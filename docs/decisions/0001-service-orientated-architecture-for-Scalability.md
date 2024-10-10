@@ -1,3 +1,10 @@
+---
+nav_order: 2
+---
+# MADR (Architectural Decision Record) for Library Management System
+
+Title: Service Orientated Architecture for Scalability
+
 2024-10-10 12:24:26
 ## Context and Problem Statement
 
