@@ -1,7 +1,7 @@
 USE [AML]
 GO
 
-/****** Object:  Table [dbo].[User]    Script Date: 04/11/2024 16:26:20 ******/
+/****** Object:  Table [dbo].[User]    Script Date: 04/11/2024 18:07:15 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -10,7 +10,7 @@ GO
 
 CREATE TABLE [dbo].[User](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[TokenID] [int] NOT NULL,
+	[TokenID] [int] NULL,
 	[AddressID] [int] NOT NULL,
 	[RoleID] [int] NOT NULL,
 	[Username] [varchar](max) NOT NULL,
