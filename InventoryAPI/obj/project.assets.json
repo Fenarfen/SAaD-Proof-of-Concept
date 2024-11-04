@@ -521,11 +521,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\sam\\source\\repos\\InventoryAPI\\InventoryAPI.csproj",
+      "projectUniqueName": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\InventoryAPI\\InventoryAPI.csproj",
       "projectName": "InventoryAPI",
-      "projectPath": "C:\\Users\\sam\\source\\repos\\InventoryAPI\\InventoryAPI.csproj",
+      "projectPath": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\InventoryAPI\\InventoryAPI.csproj",
       "packagesPath": "C:\\Users\\sam\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\sam\\source\\repos\\InventoryAPI\\obj\\",
+      "outputPath": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\InventoryAPI\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\sam\\AppData\\Roaming\\NuGet\\NuGet.Config",
