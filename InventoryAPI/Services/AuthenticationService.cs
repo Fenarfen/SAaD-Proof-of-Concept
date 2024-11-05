@@ -1,5 +1,5 @@
 ﻿namespace InventoryAPI.Services;
 
-public static class AuthenticationService
+public class AuthenticationService
 {
 }

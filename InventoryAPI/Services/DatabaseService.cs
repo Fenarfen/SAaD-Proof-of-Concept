@@ -1,5 +1,5 @@
 ﻿namespace InventoryAPI.Services;
 
-public static class DatabaseService
+public class DatabaseService
 {
 }
