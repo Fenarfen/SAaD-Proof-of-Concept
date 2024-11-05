@@ -1,4 +1,4 @@
-
+using InventoryAPI.Interfaces;
 using InventoryAPI.Repositories;
 using InventoryAPI.Services;
 
@@ -16,7 +16,10 @@ public class Program
         builder.Services.AddScoped<BranchRepository>();
         builder.Services.AddScoped<MediaRepository>();
 
-        builder.Services.AddSingleton<DatabaseService>();
+        string connString = builder.Configuration.GetConnectionString("DefaultConnection")?? "";
+        DatabaseService service = new(connString);
+
+        builder.Services.AddSingleton<IDatabaseService>(service);
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

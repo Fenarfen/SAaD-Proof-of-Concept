@@ -1,5 +1,6 @@
 ﻿using InventoryAPI.Models;
 using InventoryAPI.Repositories;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryAPI.Controllers;
@@ -11,10 +12,18 @@ public class MediaController(MediaRepository mediaRepository) : ControllerBase
     private readonly MediaRepository _mediaRepository = mediaRepository;
 
     [HttpGet]
-    public List<Media> GetAllMedia()
+    public IActionResult GetAllMedia()
     {
         List<Media> mediaList = [];
+        try
+        {
+            mediaList = _mediaRepository.GetAllMedia();
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
 
-        return mediaList;
+        return Ok(mediaList);
     }
 }

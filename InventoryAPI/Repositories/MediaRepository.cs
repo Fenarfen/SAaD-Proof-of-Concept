@@ -1,19 +1,14 @@
-﻿using InventoryAPI.Models;
-using InventoryAPI.Services;
-using Microsoft.AspNetCore.SignalR;
+﻿using InventoryAPI.Interfaces;
+using InventoryAPI.Models;
 
 namespace InventoryAPI.Repositories;
 
-public class MediaRepository(DatabaseService databaseService)
+public class MediaRepository(IDatabaseService databaseService)
 {
-    private readonly DatabaseService _dbService = databaseService;
+    private readonly IDatabaseService _dbService = databaseService;
 
     public List<Media> GetAllMedia()
     {
-        string query;
-
-        // send to _dbService
-
-        return [];
+        return _dbService.GetAllMedia();
     }
 }
