@@ -20,6 +20,7 @@ public class Program
         DatabaseService service = new(connString);
 
         builder.Services.AddSingleton<IDatabaseService>(service);
+        builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

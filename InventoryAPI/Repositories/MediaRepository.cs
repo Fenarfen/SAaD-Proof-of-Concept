@@ -11,4 +11,9 @@ public class MediaRepository(IDatabaseService databaseService)
     {
         return _dbService.GetAllMedia();
     }
+
+    public List<Media> GetMediaByCity(int cityID)
+    {
+        return _dbService.GetMediaByCity(cityID);
+    }
 }
