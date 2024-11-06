@@ -1,0 +1,64 @@
+﻿@page "/accounts/details"
+@using Microsoft.EntityFrameworkCore
+@using AuthAPI.Models
+@inject IDbContextFactory<AuthAPI.Data.AuthAPIContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Account</h2>
+    <hr />
+    @if (account is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">TokenID</dt>
+            <dd class="col-sm-10">@account.TokenID</dd>
+            <dt class="col-sm-2">AddressID</dt>
+            <dd class="col-sm-10">@account.AddressID</dd>
+            <dt class="col-sm-2">RoleID</dt>
+            <dd class="col-sm-10">@account.RoleID</dd>
+            <dt class="col-sm-2">Username</dt>
+            <dd class="col-sm-10">@account.Username</dd>
+            <dt class="col-sm-2">Password</dt>
+            <dd class="col-sm-10">@account.Password</dd>
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@account.Email</dd>
+            <dt class="col-sm-2">FirstName</dt>
+            <dd class="col-sm-10">@account.FirstName</dd>
+            <dt class="col-sm-2">LastName</dt>
+            <dd class="col-sm-10">@account.LastName</dd>
+            <dt class="col-sm-2">Created</dt>
+            <dd class="col-sm-10">@account.Created</dd>
+            <dt class="col-sm-2">Verified</dt>
+            <dd class="col-sm-10">@account.Verified</dd>
+        </dl>
+        <div>
+            <a href="@($"/accounts/edit?id={account.Id}")">Edit</a> |
+            <a href="@($"/accounts")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Account? account;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        account = await context.Account.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (account is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
