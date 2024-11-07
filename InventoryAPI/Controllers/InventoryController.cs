@@ -37,4 +37,65 @@ public class InventoryController(
             return StatusCode(500, ex.Message);
         }
     }
+
+    [HttpGet]
+    [Route("Transfer")]
+    public IActionResult GetTransfers()
+    {
+        string token = _authenticationService.GetToken(Request);
+
+        if (token.IsNullOrEmpty())
+            return Unauthorized();
+
+        User? user = _authenticationService.GetUser(token).Result;
+
+        if (user == null || user.Role.Name != "Manager")
+            return Unauthorized();
+
+        try
+        {
+            return Ok(_mediaRepository.GetTransfers(user.ID));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpPost]
+    [Route("Transfer")]
+    public IActionResult CreateTransfer(List<MediaTransfer> transfers)
+    {
+        string token = _authenticationService.GetToken(Request);
+
+        if (token.IsNullOrEmpty())
+            return Unauthorized();
+
+        User? user = _authenticationService.GetUser(token).Result;
+
+        if (user == null || user.Role.Name != "Manager")
+            return Unauthorized();
+
+        if (transfers.IsNullOrEmpty())
+            return BadRequest("No transfer(s) supplied");
+
+        try
+        {
+            foreach(var transfer in transfers)
+            {
+                int createdID = _mediaRepository.CreateTransfer(transfer);
+                
+                if (createdID == 0)
+                    return StatusCode(500, "Transfer could not be created");
+                
+                transfer.ID = createdID;
+            }
+
+            return Ok(transfers);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, ex.Message);
+        }
+    }
 }

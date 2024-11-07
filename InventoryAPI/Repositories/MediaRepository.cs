@@ -16,4 +16,14 @@ public class MediaRepository(IDatabaseService databaseService)
     {
         return _dbService.GetMediaByCity(cityID);
     }
+
+    public List<MediaTransfer> GetTransfers(int userID)
+    {
+        return _dbService.GetTransfers(userID);
+    }
+
+    public int CreateTransfer(MediaTransfer mediaTransfer)
+    {
+        return _dbService.CreateMediaTransfer(mediaTransfer);
+    }
 }
