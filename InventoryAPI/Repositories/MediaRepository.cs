@@ -12,9 +12,9 @@ public class MediaRepository(IDatabaseService databaseService)
         return _dbService.GetAllMedia();
     }
 
-    public List<Media> GetMediaByCity(int cityID)
+    public List<Media> GetMediaByCity(string city)
     {
-        return _dbService.GetMediaByCity(cityID);
+        return _dbService.GetMediaByCity(city);
     }
 
     public List<MediaTransfer> GetTransfers(int userID)

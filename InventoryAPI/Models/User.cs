@@ -5,7 +5,6 @@ public class User
     public int ID { get; set; }
     public Token Token { get; set; } = new();
     public Role Role { get; set; } = new();
-    public Address Address { get; set; } = new Address();
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

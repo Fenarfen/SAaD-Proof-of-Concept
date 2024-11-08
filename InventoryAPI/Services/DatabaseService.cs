@@ -22,12 +22,10 @@ public class DatabaseService : IDatabaseService
         {
             connection.Open();
 
-            results = connection.Query<Media, Branch, Address, City, Media>(
+            results = connection.Query<Media, Branch, Media>(
                 Utillities.Queries.GetAllMedia,
-                (media, branch, address, city) =>
+                (media, branch) =>
                 {
-                    address.City = city;
-                    branch.Address = address;
                     media.Branch = branch;
                     return media;
                 },
@@ -38,23 +36,21 @@ public class DatabaseService : IDatabaseService
         return results;
     }
 
-    public List<Media> GetMediaByCity(int cityID)
+    public List<Media> GetMediaByCity(string city)
     {
         List<Media> results = [];
 
         // Create object with parameter for query
-        var parameter = new { CityID = cityID };
+        var parameter = new { City = city };
 
         using (var connection = new SqlConnection(_connString))
         {
             connection.Open();
 
-            results = connection.Query<Media, Branch, Address, City, Media>(
+            results = connection.Query<Media, Branch, Media>(
                 Utillities.Queries.GetMediaByCity,
-                (media, branch, address, city) =>
+                (media, branch) =>
                 {
-                    address.City = city;
-                    branch.Address = address;
                     media.Branch = branch;
                     return media;
                 },
@@ -76,39 +72,13 @@ public class DatabaseService : IDatabaseService
         {
             connection.Open();
 
-            Type[] returnTypes = 
-            {
-                typeof(MediaTransfer),
-                typeof(Media),
-                typeof(Branch),
-                typeof(Address),
-                typeof(City),
-                typeof(Branch),
-                typeof(Address),
-                typeof(City),
-                typeof(Branch),
-                typeof(Address),
-                typeof(City),
-            };
-
-            results = connection.Query<MediaTransfer>(
+            results = connection.Query<MediaTransfer, Media, Branch, Branch, Branch, MediaTransfer>(
                 Utillities.Queries.GetTransferByUserID,
-                returnTypes,
-                (objects) =>
+                (mediaTransfer, media, mediaBranch, originBranch, destinationBranch) =>
                 {
-                    var mediaTransfer = (MediaTransfer)objects[0];
-                    var media = (Media)objects[1];
-                    media.Branch = (Branch)objects[2];
-                    media.Branch.Address = (Address)objects[3];
-                    media.Branch.Address.City = (City)objects[4];
+                    media.Branch = mediaBranch;
                     mediaTransfer.Media = media;
-                    var originBranch = (Branch)objects[5];
-                    originBranch.Address = (Address)objects[6];
-                    originBranch.Address.City = (City)objects[7];
                     mediaTransfer.OriginBranch = originBranch;
-                    var destinationBranch = (Branch)objects[8];
-                    destinationBranch.Address = (Address)objects[9];
-                    destinationBranch.Address.City = (City)objects[10];
                     mediaTransfer.DestinationBranch = destinationBranch;
                     return mediaTransfer;
                 },

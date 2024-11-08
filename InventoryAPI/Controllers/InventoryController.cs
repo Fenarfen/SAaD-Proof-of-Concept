@@ -18,19 +18,19 @@ public class InventoryController(
     [HttpGet]
     public IActionResult GetInventory()
     {
-        string token = _authenticationService.GetToken(Request);
+        //string token = _authenticationService.GetToken(Request);
 
-        if (token.IsNullOrEmpty())
-            return Unauthorized();
+        //if (token.IsNullOrEmpty())
+        //    return Unauthorized();
 
-        User? user = _authenticationService.GetUser(token).Result;
+        //User? user = _authenticationService.GetUser(token).Result;
 
-        if (user == null || user.Role.Name != "Manager")
-            return Unauthorized();
+        //if (user == null || user.Role.Name != "Manager")
+        //    return Unauthorized();
 
         try
         {
-            return Ok(_mediaRepository.GetMediaByCity(user.Address.City.ID));
+            return Ok(_mediaRepository.GetMediaByCity("Sheffield"));
         }
         catch (Exception ex)
         {

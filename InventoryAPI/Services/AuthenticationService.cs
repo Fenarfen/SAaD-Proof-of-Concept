@@ -38,17 +38,6 @@ public class AuthenticationService : IAuthenticationService
                 Value = token,
                 Created = DateTime.Now,
             },
-            Address = new()
-            {
-                ID = 1,
-                City =
-                {
-                    ID = 2,
-                    Name = "London",
-                },
-                FirstLine = "111 Arundle Street",
-                PostCode = "S78YJ"
-            },
             Role = new()
             {
                 ID = 1,
