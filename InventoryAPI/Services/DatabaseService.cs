@@ -62,9 +62,9 @@ public class DatabaseService : IDatabaseService
         return results;
     }
 
-    public List<MediaTransfer> GetTransfers(int userID)
+    public List<MediaTransfer> GetTransfers(int accountID)
     {
-        var parameter = new { UserID = userID};
+        var parameter = new { AccountID = accountID };
 
         List<MediaTransfer> results = [];
 
@@ -73,7 +73,7 @@ public class DatabaseService : IDatabaseService
             connection.Open();
 
             results = connection.Query<MediaTransfer, Media, Branch, Branch, Branch, MediaTransfer>(
-                Utillities.Queries.GetTransferByUserID,
+                Utillities.Queries.GetTransferByAccountID,
                 (mediaTransfer, media, mediaBranch, originBranch, destinationBranch) =>
                 {
                     media.Branch = mediaBranch;
@@ -97,7 +97,7 @@ public class DatabaseService : IDatabaseService
             MediaID = mediaTransfer.Media.ID,
             OriginBranchID = mediaTransfer.OriginBranch.ID,
             DestinationBranchID = mediaTransfer.DestinationBranch.ID,
-            UserID = mediaTransfer.UserID,
+            AccountID = mediaTransfer.AccountID,
         };
 
         using (var connection = new SqlConnection(_connString))

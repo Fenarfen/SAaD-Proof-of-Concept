@@ -12,21 +12,33 @@ public class InventoryController(
     MediaRepository mediaRepository,
     IAuthenticationService authenticationService) : ControllerBase
 {
+    private const string AUTHLEVEL = "Manager";
+
     private readonly MediaRepository _mediaRepository = mediaRepository;
     private readonly IAuthenticationService _authenticationService = authenticationService;
+
+    private Account? Authenticate(HttpRequest request)
+    {
+        string token = _authenticationService.GetToken(request);
+
+        if (token.IsNullOrEmpty())
+            return null;
+
+        Account? account = _authenticationService.GetAccount(token).Result;
+
+        if (account == null || account.Role.Name != AUTHLEVEL)
+            return null;
+
+        return account;
+    }
 
     [HttpGet]
     public IActionResult GetInventory()
     {
-        //string token = _authenticationService.GetToken(Request);
+        Account? account = Authenticate(Request);
 
-        //if (token.IsNullOrEmpty())
-        //    return Unauthorized();
-
-        //User? user = _authenticationService.GetUser(token).Result;
-
-        //if (user == null || user.Role.Name != "Manager")
-        //    return Unauthorized();
+        if (account == null)
+            return Unauthorized();
 
         try
         {
@@ -42,19 +54,14 @@ public class InventoryController(
     [Route("Transfer")]
     public IActionResult GetTransfers()
     {
-        string token = _authenticationService.GetToken(Request);
+        Account? account = Authenticate(Request);
 
-        if (token.IsNullOrEmpty())
-            return Unauthorized();
-
-        User? user = _authenticationService.GetUser(token).Result;
-
-        if (user == null || user.Role.Name != "Manager")
+        if (account == null)
             return Unauthorized();
 
         try
         {
-            return Ok(_mediaRepository.GetTransfers(user.ID));
+            return Ok(_mediaRepository.GetTransfers(account.ID));
         }
         catch (Exception ex)
         {
@@ -66,14 +73,9 @@ public class InventoryController(
     [Route("Transfer")]
     public IActionResult CreateTransfer(List<MediaTransfer> transfers)
     {
-        string token = _authenticationService.GetToken(Request);
+        Account? account = Authenticate(Request);
 
-        if (token.IsNullOrEmpty())
-            return Unauthorized();
-
-        User? user = _authenticationService.GetUser(token).Result;
-
-        if (user == null || user.Role.Name != "Manager")
+        if (account == null)
             return Unauthorized();
 
         if (transfers.IsNullOrEmpty())

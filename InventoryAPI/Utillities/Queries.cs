@@ -29,9 +29,9 @@ static public class Queries
         WHERE mt.MediaID IS NULL 
         AND b.City = @City;";
 
-    public const string GetTransferByUserID = @"
+    public const string GetTransferByAccountID = @"
         SELECT 
-           	mt.ID, mt.UserID, mt.Approved, mt.Completed, mt.Created,
+           	mt.ID, mt.AccountID, mt.Approved, mt.Completed, mt.Created,
            	mt.MediaID AS ID, m.Title, m.Author, m.Released, m.[Type], 
             m.BranchID AS ID, mb.[Name], mb.Opened, mb.AddressFirstLine, mb.AddressSecondLine, mb.City, mb.PostCode,
            	mt.OriginBranchID AS ID, ob.[Name], ob.Opened, ob.AddressFirstLine, ob.AddressSecondLine, ob.City, ob.PostCode,
@@ -41,12 +41,12 @@ static public class Queries
         INNER JOIN Branch mb ON m.BranchID = mb.ID
         INNER JOIN Branch ob ON mt.OriginBranchID = ob.ID
         INNER JOIN Branch db ON mt.DestinationBranchID = db.ID
-        WHERE mt.UserID = 1;";
+        WHERE mt.AccountID = @AccountID;";
 
     public const string CreateTransfer = @"
-        INSERT INTO MediaTransfer (MediaID, OriginBranchID, DestinationBranchID, UserID)
+        INSERT INTO MediaTransfer (MediaID, OriginBranchID, DestinationBranchID, AccountID)
         OUTPUT inserted.ID
-        VALUES (@MediaID,@OriginBranchID,@DestinationBranchID,@UserID);";
+        VALUES (@MediaID,@OriginBranchID,@DestinationBranchID,@AccountID);";
 
     public const string GetMediaSplitOn = "ID,ID";
 

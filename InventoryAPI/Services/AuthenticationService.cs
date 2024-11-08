@@ -22,15 +22,15 @@ public class AuthenticationService : IAuthenticationService
         return headers[1];
     }
 
-    public async Task<User> GetUser(string token)
+    public async Task<Account> GetAccount(string token)
     {
         // TODO:
         // Call Authentication API with bearer token to get User information
         // Fake call for now
 
-        User user = new()
+        return new()
         {
-            ID = 2,
+            ID = 1,
             Token = new()
             {
                 ID = 1,
@@ -51,7 +51,5 @@ public class AuthenticationService : IAuthenticationService
             Created = DateTime.Now,
             Verified = true
         };
-        
-        return user;
     }
 }
