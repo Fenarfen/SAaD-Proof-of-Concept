@@ -1,5 +1,14 @@
-﻿namespace InventoryAPI.Repositories;
+﻿using InventoryAPI.Interfaces;
+using InventoryAPI.Models;
 
-public class BranchRepository
+namespace InventoryAPI.Repositories;
+
+public class BranchRepository(IDatabaseService databaseService)
 {
+    private readonly IDatabaseService _databaseService = databaseService;
+
+    public List<Branch> GetBranches()
+    {
+        return _databaseService.GetBranches();
+    }
 }

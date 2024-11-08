@@ -48,6 +48,16 @@ static public class Queries
         OUTPUT inserted.ID
         VALUES (@MediaID,@OriginBranchID,@DestinationBranchID,@AccountID);";
 
+    public const string GetBranches = @"
+        SELECT [ID]
+            ,[Name]
+            ,[AddressFirstLine]
+            ,[AddressSecondLine]
+            ,[City]
+            ,[PostCode]
+            ,[Opened]
+        FROM [dbo].[Branch]";
+
     public const string GetMediaSplitOn = "ID,ID";
 
     public const string GetMediaTransferSplitOn = "ID,ID,ID,ID";

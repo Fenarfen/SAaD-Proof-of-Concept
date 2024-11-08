@@ -2,6 +2,7 @@
 using InventoryAPI.Interfaces;
 using InventoryAPI.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Identity.Client;
 
 namespace InventoryAPI.Services;
 
@@ -107,6 +108,18 @@ public class DatabaseService : IDatabaseService
              return connection.QuerySingle<int>(
                 Utillities.Queries.CreateTransfer,
                 param: parameters);
+        }
+    }
+
+    public List<Branch> GetBranches()
+    {
+        using (var connection = new SqlConnection(_connString))
+        {
+            connection.Open();
+
+            return connection.Query<Branch>(
+                Utillities.Queries.GetBranches)
+                .ToList();
         }
     }
 }
