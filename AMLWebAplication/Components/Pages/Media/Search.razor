@@ -1,0 +1,105 @@
+﻿@page "/Search"
+@using AMLWebAplication.Models
+@using System.Text.Json
+@using System.Text.Json.Serialization
+@inject IHttpClientFactory ClientFactory
+@using Microsoft.AspNetCore.Components.QuickGrid
+@rendermode InteractiveServer
+
+<h3>Search</h3>
+
+<p>Look at all our Media!</p>
+
+@if (error || media is null)
+{
+    <p>Could not find any media, sorry! Please try again later.</p>
+}
+else
+{
+    <div class="grid">
+        <QuickGrid Items="filteredMedia" Pagination="pagination">
+            <PropertyColumn Property="@(m => m.Title)" Sortable="true">
+                <ColumnOptions>
+                    <div class="search-box">
+                        <input type="search" autofocus @bind="titleFilter" @bind:event="oninput" />
+                    </div>
+                </ColumnOptions>
+            </PropertyColumn>
+            <PropertyColumn Property="@(m => m.Author)" Sortable="true" >
+                <ColumnOptions>
+                    <div class="search-box">
+                        <input type="search" autofocus @bind="authorFilter" @bind:event="oninput" />
+                    </div>
+                </ColumnOptions>
+            </PropertyColumn>
+            <PropertyColumn Property="@(m => m.Released.ToShortDateString())" Title="Release Date" />
+            <PropertyColumn Property="@(m => m.Branch.Name)" Sortable="true" />
+            <PropertyColumn Property="@(m => m.Branch.City)" Sortable="true" />
+            <PropertyColumn Property="@(m => m.Type)" />
+        </QuickGrid>
+
+        <Paginator State="pagination" />
+    </div>  
+}
+
+@code {
+    private IQueryable<Media>? media;
+    private bool error;
+    private bool shouldRender;
+
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+    private string titleFilter = string.Empty;
+    private string authorFilter = string.Empty;
+
+    private IQueryable<Media>? filteredMedia
+    {
+        get
+        {
+            var result = media;
+
+            if (!string.IsNullOrEmpty(titleFilter))
+                result = result?.Where(m => m.Title.Contains(titleFilter));
+
+            if (!string.IsNullOrEmpty(authorFilter))
+                result = result?.Where(m => m.Author.Contains(authorFilter));
+
+            return result;
+        }
+    }
+
+    protected override bool ShouldRender() => shouldRender;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = new HttpRequestMessage(HttpMethod.Get,
+            "http://localhost:32772/api/Media");
+        request.Headers.Add("Accept", "application/json");
+        request.Headers.Add("User-Agent", "HttpClientFactory-Media");
+
+        var client = ClientFactory.CreateClient();
+
+        var response = await client.SendAsync(request);
+
+        if (response.IsSuccessStatusCode)
+        {
+            using var responseStream = await response.Content.ReadAsStreamAsync();
+
+            var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+            var result = await JsonSerializer.DeserializeAsync
+                <IEnumerable<Media>>(responseStream, options);
+
+            media = result?.AsQueryable();
+        }
+        else
+        {
+            error = true;
+        }
+
+        shouldRender = true;
+	}
+}
