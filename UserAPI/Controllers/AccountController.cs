@@ -24,7 +24,7 @@ namespace UserAPI.Controllers
 		}
 
 		[HttpPost("create")]
-		public IActionResult CreateAccount([FromBody] Account account)
+		public IActionResult CreateAccount([FromBody] AccountCreateDto account)
 		{
 			if (account == null)
 			{
