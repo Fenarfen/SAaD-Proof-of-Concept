@@ -1,0 +1,215 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\interfaces\\idatabaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:interfaces\\idatabaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:controllers\\accountcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\services\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:services\\databaseservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\models\\entities\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:models\\entities\\account.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\controllers\\memberaddresscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:controllers\\memberaddresscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\models\\dtos\\accountcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:models\\dtos\\accountcreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\models\\dtos\\accountupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:models\\dtos\\accountupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\models\\entities\\memberaddress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:models\\entities\\memberaddress.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|c:\\users\\lewis\\desktop\\saad-poc\\userapi\\dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{51B79FF2-0F89-46B1-A702-50A129FF4D56}|UserAPI.csproj|solutionrelative:dockerfile||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 184,
+          "SelectedChildIndex": 10,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "AccountUpdateDto.cs",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Models\\Dtos\\AccountUpdateDto.cs",
+              "RelativeDocumentMoniker": "Models\\Dtos\\AccountUpdateDto.cs",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Models\\Dtos\\AccountUpdateDto.cs",
+              "RelativeToolTip": "Models\\Dtos\\AccountUpdateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T21:49:49.217Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "MemberAddressController.cs",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Controllers\\MemberAddressController.cs",
+              "RelativeDocumentMoniker": "Controllers\\MemberAddressController.cs",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Controllers\\MemberAddressController.cs",
+              "RelativeToolTip": "Controllers\\MemberAddressController.cs",
+              "ViewState": "AgIAAA4AAAAAAAAAAAAQwCAAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T19:12:18.698Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "IDatabaseService.cs",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Interfaces\\IDatabaseService.cs",
+              "RelativeDocumentMoniker": "Interfaces\\IDatabaseService.cs",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Interfaces\\IDatabaseService.cs",
+              "RelativeToolTip": "Interfaces\\IDatabaseService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T18:30:31.067Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DatabaseService.cs",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Services\\DatabaseService.cs",
+              "RelativeDocumentMoniker": "Services\\DatabaseService.cs",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Services\\DatabaseService.cs",
+              "RelativeToolTip": "Services\\DatabaseService.cs",
+              "ViewState": "AgIAAE0AAAAAAAAAAAAiwJoAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T22:53:57.812Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Account.cs",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Models\\Entities\\Account.cs",
+              "RelativeDocumentMoniker": "Models\\Entities\\Account.cs",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Models\\Entities\\Account.cs",
+              "RelativeToolTip": "Models\\Entities\\Account.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T22:06:39.212Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "MemberAddress.cs",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Models\\Entities\\MemberAddress.cs",
+              "RelativeDocumentMoniker": "Models\\Entities\\MemberAddress.cs",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Models\\Entities\\MemberAddress.cs",
+              "RelativeToolTip": "Models\\Entities\\MemberAddress.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T22:43:26.647Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "AccountController.cs",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Controllers\\AccountController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AccountController.cs",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Controllers\\AccountController.cs",
+              "RelativeToolTip": "Controllers\\AccountController.cs",
+              "ViewState": "AgIAAJoAAAAAAAAAAAAAAKsAAAAEAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T21:56:58.481Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAADAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-11-10T18:31:40.835Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T21:55:41.098Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "AccountCreateDto.cs",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Models\\Dtos\\AccountCreateDto.cs",
+              "RelativeDocumentMoniker": "Models\\Dtos\\AccountCreateDto.cs",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Models\\Dtos\\AccountCreateDto.cs",
+              "RelativeToolTip": "Models\\Dtos\\AccountCreateDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-10T22:25:56.868Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "Dockerfile",
+              "DocumentMoniker": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Dockerfile",
+              "RelativeDocumentMoniker": "Dockerfile",
+              "ToolTip": "C:\\Users\\lewis\\Desktop\\SAaD-POC\\UserAPI\\Dockerfile",
+              "RelativeToolTip": "Dockerfile",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-11-10T18:29:04.933Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
