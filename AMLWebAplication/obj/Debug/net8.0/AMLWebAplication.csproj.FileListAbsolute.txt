@@ -27,3 +27,36 @@ C:\Users\sam\source\repos\AMLWebAplication\obj\Debug\net8.0\refint\AMLWebAplicat
 C:\Users\sam\source\repos\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.pdb
 C:\Users\sam\source\repos\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.genruntimeconfig.cache
 C:\Users\sam\source\repos\AMLWebAplication\obj\Debug\net8.0\ref\AMLWebAplication.dll
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\bin\Debug\net8.0\appsettings.Development.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\bin\Debug\net8.0\appsettings.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\bin\Debug\net8.0\AMLWebAplication.staticwebassets.runtime.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\bin\Debug\net8.0\AMLWebAplication.staticwebassets.endpoints.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\bin\Debug\net8.0\AMLWebAplication.exe
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\bin\Debug\net8.0\AMLWebAplication.deps.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\bin\Debug\net8.0\AMLWebAplication.runtimeconfig.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\bin\Debug\net8.0\AMLWebAplication.dll
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\bin\Debug\net8.0\AMLWebAplication.pdb
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.AssemblyInfoInputs.cache
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.AssemblyInfo.cs
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.csproj.CoreCompileInputs.cache
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.sourcelink.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\scopedcss\Components\Layout\MainLayout.razor.rz.scp.css
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\scopedcss\Components\Layout\NavMenu.razor.rz.scp.css
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\scopedcss\bundle\AMLWebAplication.styles.css
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\scopedcss\projectbundle\AMLWebAplication.bundle.scp.css
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\staticwebassets.build.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\staticwebassets.development.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\staticwebassets\msbuild.AMLWebAplication.Microsoft.AspNetCore.StaticWebAssets.props
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\staticwebassets\msbuild.AMLWebAplication.Microsoft.AspNetCore.StaticWebAssetEndpoints.props
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\staticwebassets\msbuild.build.AMLWebAplication.props
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\staticwebassets\msbuild.buildMultiTargeting.AMLWebAplication.props
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\staticwebassets\msbuild.buildTransitive.AMLWebAplication.props
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\staticwebassets.pack.json
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.dll
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\refint\AMLWebAplication.dll
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.pdb
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\AMLWebAplication.genruntimeconfig.cache
+C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\obj\Debug\net8.0\ref\AMLWebAplication.dll

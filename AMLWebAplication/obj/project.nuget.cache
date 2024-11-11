@@ -1,8 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "e1IUHBbLEqM=",
+  "dgSpecHash": "Qrs1nQjUFPw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\sam\\source\\repos\\AMLWebAplication\\AMLWebAplication.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\lewis\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.10\\microsoft.netcore.app.ref.8.0.10.nupkg.sha512",
+    "C:\\Users\\lewis\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.10\\microsoft.windowsdesktop.app.ref.8.0.10.nupkg.sha512",
+    "C:\\Users\\lewis\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\8.0.10\\microsoft.aspnetcore.app.ref.8.0.10.nupkg.sha512",
+    "C:\\Users\\lewis\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\8.0.10\\microsoft.netcore.app.host.win-x64.8.0.10.nupkg.sha512"
+  ],
   "logs": []
 }
