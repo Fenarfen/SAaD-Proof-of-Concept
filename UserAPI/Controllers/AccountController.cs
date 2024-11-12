@@ -78,7 +78,7 @@ namespace UserAPI.Controllers
 			}
 
 			// Return a success response with the created account information
-			return CreatedAtAction(nameof(CreateAccount), new { id = 1 }, new { message = "Account created successfully." });
+			return Ok( new { message = "Account created successfully." });
 		}
 
 		[HttpPost("update/{id}")]

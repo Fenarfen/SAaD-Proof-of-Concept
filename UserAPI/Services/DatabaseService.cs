@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using UserAPI.Models.Entities;
 using UserAPI.Models.Dtos;
+using Microsoft.Identity.Client;
 
 namespace UserAPI.Services;
 
@@ -14,7 +15,7 @@ public class DatabaseService : IDatabaseService
 		_connectionString = connectionString;
 	}
 
-	public string CreateMemberUser(Account account)
+	public string CreateMemberUser(AccountCreateDto account)
 	{
 		using (SqlConnection connection = new SqlConnection(_connectionString))
 		{
@@ -50,7 +51,7 @@ public class DatabaseService : IDatabaseService
 			connection.Open();
 
 			string query = @"update Account
-							 Email = @Email,
+							 set Email = @Email,
 							 Password = @Password,
 							 FirstName = @FirstName,
 							 LastName = @LastName
@@ -78,7 +79,7 @@ public class DatabaseService : IDatabaseService
 		}
 	}
 
-	public string CreateMemberAddress(MemberAddress memberAddress)
+	public string CreateMemberAddress(AddressCreateUpdateDto memberAddress)
 	{
 		using (SqlConnection connection = new SqlConnection(_connectionString))
 		{
@@ -126,10 +127,12 @@ public class DatabaseService : IDatabaseService
 		{
 			connection.Open();
 
-			string query = @"select TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where ID = @ID";
+			string query = @"select ID, TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where ID = @ID";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
+				command.Parameters.AddWithValue("ID", accountID);
+
 				using (SqlDataReader reader = command.ExecuteReader())
 				{
 					if (reader.Read())
@@ -137,7 +140,7 @@ public class DatabaseService : IDatabaseService
 						return new Account
 						{
 							ID = Convert.ToInt32(reader["ID"]),
-							TokenID = Convert.ToInt32(reader["TokenID"]),
+							TokenID = reader["TokenID"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["TokenID"]),
 							RoleID = Convert.ToInt32(reader["RoleID"]),
 							Password = reader["Password"].ToString(),
 							Email = reader["Email"].ToString(),
@@ -156,7 +159,7 @@ public class DatabaseService : IDatabaseService
 		}
 	}
 
-	public string EditMemberAddress(int id, MemberAddress memberAddress)
+	public string EditMemberAddress(int id, Address memberAddress)
 	{
 		using (SqlConnection connection = new SqlConnection(_connectionString))
 		{
@@ -219,7 +222,7 @@ public class DatabaseService : IDatabaseService
 				}
 				else
 				{
-					return "failure";
+					return "not found";
 				}
 			}
 		}

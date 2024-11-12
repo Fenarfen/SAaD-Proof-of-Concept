@@ -1,6 +1,6 @@
 ﻿namespace UserAPI.Models.Entities
 {
-    public class MemberAddress
+    public class Address
     {
         public int AccountID { get; set; }
         public required string FirstLine { get; set; }

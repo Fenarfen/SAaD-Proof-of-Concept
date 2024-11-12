@@ -3,7 +3,7 @@
     public class Account
     {
         public int ID { get; set; }
-        public required int TokenID { get; set; }
+        public int? TokenID { get; set; }
         public required int RoleID { get; set; }
         public required string Password { get; set; }
         public required string Email { get; set; }

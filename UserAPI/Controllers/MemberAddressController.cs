@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using UserAPI.Services;
 using UserAPI.Interfaces;
 using UserAPI.Models.Entities;
+using UserAPI.Models.Dtos;
 
 namespace UserAPI.Controllers
 {
@@ -21,30 +22,37 @@ namespace UserAPI.Controllers
 		}
 
 		[HttpPost("create")]
-		public IActionResult CreateMemberAddressController([FromBody] MemberAddress memberAddress)
+		public IActionResult CreateMemberAddress([FromBody] AddressCreateUpdateDto memberAddress)
 		{
 			if (memberAddress == null)
 			{
 				return BadRequest(new { message = "Address data is required." });
 			}
 
-			string resultOfCreateMemberAddress = string.Empty;
-
 			try
 			{
-				resultOfCreateMemberAddress = _databaseService.CreateMemberAddress(memberAddress);
+				Account account = _databaseService.GetAccountByID(memberAddress.AccountID);
+
+				if(account == null)
+				{
+					return BadRequest(new { message = "Account ID doesn't exist" });
+				}
+
+				_databaseService.CreateMemberAddress(memberAddress);
+
+				return Ok(new { message = "Address created successfully." });
 			}
 			catch (Exception ex)
 			{
 				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later." + ex.ToString() });
 			}
 
-			// Return a success response with the created account information
-			return CreatedAtAction(nameof(MemberAddress), new { id = 1 }, new { message = "Address created successfully." });
+			// Return a success response with the created address information
+			
 		}
 
 		[HttpPost("edit/{addressID}")]
-		public IActionResult EditMemberAddressController(int addressID, [FromBody] MemberAddress memberAddress)
+		public IActionResult EditMemberAddress(int addressID, [FromBody] Address memberAddress)
 		{
 			if (memberAddress == null)
 			{
@@ -63,11 +71,11 @@ namespace UserAPI.Controllers
 			}
 
 			// Return a success response with the created account information
-			return Ok(new { message = "Address updated successfully.", result = resultOfEditMemberAddress });
+			return Ok(new { message = "Address updated successfully." });
 		}
 
 		[HttpDelete("delete/{addressId}")]
-		public IActionResult DeleteMemberAddressController(int addressId)
+		public IActionResult DeleteMemberAddress(int addressId)
 		{
 			try
 			{
@@ -78,18 +86,21 @@ namespace UserAPI.Controllers
 				return BadRequest(new { message = "Address ID given should be an integer." });
 			}
 
-			string resultOfDeleteMemberAddress = string.Empty;
-
 			try
 			{
-				resultOfDeleteMemberAddress = _databaseService.DeleteMemberAddress(addressId);
+				string result = _databaseService.DeleteMemberAddress(addressId);
+
+				if (result == "not found")
+				{
+					return BadRequest(new { message = "No address found with that id" });
+				}
 			}
 			catch (Exception ex)
 			{
 				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later." + ex.ToString() });
 			}
 
-			return NoContent();
+			return Ok(new { message = "Address has been deleted" });
 		}
 	}
 }
