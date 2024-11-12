@@ -1,4 +1,6 @@
-﻿using AuthAPI.Models.Entities;
+﻿using AuthAPI.Models;
+using AuthAPI.Models.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AuthAPI.Interfaces
 {
@@ -10,5 +12,6 @@ namespace AuthAPI.Interfaces
 		public string CheckCode(int accountID, string code);
 		public string VerifyAccount(int accountID);
 		public string AssignToken(int id, string token);
+		public string VerifyToken(VerifyTokenRequest request);
 	}
 }

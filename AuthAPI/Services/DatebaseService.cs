@@ -1,6 +1,9 @@
 ﻿using AuthAPI.Interfaces;
 using Microsoft.Data.SqlClient;
 using AuthAPI.Models.Entities;
+using AuthAPI.Models;
+using Microsoft.Identity.Client;
+using Microsoft.IdentityModel.Tokens;
 
 namespace AuthAPI.Services;
 
@@ -48,7 +51,7 @@ public class DatabaseService : IDatabaseService
 		{
 			connection.Open();
 
-			string query = @"select TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where ID = @ID";
+			string query = @"select ID, TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where ID = @ID";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
@@ -61,7 +64,7 @@ public class DatabaseService : IDatabaseService
 						return new Account
 						{
 							ID = Convert.ToInt32(reader["ID"]),
-							TokenID = Convert.ToInt32(reader["TokenID"]),
+							TokenID = reader["TokenID"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["TokenID"]),
 							RoleID = Convert.ToInt32(reader["RoleID"]),
 							Password = reader["Password"].ToString(),
 							Email = reader["Email"].ToString(),
@@ -86,7 +89,7 @@ public class DatabaseService : IDatabaseService
 		{
 			connection.Open();
 
-			string query = @"select TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where Email = @Email";
+			string query = @"select ID, TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where Email = @Email";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
@@ -99,7 +102,7 @@ public class DatabaseService : IDatabaseService
 						return new Account
 						{
 							ID = Convert.ToInt32(reader["ID"]),
-							TokenID = Convert.ToInt32(reader["TokenID"]),
+							TokenID = reader["TokenID"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["TokenID"]),
 							RoleID = Convert.ToInt32(reader["RoleID"]),
 							Password = reader["Password"].ToString(),
 							Email = reader["Email"].ToString(),
@@ -124,7 +127,7 @@ public class DatabaseService : IDatabaseService
 		{
 			connection.Open();
 
-			string query = @"select count(*) from UserVerificationCode where AccountID = @AccountID and Code = @Code and Created >= DATEADD(MINUTE, -30, GETUTCDATE());";
+			string query = @"select count(*) from UserVerificationCode where AccountID = @AccountID and Code = @Code and CreatedAt >= DATEADD(MINUTE, -30, GETUTCDATE());";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
@@ -147,7 +150,7 @@ public class DatabaseService : IDatabaseService
 
 				if (Convert.ToInt32(command.ExecuteScalar()) > 0)
 				{
-					return "expired";
+					return "Code has expired";
 				}
 			}
 
@@ -187,6 +190,37 @@ public class DatabaseService : IDatabaseService
 				else
 				{
 					return "false";
+				}
+			}
+		}
+	}
+
+	public string VerifyToken(VerifyTokenRequest request)
+	{
+		using (SqlConnection connection = new SqlConnection(_connectionString))
+		{
+			connection.Open();
+
+			string query = @"select Value from Token where UserID = @UserID order by Created desc";
+
+			using (SqlCommand command = new SqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@UserID", request.accountID);
+
+				var result = command.ExecuteScalar().ToString();
+
+				if(result == null)
+				{
+					return "token not found";
+				}
+
+				if (result.ToString() == request.token)
+				{
+					return "valid";
+				}
+				else
+				{
+					return "not valid";
 				}
 			}
 		}

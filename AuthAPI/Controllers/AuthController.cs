@@ -27,19 +27,28 @@ namespace AuthAPI.Controllers
 			//check user exists
 			try
 			{
-				if (_databaseService.GetAccountByID(accountID) == null)
+				Account account = _databaseService.GetAccountByID(accountID);
+
+				if (account == null)
 				{
 					return BadRequest(new { message = "User does not exist." });
 				}
 
-				//todo mail
-				_databaseService.AssignVerificationCode(accountID, GenerateVerificationCode());
+				if(account.Verified == true)
+				{
+					return BadRequest(new { message = "Account is already verified" });
+				}
 
-				return Ok(new { message = "true" });
+				string verificationCode = GenerateVerificationCode();
+
+				//todo mail
+				_databaseService.AssignVerificationCode(accountID, verificationCode);
+
+				return Ok(new { message = "Verification started - " + verificationCode });
 			}
-			catch
+			catch (Exception ex)
 			{
-				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later." });
+				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later." + ex.ToString() });
 			}
 		}
 
@@ -65,9 +74,9 @@ namespace AuthAPI.Controllers
 				//send email saying they're verified
 				return Ok(new { message = "Account is now verified" });
 			}
-			catch
+			catch (Exception ex)
 			{
-				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later." });
+				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later. " + ex.ToString() });
 			}
 		}
 
@@ -98,18 +107,52 @@ namespace AuthAPI.Controllers
 
 				return Ok(new { token = token });
 			}
-			catch
+			catch (Exception ex)
 			{
-				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later." });
+				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later. " + ex.ToString() });
 			}
 		}
 
-		[HttpPost("validate-token")]
-		[Authorize]
-		public IActionResult ValidateToken()
+		[HttpPost("Verify-token")]
+		public IActionResult VerifyToken([FromBody] VerifyTokenRequest request)
 		{
-			// If the token is valid, this method will be invoked
-			return Ok(new { Message = "Token is valid." });
+			if (request == null)
+			{
+				return BadRequest(new { message = "Request is null" });
+			}
+
+			if (request.token.IsNullOrEmpty())
+			{
+				return BadRequest(new { message = "Token is missing or empty" });
+			}
+
+			if (request.token.Length != 64)
+			{
+				return BadRequest(new { message = "Token is in an invalid format" });
+			}
+
+			if (_databaseService.GetAccountByID(request.accountID) == null)
+			{
+				return BadRequest(new { message = "Account doesn't exist" });
+			}
+
+			try
+			{
+				string result = _databaseService.VerifyToken(request);
+
+				if (result == "valid")
+				{
+					return Ok(new { message = "Token is valid" });
+				}
+				else
+				{
+					return BadRequest(new { message = "Token is invalid" });
+				}
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later. " + ex.ToString() });
+			}
 		}
 
 		private string GenerateVerificationCode()
