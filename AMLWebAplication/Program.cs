@@ -1,4 +1,5 @@
 using AMLWebAplication.Components;
+using AMLWebAplication.Services;
 
 namespace AMLWebAplication
 {
@@ -7,6 +8,7 @@ namespace AMLWebAplication
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            builder.Services.AddScoped<IMonitorService, MonitorService>();
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
