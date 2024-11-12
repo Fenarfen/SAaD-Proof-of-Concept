@@ -1,0 +1,52 @@
+@page "/reports"
+@using AMLWebAplication.Data
+@using AMLWebAplication.Services
+@inject IMediaLoanService MediaLoanService
+
+<h3>Active Loans</h3>
+
+@if (activeLoans == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!activeLoans.Any())
+{
+    <p>No active loans.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Media ID</th>
+                <th>Account ID</th>
+                <th>Branch ID</th>
+                <th>Loaned Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var loan in activeLoans)
+            {
+                <tr>
+                    <td>@loan.MediaID</td>
+                    <td>@loan.AccountID</td>
+                    <td>@loan.BranchID</td>
+                    <td>@loan.LoanedDate</td>
+                    <td>@loan.DueDate</td>
+                    <td>@loan.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<MediaLoan> activeLoans;
+
+    protected override async Task OnInitializedAsync()
+    {
+        activeLoans = await MediaLoanService.GetActiveLoansAsync();
+    }
+}

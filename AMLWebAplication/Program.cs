@@ -1,5 +1,6 @@
 using AMLWebAplication.Components;
 using AMLWebAplication.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AMLWebAplication
 {
@@ -9,6 +10,7 @@ namespace AMLWebAplication
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddScoped<IMonitorService, MonitorService>();
+            builder.Services.AddScoped<IMediaLoanService, MediaLoanService>();
 
             // Add services to the container.
             builder.Services.AddRazorComponents()
