@@ -9,10 +9,12 @@ namespace AMLWebAplication
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddScoped<IMonitorService, MonitorService>();
-            builder.Services.AddScoped<IMediaLoanService, MediaLoanService>();
 
             // Add services to the container.
+            builder.Services.AddScoped<IMonitorService, MonitorService>();
+            builder.Services.AddScoped<IMediaLoanService, MediaLoanService>();
+            builder.Services.AddRazorPages();
+            builder.Services.AddServerSideBlazor();
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 

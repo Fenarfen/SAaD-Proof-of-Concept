@@ -7,6 +7,7 @@ using Dapper;
 using Microsoft.Data.SqlClient;
 using AMLWebAplication.Data;
 using Microsoft.Extensions.Configuration;
+using OfficeOpenXml;
 
 namespace AMLWebAplication.Services
 {
@@ -25,10 +26,20 @@ namespace AMLWebAplication.Services
             return (await _db.QueryAsync<MediaLoan>(sql)).ToList();
         }
 
-        public async Task<List<MediaLoan>> GetMediaLoansByAccountIdAsync(int accountId)
+        public async Task<List<MediaLoan>> GetLoansByAccountAsync(int accountId)
         {
-            const string sql = "SELECT MediaID, AccountID, BranchID, LoanedDate, DueDate, ReturnedDate, Status FROM MediaLoan WHERE AccountID = @AccountID";
-            return (await _db.QueryAsync<MediaLoan>(sql, new { AccountID = accountId })).ToList();
+            const string sql = @"
+                SELECT MediaID, AccountID, BranchID, LoanedDate, DueDate,
+                    CASE
+                        WHEN DueDate < GETDATE() THEN 'Overdue'
+                        ELSE Status
+                    END as Status
+                FROM MediaLoan
+                WHERE AccountID = @accountId
+                AND (Status = 'Active' OR Status = 'Overdue')
+                ORDER BY LoanedDate DESC";
+
+            return (await _db.QueryAsync<MediaLoan>(sql, new { AccountId = accountId })).ToList();
         }
 
         public async Task<List<MediaLoan>> GetOverdueLoansAsync()
