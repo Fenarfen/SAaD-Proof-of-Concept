@@ -31,14 +31,14 @@ namespace AMLWebAplication.Services
             const string sql = @"
                 SELECT MediaID, AccountID, BranchID, LoanedDate, DueDate,
                     CASE
-                        WHEN DueDate < GETDATE() THEN 'Overdue'
+                        WHEN DueDate < GETDATE() AND Status = 'Active' THEN 'Overdue'
                         ELSE Status
                     END as Status
                 FROM MediaLoan
-                WHERE AccountID = @accountId
+                WHERE AccountID = @AccountId
                 AND (Status = 'Active' OR Status = 'Overdue')
                 ORDER BY LoanedDate DESC";
-
+            
             return (await _db.QueryAsync<MediaLoan>(sql, new { AccountId = accountId })).ToList();
         }
 

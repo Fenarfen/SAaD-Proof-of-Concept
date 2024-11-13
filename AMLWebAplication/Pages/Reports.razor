@@ -43,12 +43,10 @@ else
 }
 
 <h3>Loans by Account</h3>
-
 <div class="mb-3">
-    <input type="number" @bind="accountId" placeholder="Enter Account ID" />
-    <button class="btn btn-primary ms-2" @onclick="LoadLoansAndUpdateTable">Search</button>
+    <input type="text" @bind-Value="accountId" @bind-Value:event="ValueChanged" />
+    <button class="btn btn-primary ms-2" @onclick="LoadLoansAndUpdateTableAsync">Search</button>
 </div>
-
 @if (accountLoans == null)
 {
     <p><em>Loading...</em></p>
@@ -132,11 +130,11 @@ else
     {
         activeLoans = await MediaLoanService.GetActiveLoansAsync();
         overdueLoans = await MediaLoanService.GetOverdueLoansAsync();
-        @* accountLoans = await MediaLoanService.GetLoansByAccountAsync(accountId); *@
-        await LoadLoansAndUpdateTable();
+        accountLoans = await MediaLoanService.GetLoansByAccountAsync(accountId);
+        await LoadLoansAndUpdateTableAsync();
     }
 
-    private async Task LoadLoansAndUpdateTable()
+    private async Task LoadLoansAndUpdateTableAsync()
     {
         Console.WriteLine("activated");
         accountLoans = await MediaLoanService.GetLoansByAccountAsync(accountId);

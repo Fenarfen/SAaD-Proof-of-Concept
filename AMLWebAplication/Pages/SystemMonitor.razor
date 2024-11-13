@@ -1,0 +1,30 @@
+@page "/monitorsystem"
+@using AMLWebAplication.Services
+@inject NetworkMonitorService NetworkService
+@inject SystemMonitorService SystemMonitorService
+
+<h3>Network Traffic Monitoring</h3>
+
+<p>Bytes Sent: @NetworkService.BytesSent</p>
+<p>Bytes Received: @NetworkService.BytesReceived</p>
+
+@code {
+    protected override void OnInitialized()
+    {
+        NetworkService.UpdateNetworkTraffic();
+    }
+}
+
+<h3>System Monitoring</h3>
+<p><strong>CPU Usage:</strong> @systemData.CpuUsage %</p>
+<p><strong>Memory Usage:</strong> @systemData.MemoryUsage MB</p>
+<p><strong>Disk Usage:</strong> @systemData.DiskUsage %</p>
+
+@code {
+    private SystemMonitorData systemData = new SystemMonitorData();
+
+    protected override async Task OnInitializedAsync()
+    {
+        systemData = await SystemMonitorService.GetSystemDataAsync();
+    }
+}

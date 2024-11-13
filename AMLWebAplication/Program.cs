@@ -17,6 +17,8 @@ namespace AMLWebAplication
             builder.Services.AddServerSideBlazor();
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            builder.Services.AddSingleton<NetworkMonitorService>();
+            builder.Services.AddSingleton<SystemMonitorService>();
 
             var app = builder.Build();
 
