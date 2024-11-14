@@ -53,6 +53,55 @@ namespace AMLWebAplication.Services
             const string sql = "SELECT MediaID, AccountID, BranchID, LoanedDate, DueDate, ReturnedDate, Status FROM MediaLoan WHERE ReturnedDate IS NULL";
             return (await _db.QueryAsync<MediaLoan>(sql)).ToList();
         }
+
+        public async Task<BranchReport> GetBranchReportAsync(int branchId, DateTime startDate, DateTime endDate)
+        {
+            var report = new BranchReport
+            {
+                BranchId = branchId,
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
+            const string borrowingStatsSql = @"
+                SELECT 
+                    COUNT(*) as TotalLoans,
+                    COUNT(DISTINCT AccountID) as UniqueUsers,
+                    COUNT(CASE WHEN Status = 'Overdue' THEN 1 END) as OverdueLoans
+                FROM MediaLoan
+                WHERE BranchID = @BranchId
+                AND LoanedDate BETWEEN @StartDate AND @EndDate";
+
+            Console.WriteLine("Executing Borrowing Stats SQL:");
+            Console.WriteLine(borrowingStatsSql);
+
+            report.BorrowingStats = await _db.QuerySingleAsync<BorrowingStats>(
+                borrowingStatsSql,
+                new { BranchId = branchId, StartDate = startDate, EndDate = endDate }
+            );
+
+            const string popularMediaSql = @"
+                SELECT TOP 10
+                    m.MediaID,
+                    m.Title,
+                    COUNT(*) as LoanCount
+                FROM MediaLoan ml
+                JOIN Media m ON ml.MediaID = m.MediaID
+                WHERE ml.BranchID = @BranchId
+                AND ml.LoanedDate BETWEEN @StartDate AND @EndDate
+                GROUP BY m.MediaID, m.Title
+                ORDER BY LoanCount DESC";
+
+                Console.WriteLine("Executing Popular Media SQL:");
+                Console.WriteLine(popularMediaSql);
+
+                report.PopularItems = await _db.QueryAsync<PopularMediaItem>(
+                popularMediaSql,
+                new { BranchId = branchId, StartDate = startDate, EndDate = endDate }
+            );
+
+            return report;
+        }
     }
 
 }

@@ -3,43 +3,75 @@
 @using AMLWebAplication.Services
 @inject IMediaLoanService MediaLoanService
 
-<h3>Active Loans</h3>
+@page "/branch-report"
+@inject IMediaLoanService MediaLoanService
 
-@if (activeLoans == null)
+<h3>Branch Report</h3>
+
+<div>
+    <label>Branch ID: </label>
+    <input type="number" @bind="branchId" />
+
+    <label>Start Date: </label>
+    <input type="date" @bind="startDate" />
+
+    <label>End Date: </label>
+    <input type="date" @bind="endDate" />
+
+    <button @onclick="GenerateReport">Generate Report</button>
+</div>
+
+@if (branchReport != null)
 {
-    <p><em>Loading...</em></p>
-}
-else if (!activeLoans.Any())
-{
-    <p>No active loans.</p>
-}
-else
-{
+    <h4>Report for Branch @branchReport.BranchId</h4>
+    <p>From: @branchReport.StartDate.ToShortDateString() To: @branchReport.EndDate.ToShortDateString()</p>
+
+    <h5>Borrowing Statistics</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Total Loans</th>
+                <th>Unique Users</th>
+                <th>Overdue Loans</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@branchReport.BorrowingStats.TotalLoans</td>
+                <td>@branchReport.BorrowingStats.UniqueUsers</td>
+                <td>@branchReport.BorrowingStats.OverdueLoans</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h5>Popular Media Items</h5>
     <table class="table">
         <thead>
             <tr>
                 <th>Media ID</th>
-                <th>Account ID</th>
-                <th>Branch ID</th>
-                <th>Loaned Date</th>
-                <th>Due Date</th>
-                <th>Status</th>
+                <th>Title</th>
+                <th>Loan Count</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var loan in activeLoans)
+            @foreach (var item in branchReport.PopularItems)
             {
                 <tr>
-                    <td>@loan.MediaID</td>
-                    <td>@loan.AccountID</td>
-                    <td>@loan.BranchID</td>
-                    <td>@loan.LoanedDate</td>
-                    <td>@loan.DueDate</td>
-                    <td>@loan.Status</td>
+                    <td>@item.MediaId</td>
+                    <td>@item.Title</td>
+                    <td>@item.LoanCount</td>
                 </tr>
             }
         </tbody>
     </table>
+}
+else if (loading)
+{
+    <p>Loading report...</p>
+}
+else if (errorMessage != null)
+{
+    <p class="text-danger">@errorMessage</p>
 }
 
 <h3>Loans by Account</h3>
@@ -70,6 +102,45 @@ else
         </thead>
         <tbody>
             @foreach (var loan in accountLoans)
+            {
+                <tr>
+                    <td>@loan.MediaID</td>
+                    <td>@loan.AccountID</td>
+                    <td>@loan.BranchID</td>
+                    <td>@loan.LoanedDate</td>
+                    <td>@loan.DueDate</td>
+                    <td>@loan.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<h3>Active Loans</h3>
+
+@if (activeLoans == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!activeLoans.Any())
+{
+    <p>No active loans.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Media ID</th>
+                <th>Account ID</th>
+                <th>Branch ID</th>
+                <th>Loaned Date</th>
+                <th>Due Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var loan in activeLoans)
             {
                 <tr>
                     <td>@loan.MediaID</td>
@@ -125,6 +196,30 @@ else
     private IEnumerable<MediaLoan> overdueLoans;
     private int accountId = 1; // HARDCODED CHANGE
     private List<MediaLoan> loans;
+    private int branchId;
+    private DateTime startDate;
+    private DateTime endDate;
+    private BranchReport branchReport;
+    private bool loading = false;
+    private string errorMessage;
+
+    private async Task GenerateReport()
+    {
+        loading = true;
+        errorMessage = null;
+        try
+        {
+            branchReport = await MediaLoanService.GetBranchReportAsync(branchId, startDate, endDate);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Failed to load report: {ex.Message}";
+        }
+        finally
+        {
+            loading = false;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {

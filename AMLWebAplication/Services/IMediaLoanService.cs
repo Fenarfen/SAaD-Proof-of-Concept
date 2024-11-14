@@ -8,5 +8,6 @@ namespace AMLWebAplication.Services
         Task<List<MediaLoan>> GetLoansByAccountAsync(int accountId);
         Task<List<MediaLoan>> GetOverdueLoansAsync();   
         Task<List<MediaLoan>> GetActiveLoansAsync();
+        Task<BranchReport> GetBranchReportAsync(int branchId, DateTime startDate, DateTime endDate);
     }
 }
