@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "PfO6mvrHRVBb/VlmBrVpEq5Enl/85YwnxlwVWs94zxU=",
+  "Hash": "lW0d2KojoWFGBnA109m/BJhmqqJNh43I10jK9kSoGIU=",
   "Source": "AMLWebAplication",
   "BasePath": "_content/AMLWebAplication",
   "Mode": "Default",
@@ -10,57 +10,19 @@
     {
       "Name": "AMLWebAplication\\wwwroot",
       "Source": "AMLWebAplication",
-      "ContentRoot": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
       "BasePath": "_content/AMLWebAplication",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "C:\\Users\\sam\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.10\\staticwebassets\\Microsoft.AspNetCore.Components.QuickGrid.bundle.scp.css",
-      "SourceId": "Microsoft.AspNetCore.Components.QuickGrid",
-      "SourceType": "Package",
-      "ContentRoot": "C:\\Users\\sam\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.10\\staticwebassets\\",
-      "BasePath": "_content/Microsoft.AspNetCore.Components.QuickGrid",
-      "RelativePath": "Microsoft.AspNetCore.Components.QuickGrid.bundle.scp.css",
-      "AssetKind": "All",
-      "AssetMode": "Reference",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "ScopedCss",
-      "AssetTraitValue": "ProjectBundle",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\sam\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.10\\staticwebassets\\Microsoft.AspNetCore.Components.QuickGrid.bundle.scp.css"
-    },
-    {
-      "Identity": "C:\\Users\\sam\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.10\\staticwebassets\\QuickGrid.razor.js",
-      "SourceId": "Microsoft.AspNetCore.Components.QuickGrid",
-      "SourceType": "Package",
-      "ContentRoot": "C:\\Users\\sam\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.10\\staticwebassets\\",
-      "BasePath": "_content/Microsoft.AspNetCore.Components.QuickGrid",
-      "RelativePath": "QuickGrid.razor.js",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\sam\\.nuget\\packages\\microsoft.aspnetcore.components.quickgrid\\8.0.10\\staticwebassets\\QuickGrid.razor.js"
-    },
-    {
-      "Identity": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AMLWebAplication.styles.css",
+      "Identity": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AMLWebAplication.styles.css",
       "SourceId": "AMLWebAplication",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
+      "ContentRoot": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\bundle\\",
       "BasePath": "_content/AMLWebAplication",
-      "RelativePath": "AMLWebAplication.styles.css",
+      "RelativePath": "AMLWebAplication#[.{fingerprint}]?.styles.css",
       "AssetKind": "All",
       "AssetMode": "CurrentProject",
       "AssetRole": "Primary",
@@ -69,17 +31,19 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ApplicationBundle",
+      "Fingerprint": "21sh8sqxuk",
+      "Integrity": "2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AMLWebAplication.styles.css"
+      "OriginalItemSpec": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AMLWebAplication.styles.css"
     },
     {
-      "Identity": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AMLWebAplication.bundle.scp.css",
+      "Identity": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AMLWebAplication.bundle.scp.css",
       "SourceId": "AMLWebAplication",
       "SourceType": "Computed",
-      "ContentRoot": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
+      "ContentRoot": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\",
       "BasePath": "_content/AMLWebAplication",
-      "RelativePath": "AMLWebAplication.bundle.scp.css",
+      "RelativePath": "AMLWebAplication#[.{fingerprint}]!.bundle.scp.css",
       "AssetKind": "All",
       "AssetMode": "Reference",
       "AssetRole": "Primary",
@@ -88,85 +52,589 @@
       "RelatedAsset": "",
       "AssetTraitName": "ScopedCss",
       "AssetTraitValue": "ProjectBundle",
+      "Fingerprint": "21sh8sqxuk",
+      "Integrity": "2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AMLWebAplication.bundle.scp.css"
+      "OriginalItemSpec": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AMLWebAplication.bundle.scp.css"
     },
     {
-      "Identity": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\app.css",
+      "Identity": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\app.css",
       "SourceId": "AMLWebAplication",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
       "BasePath": "_content/AMLWebAplication",
-      "RelativePath": "app.css",
+      "RelativePath": "app#[.{fingerprint}]?.css",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeBehavior": "",
       "AssetMergeSource": "",
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
+      "Fingerprint": "da95v2qkru",
+      "Integrity": "u9qEka1auR7E3rd3/8/j8hkQdSOYj9bRJ4nYiFDR1sE=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\app.css"
     },
     {
-      "Identity": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Identity": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\bootstrap\\bootstrap.min.css",
       "SourceId": "AMLWebAplication",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
       "BasePath": "_content/AMLWebAplication",
-      "RelativePath": "bootstrap/bootstrap.min.css",
+      "RelativePath": "bootstrap/bootstrap.min#[.{fingerprint}]?.css",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeBehavior": "",
       "AssetMergeSource": "",
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
+      "Fingerprint": "6gzpyzhau4",
+      "Integrity": "SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css"
     },
     {
-      "Identity": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Identity": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\bootstrap\\bootstrap.min.css.map",
       "SourceId": "AMLWebAplication",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
       "BasePath": "_content/AMLWebAplication",
-      "RelativePath": "bootstrap/bootstrap.min.css.map",
+      "RelativePath": "bootstrap/bootstrap.min.css#[.{fingerprint}]?.map",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeBehavior": "",
       "AssetMergeSource": "",
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
+      "Fingerprint": "8inm30yfxf",
+      "Integrity": "gBwg2tmA0Ci2u54gMF1jNCVku6vznarkLS6D76htNNQ=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\bootstrap\\bootstrap.min.css.map"
     },
     {
-      "Identity": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\favicon.png",
+      "Identity": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\favicon.png",
       "SourceId": "AMLWebAplication",
       "SourceType": "Discovered",
-      "ContentRoot": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
+      "ContentRoot": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\",
       "BasePath": "_content/AMLWebAplication",
-      "RelativePath": "favicon.png",
+      "RelativePath": "favicon#[.{fingerprint}]?.png",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeBehavior": "",
       "AssetMergeSource": "",
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
+      "Fingerprint": "ifv42okdf2",
+      "Integrity": "4mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.png"
+    }
+  ],
+  "Endpoints": [
+    {
+      "Route": "AMLWebAplication.21sh8sqxuk.bundle.scp.css",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AMLWebAplication.bundle.scp.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5915"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "21sh8sqxuk"
+        },
+        {
+          "Name": "label",
+          "Value": "AMLWebAplication.bundle.scp.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs="
+        }
+      ]
+    },
+    {
+      "Route": "AMLWebAplication.21sh8sqxuk.styles.css",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AMLWebAplication.styles.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5915"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "21sh8sqxuk"
+        },
+        {
+          "Name": "label",
+          "Value": "AMLWebAplication.styles.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs="
+        }
+      ]
+    },
+    {
+      "Route": "AMLWebAplication.bundle.scp.css",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\projectbundle\\AMLWebAplication.bundle.scp.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5915"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs="
+        }
+      ]
+    },
+    {
+      "Route": "AMLWebAplication.styles.css",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\Debug\\net8.0\\scopedcss\\bundle\\AMLWebAplication.styles.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "5915"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-2n/ARvKaasbhGUUgYYoGsUwEsCmsxQ+zHrg8GUltrSs="
+        }
+      ]
+    },
+    {
+      "Route": "app.css",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\app.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2591"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"u9qEka1auR7E3rd3/8/j8hkQdSOYj9bRJ4nYiFDR1sE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-u9qEka1auR7E3rd3/8/j8hkQdSOYj9bRJ4nYiFDR1sE="
+        }
+      ]
+    },
+    {
+      "Route": "app.da95v2qkru.css",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\app.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2591"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"u9qEka1auR7E3rd3/8/j8hkQdSOYj9bRJ4nYiFDR1sE=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "da95v2qkru"
+        },
+        {
+          "Name": "label",
+          "Value": "app.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-u9qEka1auR7E3rd3/8/j8hkQdSOYj9bRJ4nYiFDR1sE="
+        }
+      ]
+    },
+    {
+      "Route": "bootstrap/bootstrap.min.6gzpyzhau4.css",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "162726"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "6gzpyzhau4"
+        },
+        {
+          "Name": "label",
+          "Value": "bootstrap/bootstrap.min.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0="
+        }
+      ]
+    },
+    {
+      "Route": "bootstrap/bootstrap.min.css",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\bootstrap\\bootstrap.min.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "162726"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-SiIVMGgRhdXjKSTIddX7mh9IbOXVcwQWc7/p4nS6D/0="
+        }
+      ]
+    },
+    {
+      "Route": "bootstrap/bootstrap.min.css.8inm30yfxf.map",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "449111"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/plain"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"gBwg2tmA0Ci2u54gMF1jNCVku6vznarkLS6D76htNNQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "8inm30yfxf"
+        },
+        {
+          "Name": "label",
+          "Value": "bootstrap/bootstrap.min.css.map"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-gBwg2tmA0Ci2u54gMF1jNCVku6vznarkLS6D76htNNQ="
+        }
+      ]
+    },
+    {
+      "Route": "bootstrap/bootstrap.min.css.map",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\bootstrap\\bootstrap.min.css.map",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "449111"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/plain"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"gBwg2tmA0Ci2u54gMF1jNCVku6vznarkLS6D76htNNQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-gBwg2tmA0Ci2u54gMF1jNCVku6vznarkLS6D76htNNQ="
+        }
+      ]
+    },
+    {
+      "Route": "favicon.ifv42okdf2.png",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\favicon.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1148"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"4mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "ifv42okdf2"
+        },
+        {
+          "Name": "label",
+          "Value": "favicon.png"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-4mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg="
+        }
+      ]
+    },
+    {
+      "Route": "favicon.png",
+      "AssetFile": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\wwwroot\\favicon.png",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "1148"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/png"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"4mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 11 Nov 2024 03:37:47 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-4mWsDy3aHl36ZbGt8zByK7Pvd4kRUoNgTYzRnwmPHwg="
+        }
+      ]
     }
   ]
 }

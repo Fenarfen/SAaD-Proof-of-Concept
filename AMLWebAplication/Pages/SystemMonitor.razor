@@ -1,0 +1,93 @@
+@page "/monitorsystem"
+@using AMLWebAplication.Services
+@inject NetworkMonitorService NetworkService
+@inject SystemMonitorService SystemMonitorService
+@implements IDisposable
+
+<h3>System Monitoring</h3>
+
+<div>
+    <p><strong>CPU Usage:</strong> @cpuUsage.ToString("F1")%</p>
+    <p><strong>Memory Usage:</strong> @memoryUsage.ToString("F1") MB</p>
+    <p><strong>Disk Usage:</strong> @diskUsage.ToString("F1")%</p>
+    <p><strong>Bytes Sent:</strong> @(NetworkService.BytesSent / 1024 / 1024) MB</p>
+    <p><strong>Bytes Received:</strong> @(NetworkService.BytesReceived / 1024 / 1024) MB</p>
+</div>
+
+<div>
+    <h4>Alerts</h4>
+    @if (!alerts.Any())
+    {
+        <p>No alerts at this time. Alerts will appear here when:</p>
+        <ul style="margin-left: 20px; list-style-type: disc;">
+            <li>CPU usage exceeds 85%</li>
+            <li>Memory usage exceeds 500 MB</li>
+            <li>Disk usage exceeds 95%</li>
+            <li>Network traffic spikes above 1 GB</li>
+        </ul>
+    }
+    @foreach (var alert in alerts)
+    {
+        <div class="alert">@alert</div>
+    }
+</div>
+
+@code {
+    private float cpuUsage;
+    private float memoryUsage;
+    private float diskUsage;
+    private List<string> alerts = new List<string>();
+    private Timer timer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        NetworkService.CriticalAlert += AddAlert;
+        SystemMonitorService.CriticalAlert += AddAlert;
+        
+        await UpdateData();
+
+        AddAlert("High CPU usage detected: 87.5%");
+        AddAlert("Network traffic spike: 1.02GB");
+        
+        timer = new Timer(async _ => 
+        {
+            await UpdateData();
+            await InvokeAsync(StateHasChanged);
+        }, null, 0, 5000);
+    }
+
+    private async Task UpdateData()
+    {
+        try
+        {
+            NetworkService.UpdateNetworkTraffic();
+            var systemData = await SystemMonitorService.GetSystemDataAsync();
+            
+            cpuUsage = systemData.CpuUsage;
+            memoryUsage = systemData.MemoryUsage;
+            diskUsage = systemData.DiskUsage;
+        }
+        catch (Exception ex)
+        {
+            AddAlert($"Error updating monitoring data: {ex.Message}");
+        }
+    }
+
+    private void AddAlert(string message)
+    {
+        alerts.Add($"{DateTime.Now:HH:mm:ss} - {message}");
+        InvokeAsync(StateHasChanged);
+        
+        if (alerts.Count > 20)
+        {
+            alerts.RemoveAt(0);
+        }
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+        if (NetworkService != null) NetworkService.CriticalAlert -= AddAlert;
+        if (SystemMonitorService != null) SystemMonitorService.CriticalAlert -= AddAlert;
+    }
+}

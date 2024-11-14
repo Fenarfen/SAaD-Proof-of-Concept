@@ -1,0 +1,54 @@
+@page "/monitor"
+@using AMLWebAplication.Data
+@using AMLWebAplication.Services
+@inject IMonitorService MonitorService
+
+<h2>Title</h2>
+
+@if (accounts == null)
+{
+    <p>,,,</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>AddressID</th>
+                <th>RoleID</th>
+                <th>Username</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Email</th>
+                <th>Created</th>
+                <th>Verified</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var account in accounts)
+            {
+                <tr>
+                    <td>@account.ID</td>
+                    <td>@account.AddressID</td>
+                    <td>@account.RoleID</td>
+                    <td>@account.Username</td>
+                    <td>@account.FirstName</td>
+                    <td>@account.LastName</td>
+                    <td>@account.Email</td>
+                    <td>@account.Created.ToString("yyyy-MM-dd")</td>
+                    <td>@(account.Verified ? "Yes" : "No")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Account> accounts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        accounts = await MonitorService.GetAccountsAsync();
+    }
+}

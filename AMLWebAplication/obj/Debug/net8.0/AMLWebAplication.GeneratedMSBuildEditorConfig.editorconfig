@@ -9,43 +9,53 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = AMLWebAplication
 build_property.RootNamespace = AMLWebAplication
-build_property.ProjectDir = C:\Users\sam\Source\Repos\SAaD-Proof-of-Concept\AMLWebAplication\
+build_property.ProjectDir = C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\sam\Source\Repos\SAaD-Proof-of-Concept\AMLWebAplication
+build_property.MSBuildProjectDirectory = C:\Users\lewis\Documents\final year\saad\repo\SAaD-Proof-of-Concept\AMLWebAplication
 build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/sam/Source/Repos/SAaD-Proof-of-Concept/AMLWebAplication/Components/App.razor]
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Components/App.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/sam/Source/Repos/SAaD-Proof-of-Concept/AMLWebAplication/Components/Pages/Error.razor]
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xFcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/sam/Source/Repos/SAaD-Proof-of-Concept/AMLWebAplication/Components/Pages/Home.razor]
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/sam/Source/Repos/SAaD-Proof-of-Concept/AMLWebAplication/Components/Pages/Media/Search.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xNZWRpYVxTZWFyY2gucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/sam/Source/Repos/SAaD-Proof-of-Concept/AMLWebAplication/Components/Routes.razor]
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Components/Routes.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/sam/Source/Repos/SAaD-Proof-of-Concept/AMLWebAplication/Components/_Imports.razor]
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Components/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xfSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/sam/Source/Repos/SAaD-Proof-of-Concept/AMLWebAplication/Components/Layout/MainLayout.razor]
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Pages/MonitorSystem.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTW9uaXRvclN5c3RlbS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Pages/Reports.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVwb3J0cy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Pages/SystemMonitor.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3lzdGVtTW9uaXRvci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Components/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-e3x034n4ym
 
-[C:/Users/sam/Source/Repos/SAaD-Proof-of-Concept/AMLWebAplication/Components/Layout/NavMenu.razor]
+[C:/Users/lewis/Documents/final year/saad/repo/SAaD-Proof-of-Concept/AMLWebAplication/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xMYXlvdXRcTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-0l0k7rwzec

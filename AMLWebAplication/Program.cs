@@ -1,4 +1,6 @@
 using AMLWebAplication.Components;
+using AMLWebAplication.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AMLWebAplication
 {
@@ -9,8 +11,14 @@ namespace AMLWebAplication
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddScoped<IMonitorService, MonitorService>();
+            builder.Services.AddScoped<IMediaLoanService, MediaLoanService>();
+            builder.Services.AddRazorPages();
+            builder.Services.AddServerSideBlazor();
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            builder.Services.AddSingleton<NetworkMonitorService>();
+            builder.Services.AddSingleton<SystemMonitorService>();
 
             builder.Services.AddHttpClient();
 

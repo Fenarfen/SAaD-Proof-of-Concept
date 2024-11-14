@@ -1,28 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj": {}
+    "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj": {
+    "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj",
+        "projectUniqueName": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj",
         "projectName": "AMLWebAplication",
-        "projectPath": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj",
-        "packagesPath": "C:\\Users\\sam\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\",
+        "projectPath": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj",
+        "packagesPath": "C:\\Users\\lewis\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lewis\\Documents\\final year\\saad\\repo\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\sam\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\lewis\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -39,16 +36,33 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
-        }
+          "auditMode": "all"
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.AspNetCore.Components.QuickGrid": {
+            "Dapper": {
               "target": "Package",
-              "version": "[8.0.10, )"
+              "version": "[2.1.35, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[7.4.2, )"
+            },
+            "Microsoft.Data.SqlClient": {
+              "target": "Package",
+              "version": "[5.2.2, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "System.Diagnostics.PerformanceCounter": {
+              "target": "Package",
+              "version": "[8.0.1, )"
             }
           },
           "imports": [
@@ -62,6 +76,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.10, 8.0.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.10, 8.0.10]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.10, 8.0.10]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.10, 8.0.10]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -70,7 +102,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100-rc.2.24474.11/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
