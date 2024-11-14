@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sam\\source\\repos\\AMLWebAplication\\AMLWebAplication.csproj": {}
+    "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sam\\source\\repos\\AMLWebAplication\\AMLWebAplication.csproj": {
+    "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sam\\source\\repos\\AMLWebAplication\\AMLWebAplication.csproj",
+        "projectUniqueName": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj",
         "projectName": "AMLWebAplication",
-        "projectPath": "C:\\Users\\sam\\source\\repos\\AMLWebAplication\\AMLWebAplication.csproj",
+        "projectPath": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\AMLWebAplication.csproj",
         "packagesPath": "C:\\Users\\sam\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sam\\source\\repos\\AMLWebAplication\\obj\\",
+        "outputPath": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\sam\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -45,6 +45,12 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Components.QuickGrid": {
+              "target": "Package",
+              "version": "[8.0.10, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

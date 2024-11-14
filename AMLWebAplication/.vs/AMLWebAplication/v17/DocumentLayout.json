@@ -1,0 +1,127 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|c:\\users\\sam\\source\\repos\\saad-proof-of-concept\\amlwebaplication\\components\\pages\\media\\search.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|solutionrelative:components\\pages\\media\\search.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|c:\\users\\sam\\source\\repos\\saad-proof-of-concept\\amlwebaplication\\models\\media.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|solutionrelative:models\\media.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|c:\\users\\sam\\source\\repos\\saad-proof-of-concept\\amlwebaplication\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|c:\\users\\sam\\source\\repos\\saad-proof-of-concept\\amlwebaplication\\components\\pages\\error.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|solutionrelative:components\\pages\\error.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|c:\\users\\sam\\source\\repos\\saad-proof-of-concept\\amlwebaplication\\components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|solutionrelative:components\\layout\\navmenu.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|c:\\users\\sam\\source\\repos\\saad-proof-of-concept\\amlwebaplication\\models\\branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A6591B1-CF6B-4FB6-B961-A574F40AF1A4}|AMLWebAplication.csproj|solutionrelative:models\\branch.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 184,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Search.razor",
+              "DocumentMoniker": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Components\\Pages\\Media\\Search.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Media\\Search.razor",
+              "ToolTip": "C:\\Users\\sam\\Source\\Repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Components\\Pages\\Media\\Search.razor",
+              "RelativeToolTip": "Components\\Pages\\Media\\Search.razor",
+              "ViewState": "AQIAABMAAAAAAAAAAAAAACAAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-09T11:49:00.256Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Media.cs",
+              "DocumentMoniker": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Models\\Media.cs",
+              "RelativeDocumentMoniker": "Models\\Media.cs",
+              "ToolTip": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Models\\Media.cs",
+              "RelativeToolTip": "Models\\Media.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwAIAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T11:56:58.347Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Branch.cs",
+              "DocumentMoniker": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Models\\Branch.cs",
+              "RelativeDocumentMoniker": "Models\\Branch.cs",
+              "ToolTip": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Models\\Branch.cs",
+              "RelativeToolTip": "Models\\Branch.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T11:56:50.307Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NavMenu.razor",
+              "DocumentMoniker": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Components\\Layout\\NavMenu.razor",
+              "RelativeDocumentMoniker": "Components\\Layout\\NavMenu.razor",
+              "ToolTip": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Components\\Layout\\NavMenu.razor",
+              "RelativeToolTip": "Components\\Layout\\NavMenu.razor",
+              "ViewState": "AQIAAAIAAAAAAAAAAAAowBEAAAAyAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-09T11:50:23.244Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Error.razor",
+              "DocumentMoniker": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Components\\Pages\\Error.razor",
+              "RelativeDocumentMoniker": "Components\\Pages\\Error.razor",
+              "ToolTip": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Components\\Pages\\Error.razor",
+              "RelativeToolTip": "Components\\Pages\\Error.razor",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-11-09T11:49:29.11Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\sam\\source\\repos\\SAaD-Proof-of-Concept\\AMLWebAplication\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAQwB0AAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-09T11:44:36.618Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
