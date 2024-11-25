@@ -4,7 +4,7 @@ static public class Queries
 {
     public const string GetAllMedia = @"
         SELECT 
-           	m.ID, m.Title, m.Released, m.Genre, m.Author, m.[Type], 
+           	m.ID, m.Title, m.Released, m.Author, m.[Type], 
            	m.BranchID AS ID, b.[Name], b.Opened, b.AddressFirstLine, b.AddressSecondLine, b.City, b.PostCode
         FROM AML.dbo.Media m
         INNER JOIN Branch b ON m.BranchID = b.ID
@@ -17,7 +17,7 @@ static public class Queries
 
     public const string GetMediaByCity = @"
         SELECT 
-           	m.ID, m.Title, m.Released, m.Genre, m.Author, m.[Type], 
+           	m.ID, m.Title, m.Released, m.Author, m.[Type], 
            	m.BranchID AS ID, b.[Name], b.Opened, b.AddressFirstLine, b.AddressSecondLine, b.City, b.PostCode
         FROM AML.dbo.Media m
         INNER JOIN Branch b ON m.BranchID = b.ID
@@ -32,7 +32,7 @@ static public class Queries
     public const string GetTransferByAccountID = @"
         SELECT 
            	mt.ID, mt.AccountID, mt.Approved, mt.Completed, mt.Created,
-           	mt.MediaID AS ID, m.Title, m.Author, m.Genre, m.Released, m.[Type], 
+           	mt.MediaID AS ID, m.Title, m.Author, m.Released, m.[Type], 
             m.BranchID AS ID, mb.[Name], mb.Opened, mb.AddressFirstLine, mb.AddressSecondLine, mb.City, mb.PostCode,
            	mt.OriginBranchID AS ID, ob.[Name], ob.Opened, ob.AddressFirstLine, ob.AddressSecondLine, ob.City, ob.PostCode,
            	mt.DestinationBranchID AS ID, db.[Name], db.Opened, db.AddressFirstLine, db.AddressSecondLine, db.City, db.PostCode
