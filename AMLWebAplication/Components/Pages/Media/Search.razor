@@ -58,7 +58,7 @@ else
                 </ColumnOptions>
             </PropertyColumn>
             <PropertyColumn Property="@(m => m.Released.ToShortDateString())" Title="Release Date" />
-            <PropertyColumn Property="@(m => m.Branch.Name)" Sortable="true" />
+            <PropertyColumn Property="@(m => m.Branch.Name)" Title="Branch Name" Sortable="true" />
             <PropertyColumn Property="@(m => m.Branch.City)" Sortable="true" />
             <PropertyColumn Property="@(m => m.Type)" />
         </QuickGrid>
