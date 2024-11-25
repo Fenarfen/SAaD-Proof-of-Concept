@@ -4,7 +4,7 @@ static public class Queries
 {
     public const string GetAllMedia = @"
         SELECT 
-           	m.ID, m.Title, m.Released, m.Author, m.[Type], 
+           	m.ID, m.Title, m.Released, m.Genre, m.Author, m.[Type], 
            	m.BranchID AS ID, b.[Name], b.Opened, b.AddressFirstLine, b.AddressSecondLine, b.City, b.PostCode
         FROM AML.dbo.Media m
         INNER JOIN Branch b ON m.BranchID = b.ID

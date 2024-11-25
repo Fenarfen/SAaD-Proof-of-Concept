@@ -21,14 +21,39 @@ else
             <PropertyColumn Property="@(m => m.Title)" Sortable="true">
                 <ColumnOptions>
                     <div class="search-box">
-                        <input type="search" autofocus @bind="titleFilter" @bind:event="oninput" />
+                        <input type="search" list="titleList" autofocus @bind="titleFilter" @bind:event="oninput" />
+                        <datalist id="titleList">
+                            @foreach (var title in media.Select(m => m.Title).Distinct())
+                            {
+                                <option value="@title" />
+                            }
+                        </datalist>
                     </div>
                 </ColumnOptions>
             </PropertyColumn>
             <PropertyColumn Property="@(m => m.Author)" Sortable="true" >
                 <ColumnOptions>
                     <div class="search-box">
-                        <input type="search" autofocus @bind="authorFilter" @bind:event="oninput" />
+                        <input type="search" list="authorList" autofocus @bind="authorFilter" @bind:event="oninput" />
+                        <datalist id="authorList">
+                            @foreach (var author in media.Select(m => m.Author).Distinct())
+                            {
+                                <option value="@author" />
+                            }
+                        </datalist>
+                    </div>
+                </ColumnOptions>
+            </PropertyColumn>
+            <PropertyColumn Property="@(m => m.Genre)" Sortable="true" >
+                <ColumnOptions>
+                    <div class="search-box">
+                        <input type="search" list="genreList" autofocus @bind="genreFilter" @bind:event="oninput" />
+                        <datalist id="genreList">
+                            @foreach (var genre in media.Select(m => m.Genre).Distinct())
+                            {
+                                <option value="@genre" />
+                            }
+                        </datalist>
                     </div>
                 </ColumnOptions>
             </PropertyColumn>
@@ -51,6 +76,7 @@ else
 
     private string titleFilter = string.Empty;
     private string authorFilter = string.Empty;
+    private string genreFilter = string.Empty;
 
     private IQueryable<Media>? filteredMedia
     {
@@ -64,6 +90,9 @@ else
             if (!string.IsNullOrEmpty(authorFilter))
                 result = result?.Where(m => m.Author.Contains(authorFilter));
 
+            if (!string.IsNullOrEmpty(genreFilter))
+                result = result?.Where(m => m.Genre.Contains(genreFilter));
+
             return result;
         }
     }
@@ -73,7 +102,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32772/api/Media");
+            "http://localhost:32768/api/Media");
         request.Headers.Add("Accept", "application/json");
         request.Headers.Add("User-Agent", "HttpClientFactory-Media");
 
