@@ -33,7 +33,7 @@ public class InventoryController(
     }
 
     [HttpGet]
-    public IActionResult GetInventory()
+    public async Task<IActionResult> GetInventory()
     {
         Account? account = Authenticate(Request);
 
@@ -42,7 +42,7 @@ public class InventoryController(
 
         try
         {
-            return Ok(_mediaRepository.GetMediaByCity("Sheffield"));
+            return Ok(await _mediaRepository.GetMediaByCity(Request.Path, "Sheffield"));
         }
         catch (Exception ex)
         {
@@ -52,7 +52,7 @@ public class InventoryController(
 
     [HttpGet]
     [Route("Transfer")]
-    public IActionResult GetTransfers()
+    public async Task<IActionResult> GetTransfers()
     {
         Account? account = Authenticate(Request);
 
@@ -61,7 +61,7 @@ public class InventoryController(
 
         try
         {
-            return Ok(_mediaRepository.GetTransfers(account.ID));
+            return Ok(await _mediaRepository.GetTransfers(Request.Path, account.ID));
         }
         catch (Exception ex)
         {
@@ -85,7 +85,7 @@ public class InventoryController(
         {
             foreach(var transfer in transfers)
             {
-                int createdID = _mediaRepository.CreateTransfer(transfer);
+                int createdID = _mediaRepository.CreateTransfer(Request.Path, transfer);
                 
                 if (createdID == 0)
                     return StatusCode(500, "Transfer could not be created");

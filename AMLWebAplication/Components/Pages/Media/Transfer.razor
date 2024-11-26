@@ -170,13 +170,13 @@ else
     private async Task RefreshInventory()
     {
         var branchRequest = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32768/api/Branch");
+            "http://localhost:32772/api/Branch");
         branchRequest.Headers.Add("Accept", "application/json");
         branchRequest.Headers.Add("Authorization", "Bearer APIKey");
         branchRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
 
         var inventoryRequest = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32768/api/Inventory");
+            "http://localhost:32772/api/Inventory");
         inventoryRequest.Headers.Add("Accept", "application/json");
         inventoryRequest.Headers.Add("Authorization", "Bearer APIKey");
         inventoryRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
@@ -248,7 +248,7 @@ else
         var transferRequest = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri("http://localhost:32768/api/Inventory/Transfer"),
+                RequestUri = new Uri("http://localhost:32772/api/Inventory/Transfer"),
             Content = content
         };
         transferRequest.Headers.Add("Accept", "application/json");
