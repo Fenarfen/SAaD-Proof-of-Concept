@@ -3,13 +3,20 @@ using InventoryAPI.Models;
 
 namespace InventoryAPI.Repositories;
 
-public class MediaRepository(IDatabaseService databaseService)
+public class MediaRepository(IDatabaseService databaseService, ICacheService cacheService)
 {
     private readonly IDatabaseService _dbService = databaseService;
+    private readonly ICacheService _cacheService = cacheService;
 
-    public List<Media> GetAllMedia()
+    public async Task<List<Media>> GetAllMedia(string key)
     {
-        return _dbService.GetAllMedia();
+        var result = await _cacheService.Get<List<Media>>(key);
+        if (result == null)
+        {
+            result = _dbService.GetAllMedia();
+            _cacheService.Set(key, result);
+        }
+        return result;
     }
 
     public List<Media> GetMediaByCity(string city)
