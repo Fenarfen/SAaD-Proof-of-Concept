@@ -1,6 +1,7 @@
 using InventoryAPI.Interfaces;
 using InventoryAPI.Repositories;
 using InventoryAPI.Services;
+using StackExchange.Redis;
 
 namespace InventoryAPI;
 
@@ -20,6 +21,17 @@ public class Program
         DatabaseService service = new(connString);
 
         builder.Services.AddSingleton<IDatabaseService>(service);
+
+        connString = builder.Configuration.GetConnectionString("RedisConnection") ?? "";
+        ConfigurationOptions configOptions = new()
+        {
+            EndPoints = { connString },
+            AbortOnConnectFail = true,
+        };
+        RedisCacheService redisCacheService = new(configOptions);
+
+        builder.Services.AddSingleton<ICacheService>(redisCacheService);
+
         builder.Services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

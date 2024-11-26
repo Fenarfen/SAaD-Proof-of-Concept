@@ -3,27 +3,58 @@ using InventoryAPI.Models;
 
 namespace InventoryAPI.Repositories;
 
-public class MediaRepository(IDatabaseService databaseService)
+public class MediaRepository(IDatabaseService databaseService, ICacheService cacheService)
 {
     private readonly IDatabaseService _dbService = databaseService;
+    private readonly ICacheService _cacheService = cacheService;
 
-    public List<Media> GetAllMedia()
+    public async Task<List<Media>> GetAllMedia(string key)
     {
-        return _dbService.GetAllMedia();
+        var result = await _cacheService.Get<List<Media>>(key);
+        if (result == null)
+        {
+            result = _dbService.GetAllMedia();
+            _cacheService.Set(key, result);
+        }
+        return result;
     }
 
-    public List<Media> GetMediaByCity(string city)
+    public async Task<List<Media>> GetMediaByCity(string key, string city)
     {
-        return _dbService.GetMediaByCity(city);
+        key += "/" + city;
+        var result = await _cacheService.Get<List<Media>>(key);
+        if (result == null)
+        {
+            result = _dbService.GetMediaByCity(city);
+            _cacheService.Set(key, result);
+        }
+        return result;
     }
 
-    public List<MediaTransfer> GetTransfers(int userID)
+    public async Task<List<MediaTransfer>> GetTransfers(string key, int userID)
     {
-        return _dbService.GetTransfers(userID);
+        key += "/" + userID;
+        var result = await _cacheService.Get<List<MediaTransfer>>(key);
+        if (result == null)
+        {
+            result = _dbService.GetTransfers(userID);
+            _cacheService.Set(key, result);
+        }
+        return result;
     }
 
-    public int CreateTransfer(MediaTransfer mediaTransfer)
+    public int CreateTransfer(string key, MediaTransfer mediaTransfer)
     {
-        return _dbService.CreateMediaTransfer(mediaTransfer);
+        string baseKey = key.Replace("/Transfer", "");
+
+        var result = _dbService.CreateMediaTransfer(mediaTransfer);
+        
+        // Drop related cache keys
+        _cacheService.Drop("/api/Media");
+        _cacheService.Drop(baseKey);
+        _cacheService.Drop(baseKey + "/" + mediaTransfer.OriginBranch.City);
+        _cacheService.Drop(key + "/" + mediaTransfer.AccountID);
+        
+        return result;
     }
 }
