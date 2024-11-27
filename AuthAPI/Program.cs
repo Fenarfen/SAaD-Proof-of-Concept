@@ -1,5 +1,6 @@
 using AuthAPI.Interfaces;
 using AuthAPI.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,21 @@ builder.Services.AddScoped<IDatabaseService>(provider =>
 {
 	string connString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
 	return new DatabaseService(connString);
+});
+
+builder.Services.AddScoped<IEmailService>(provider =>
+{
+	var configuration = provider.GetRequiredService<IConfiguration>();
+	var env = provider.GetRequiredService<IWebHostEnvironment>();
+
+	var smtpConfig = configuration.GetSection("SmtpServer");
+
+	string smtpUrl = smtpConfig.GetValue<string>("SmtpUrl");
+	int smtpPort = smtpConfig.GetValue<int>("SmtpPort");
+	string smtpEmail = smtpConfig.GetValue<string>("Email");
+	string smtpPassword = smtpConfig.GetValue<string>("Password");
+
+	return new EmailService(smtpUrl, smtpPort, smtpEmail, smtpPassword, env.ContentRootPath);
 });
 
 var app = builder.Build();

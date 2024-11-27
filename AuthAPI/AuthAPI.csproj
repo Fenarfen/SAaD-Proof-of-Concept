@@ -10,13 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\Dtos\**" />
-    <Content Remove="Models\Dtos\**" />
-    <EmbeddedResource Remove="Models\Dtos\**" />
-    <None Remove="Models\Dtos\**" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.8.0" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
