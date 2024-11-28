@@ -256,12 +256,13 @@ public class DatabaseService : IDatabaseService
 		{
 			connection.Open();
 
-			string query = @"select r.Name, ad.City from Token t
+			string query = @"select r.Name, ad.City 
+							 from Token t
 							 join Account a on t.UserID = a.ID
-							 join Role r on a.RoleID = r.ID
-							 join Address ad on a.ID = ad.UserID
+							 left join Role r ON a.RoleID = r.ID
+							 left join Address ad ON a.ID = ad.UserID
 							 where t.Value = @Token
-							 and ad.IsDefault = 1";
+							   and (ad.IsDefault = 1 or ad.IsDefault is null)";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
@@ -274,15 +275,10 @@ public class DatabaseService : IDatabaseService
 						return null;
 					}
 
-					if (reader.IsDBNull(0) || reader.IsDBNull(1))
-					{
-						return null;
-					}
-
 					return new CityRoleDTO
 					{
-						Role = reader.GetString(0),
-						City = reader.GetString(1)
+						Role = reader.IsDBNull(0) == true ? "not found" : reader.GetString(0),
+						City = reader.IsDBNull(1) == true ? "not found" : reader.GetString(1)
 					};
 				}
 			}
