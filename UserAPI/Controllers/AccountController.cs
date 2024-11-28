@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Identity.Client;
 using UserAPI.Models.Entities;
 using UserAPI.Models.Dtos;
+using System.Net.Http;
+using System.Text.Json;
 
 namespace UserAPI.Controllers
 {
@@ -17,14 +19,22 @@ namespace UserAPI.Controllers
 	public class AccountController : ControllerBase
 	{
 		private readonly IDatabaseService _databaseService;
+		private HttpClient httpClient;
 
 		public AccountController(IDatabaseService databaseService)
 		{
 			_databaseService = databaseService;
+
+			httpClient = new()
+			{
+				BaseAddress = new Uri("http://host.docker.internal:32776/api/")
+			};
+
+			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "testuserkey");
 		}
 
 		[HttpPost("create")]
-		public IActionResult CreateAccount([FromBody] AccountCreateDto account)
+		public async Task<IActionResult> CreateAccountAsync([FromBody] AccountCreateDto account)
 		{
 			if (account == null)
 			{
@@ -39,7 +49,7 @@ namespace UserAPI.Controllers
 				return UnprocessableEntity(new { message = "Account information is null or empty" });
 			}
 
-			//Validation to account object
+			// Validation of account object
 			if (!IsValidEmail(account.Email))
 			{
 				return UnprocessableEntity(new { message = "Invalid email format." });
@@ -72,13 +82,15 @@ namespace UserAPI.Controllers
 				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later." + ex.ToString() });
 			}
 
-			if (resultOfCreateUser != "success")
+			if (resultOfCreateUser == null)
 			{
 				return BadRequest(new { message = "Account creation failed." });
 			}
 
-			// Return a success response with the created account information
-			return Ok( new { message = "Account created successfully." });
+			HttpResponseMessage response = await httpClient.PostAsync($"auth/send-email-verification-code/{resultOfCreateUser}", null);
+			response.EnsureSuccessStatusCode();
+			
+			return Ok( new { message = "Account created successfully, awaiting verification." });
 		}
 
 		[HttpPost("update/{id}")]
