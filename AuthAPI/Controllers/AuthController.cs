@@ -157,7 +157,7 @@ namespace AuthAPI.Controllers
 
 				if (role.IsNullOrEmpty())
 				{
-					return UnprocessableEntity(new { message = "Role not found." });
+					return StatusCode(StatusCodes.Status403Forbidden, new { message = "Role not found." });
 				}
 
 				string token = GenerateToken();
