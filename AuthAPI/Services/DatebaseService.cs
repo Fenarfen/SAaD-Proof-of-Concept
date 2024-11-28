@@ -284,4 +284,29 @@ public class DatabaseService : IDatabaseService
 			}
 		}
 	}
+
+	public string GetAccountRoleName(Account account)
+	{
+		using (SqlConnection connection = new SqlConnection(_connectionString))
+		{
+			connection.Open();
+
+			string query = @"select Name from Role where ID = @ID";
+
+			using (SqlCommand command = new SqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@ID", account.RoleID);
+
+				using (SqlDataReader reader = command.ExecuteReader())
+				{
+					if (!reader.Read())
+					{
+						return null;
+					}
+
+					return reader.GetString(0);
+				}
+			}
+		}
+	}
 }

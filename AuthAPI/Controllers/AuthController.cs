@@ -128,10 +128,22 @@ namespace AuthAPI.Controllers
 					return BadRequest(new { message = "Incorrect log in details" });
 				}
 
-				string token = GenerateToken();
-				_databaseService.AssignToken(account.ID, token);
+				string role = _databaseService.GetAccountRoleName(account);
 
-				return Ok(new { token = token });
+				if (role.IsNullOrEmpty())
+				{
+					return UnprocessableEntity(new { message = "Role not found." });
+				}
+
+				string token = GenerateToken();
+				string dbResult = _databaseService.AssignToken(account.ID, token);
+
+				if(dbResult != "true")
+				{
+					return BadRequest(new { message = "Failed to assign token during login" });
+				}
+
+				return Ok(new { token = token, role });
 			}
 			catch (Exception ex)
 			{
