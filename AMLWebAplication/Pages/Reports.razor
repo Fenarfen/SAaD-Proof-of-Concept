@@ -2,6 +2,10 @@
 @using AMLWebAplication.Data
 @using AMLWebAplication.Services
 @inject IMediaLoanService MediaLoanService
+@rendermode InteractiveServer
+@inject IMediaLoanService Media
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using Microsoft.AspNetCore.Components.QuickGrid
 
 <h3>Branch Report</h3>
 
@@ -86,32 +90,17 @@ else if (!accountLoans.Any())
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Media ID</th>
-                <th>Account ID</th>
-                <th>Branch ID</th>
-                <th>Loaned Date</th>
-                <th>Due Date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var loan in accountLoans)
-            {
-                <tr>
-                    <td>@loan.MediaID</td>
-                    <td>@loan.AccountID</td>
-                    <td>@loan.BranchID</td>
-                    <td>@loan.LoanedDate</td>
-                    <td>@loan.DueDate</td>
-                    <td>@loan.Status</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <QuickGrid Items="@accountLoans.AsQueryable()" Pagination="@accountLoansPagination">
+        <PropertyColumn Property="@(l => l.MediaID)" Sortable="true" Title="Media ID" />
+        <PropertyColumn Property="@(l => l.AccountID)" Sortable="true" Title="Account ID" />
+        <PropertyColumn Property="@(l => l.BranchID)" Sortable="true" Title="Branch ID" />
+        <PropertyColumn Property="@(l => l.LoanedDate)" Sortable="true" Title="Loaned Date" />
+        <PropertyColumn Property="@(l => l.DueDate)" Sortable="true" Title="Due Date" />
+        <PropertyColumn Property="@(l => l.Status)" Sortable="true" Title="Status" />
+    </QuickGrid>
+    <Paginator State="@accountLoansPagination" />
 }
+
 
 <h3>Active Loans</h3>
 
@@ -125,32 +114,17 @@ else if (!activeLoans.Any())
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Media ID</th>
-                <th>Account ID</th>
-                <th>Branch ID</th>
-                <th>Loaned Date</th>
-                <th>Due Date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var loan in activeLoans)
-            {
-                <tr>
-                    <td>@loan.MediaID</td>
-                    <td>@loan.AccountID</td>
-                    <td>@loan.BranchID</td>
-                    <td>@loan.LoanedDate</td>
-                    <td>@loan.DueDate</td>
-                    <td>@loan.Status</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <QuickGrid Items="@activeLoans" Pagination="@pagination">
+        <PropertyColumn Property="@(l => l.MediaID)" Sortable="true" Title="Media ID" />
+        <PropertyColumn Property="@(l => l.AccountID)" Sortable="true" Title="Account ID" />
+        <PropertyColumn Property="@(l => l.BranchID)" Sortable="true" Title="Branch ID" />
+        <PropertyColumn Property="@(l => l.LoanedDate)" Sortable="true" Title="Loaned Date" />
+        <PropertyColumn Property="@(l => l.DueDate)" Sortable="true" Title="Due Date" />
+        <PropertyColumn Property="@(l => l.Status)" Sortable="true" Title="Status" />
+    </QuickGrid>
+    <Paginator State="@pagination" />
 }
+
 
 <h3>Overdue Loans</h3>
 
@@ -160,35 +134,27 @@ else
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Media ID</th>
-                <th>Account ID</th>
-                <th>Loaned Date</th>
-                <th>Due Date</th>
-                <th>Returned Date</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var loan in overdueLoans)
-            {
-                <tr>
-                    <td>@loan.MediaID</td>
-                    <td>@loan.AccountID</td>
-                    <td>@loan.LoanedDate.ToShortDateString()</td>
-                    <td>@loan.DueDate.ToShortDateString()</td>
-                    <td>@loan.ReturnedDate?.ToShortDateString() ?? "Not Returned"</td>
-                    <td>@(loan.Status ?? "Overdue")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    <QuickGrid Items="@overdueLoans.AsQueryable()" Pagination="@overdueLoansPagination">
+        <PropertyColumn Property="@(l => l.MediaID)" Sortable="true" Title="Media ID" />
+        <PropertyColumn Property="@(l => l.AccountID)" Sortable="true" Title="Account ID" />
+        <PropertyColumn Property="@(l => l.LoanedDate)" Sortable="true" Title="Loaned Date" />
+        <PropertyColumn Property="@(l => l.DueDate)" Sortable="true" Title="Due Date" />
+        <TemplateColumn Title="Returned Date">
+            <CellTemplate>
+                @(context.ReturnedDate?.ToShortDateString() ?? "Not Returned")
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="Status">
+            <CellTemplate>
+                @(context.Status ?? "Overdue")
+            </CellTemplate>
+        </TemplateColumn>
+    </QuickGrid>
+    <Paginator State="@overdueLoansPagination" />
 }
 
 @code {
-    private IEnumerable<MediaLoan> activeLoans;
+    private IQueryable<MediaLoan> activeLoans;
     private IEnumerable<MediaLoan> accountLoans;
     private IEnumerable<MediaLoan> overdueLoans;
     private int accountId = 1; // HARDCODED CHANGE
@@ -199,6 +165,10 @@ else
     private BranchReport branchReport;
     private bool loading = false;
     private string errorMessage;
+
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    private PaginationState accountLoansPagination = new PaginationState { ItemsPerPage = 10 };
+    private PaginationState overdueLoansPagination = new PaginationState { ItemsPerPage = 10 };
 
     private async Task GenerateReport()
     {
@@ -220,7 +190,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        activeLoans = await MediaLoanService.GetActiveLoansAsync();
+        activeLoans = (await MediaLoanService.GetActiveLoansAsync()).AsQueryable();
         overdueLoans = await MediaLoanService.GetOverdueLoansAsync();
         accountLoans = await MediaLoanService.GetLoansByAccountAsync(accountId);
         await LoadLoansAndUpdateTableAsync();
