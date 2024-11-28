@@ -4,6 +4,7 @@ using AuthAPI.Models.Entities;
 using AuthAPI.Models;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
+using AuthAPI.Models.DTOs;
 
 namespace AuthAPI.Services;
 
@@ -16,13 +17,13 @@ public class DatabaseService : IDatabaseService
 		_connectionString = connectionString;
 	}
 
-	public string AssignVerificationCode(int accountID, string code)
+	public string StoreVerificationCode(int accountID, string code)
 	{
 		using (SqlConnection connection = new SqlConnection(_connectionString))
 		{
 			connection.Open();
 
-			string query = @"insert into UserVerificationCode values (@AccountID,
+			string query = @"insert into AccountVerificationCode values (@AccountID,
 																	  @Code,
 																      GETUTCDATE())";
 
@@ -127,7 +128,7 @@ public class DatabaseService : IDatabaseService
 		{
 			connection.Open();
 
-			string query = @"select count(*) from UserVerificationCode where AccountID = @AccountID and Code = @Code and CreatedAt >= DATEADD(MINUTE, -30, GETUTCDATE());";
+			string query = @"select count(*) from AccountVerificationCode where AccountID = @AccountID and Code = @Code and CreatedAt >= DATEADD(MINUTE, -10, GETUTCDATE());";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
@@ -140,7 +141,7 @@ public class DatabaseService : IDatabaseService
 				}
 			}
 
-			query = @"select count(*) from UserVerificationCode where AccountID = @AccountID and Code = @Code";
+			query = @"select count(*) from AccountVerificationCode where AccountID = @AccountID and Code = @Code";
 
 			//If not found, lets check for an expired code to inform the user
 			using (SqlCommand command = new SqlCommand(query, connection))
@@ -181,9 +182,9 @@ public class DatabaseService : IDatabaseService
 			{
 				command.Parameters.AddWithValue("@UserID", id);
 				command.Parameters.AddWithValue("@Token", token);
-				
+
 				//This time it matters so check a record is created
-				if (Convert.ToInt32(command.ExecuteScalar()) > 0)
+				if (command.ExecuteNonQuery() > 0)
 				{
 					return "true";
 				}
@@ -195,38 +196,37 @@ public class DatabaseService : IDatabaseService
 		}
 	}
 
-	public string VerifyToken(VerifyTokenRequest request)
+	public string VerifyToken(string request)
 	{
 		using (SqlConnection connection = new SqlConnection(_connectionString))
 		{
 			connection.Open();
 
-			string query = @"select Value from Token where UserID = @UserID order by Created desc";
+			string query = @"select Created from Token where Value = @Token order by Created desc";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
-				command.Parameters.AddWithValue("@UserID", request.accountID);
+				command.Parameters.AddWithValue("@Token", request);
 
-				var result = command.ExecuteScalar().ToString();
+				using (SqlDataReader reader = command.ExecuteReader())
+				{
+					if (!reader.Read())
+					{
+						return null;
+					}
 
-				if(result == null)
-				{
-					return "token not found";
-				}
+					if (reader.IsDBNull(0))
+					{
+						return null;
+					}
 
-				if (result.ToString() == request.token)
-				{
-					return "valid";
-				}
-				else
-				{
-					return "not valid";
+					return reader.GetDateTime(0).ToString();
 				}
 			}
 		}
 	}
 
-	public string VerifyAccount(int accountID)
+	public string VerifyAccountEmail(int accountID)
 	{
 		using (SqlConnection connection = new SqlConnection(_connectionString))
 		{
@@ -238,13 +238,73 @@ public class DatabaseService : IDatabaseService
 			{
 				command.Parameters.AddWithValue("@ID", accountID);
 
-				if (Convert.ToInt32(command.ExecuteScalar()) > 0)
+				if (command.ExecuteNonQuery() > 0)
 				{
-					return "true";
+					return "success";
 				}
 				else
 				{
-					return "false";
+					return "failed";
+				}
+			}
+		}
+	}
+
+	public CityRoleDTO GetCityRoleFromToken(string token)
+	{
+		using (SqlConnection connection = new SqlConnection(_connectionString))
+		{
+			connection.Open();
+
+			string query = @"select r.Name, ad.City 
+							 from Token t
+							 join Account a on t.UserID = a.ID
+							 left join Role r ON a.RoleID = r.ID
+							 left join Address ad ON a.ID = ad.UserID
+							 where t.Value = @Token
+							   and (ad.IsDefault = 1 or ad.IsDefault is null)";
+
+			using (SqlCommand command = new SqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@Token", token);
+
+				using (SqlDataReader reader = command.ExecuteReader())
+				{
+					if (!reader.Read())
+					{
+						return null;
+					}
+
+					return new CityRoleDTO
+					{
+						Role = reader.IsDBNull(0) == true ? "not found" : reader.GetString(0),
+						City = reader.IsDBNull(1) == true ? "not found" : reader.GetString(1)
+					};
+				}
+			}
+		}
+	}
+
+	public string GetAccountRoleName(Account account)
+	{
+		using (SqlConnection connection = new SqlConnection(_connectionString))
+		{
+			connection.Open();
+
+			string query = @"select Name from Role where ID = @ID";
+
+			using (SqlCommand command = new SqlCommand(query, connection))
+			{
+				command.Parameters.AddWithValue("@ID", account.RoleID);
+
+				using (SqlDataReader reader = command.ExecuteReader())
+				{
+					if (!reader.Read())
+					{
+						return null;
+					}
+
+					return reader.GetString(0);
 				}
 			}
 		}

@@ -3,30 +3,47 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Cryptography;
-using AuthAPI.Models;
 using AuthAPI.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
+using AuthAPI.Models.Requests;
+using AuthAPI.Models.DTOs;
 
 namespace AuthAPI.Controllers
 {
-	[ApiController]
+    [ApiController]
 	[Route("api/auth")]
 	public class AuthController : ControllerBase
 	{
 		private readonly IConfiguration _config;
 		private readonly IDatabaseService _databaseService;
-		public AuthController(IConfiguration config, IDatabaseService databaseService)
+		private readonly IEmailService _emailService;
+		private const string _inventoryAPIKey = "testinventorykey";
+		private const string _userAPIKey = "testuserkey";
+		private const string _reportAPIKey = "testreportkey";
+
+		public AuthController(IConfiguration config, IDatabaseService databaseService, IEmailService emailService)
 		{
 			_config = config;
 			_databaseService = databaseService;
+			_emailService = emailService;
 		}
 
-		[HttpPost("start-verification/{accountID}")]
-		public IActionResult AssignVerificationCode(int accountID)
+		[HttpPost("send-email-verification-code/{accountID}")]
+		public IActionResult SendEmailVerification(int accountID, [FromHeader] string Authorization)
 		{
-			//check user exists
 			try
 			{
+				if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
+				{
+					return Unauthorized(new { message = "Authorization header is missing or invalid." });
+				}
+
+				var inventoryApiKey = Authorization.Substring("Bearer ".Length).Trim();
+				if (inventoryApiKey != _userAPIKey)
+				{
+					return Unauthorized(new { message = "Invalid User Key." });
+				}
+
 				Account account = _databaseService.GetAccountByID(accountID);
 
 				if (account == null)
@@ -34,17 +51,28 @@ namespace AuthAPI.Controllers
 					return BadRequest(new { message = "User does not exist." });
 				}
 
-				if(account.Verified == true)
+				if (account.Verified == true)
 				{
 					return BadRequest(new { message = "Account is already verified" });
 				}
 
 				string verificationCode = GenerateVerificationCode();
 
-				//todo mail
-				_databaseService.AssignVerificationCode(accountID, verificationCode);
+				string dbResult = _databaseService.StoreVerificationCode(accountID, verificationCode);
 
-				return Ok(new { message = "Verification started - " + verificationCode });
+				if(dbResult != "success")
+				{
+					return StatusCode(500, new { message = "Failed when writing code to database" });
+				}
+
+				string emailResult = _emailService.SendVerificationEmail(account.Email, verificationCode);
+
+				if(emailResult != "success")
+				{
+					return StatusCode(500, new { message = "Failed when sending Email\n\n" + emailResult });
+				}
+
+				return Ok(new { message = "success" });
 			}
 			catch (Exception ex)
 			{
@@ -52,13 +80,25 @@ namespace AuthAPI.Controllers
 			}
 		}
 
-		[HttpPost("verify")]
-		public IActionResult VerifyAccount([FromBody] VerifyCodeRequest verifyCodeRequest)
+		[HttpPost("verify-account")]
+		public IActionResult VerifyAccount([FromBody] VerifyCodeRequest verifyCodeRequest, [FromHeader] string Authorization)
 		{
-			//check user exists
 			try
 			{
-				if (_databaseService.GetAccountByID(verifyCodeRequest.id) == null)
+				if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
+				{
+					return Unauthorized(new { message = "Authorization header is missing or invalid." });
+				}
+
+				var inventoryApiKey = Authorization.Substring("Bearer ".Length).Trim();
+				if (inventoryApiKey != _userAPIKey)
+				{
+					return Unauthorized(new { message = "Invalid User Key." });
+				}
+
+				Account account = _databaseService.GetAccountByID(verifyCodeRequest.id);
+
+				if (account == null)
 				{
 					return BadRequest(new { message = "User does not exist." });
 				}
@@ -69,10 +109,21 @@ namespace AuthAPI.Controllers
 					return BadRequest(new { message = "Code is incorrect." });
 				}
 
-				_databaseService.VerifyAccount(verifyCodeRequest.id);
+				string dbResult = _databaseService.VerifyAccountEmail(verifyCodeRequest.id);
 
-				//send email saying they're verified
-				return Ok(new { message = "Account is now verified" });
+				if (dbResult != "success")
+				{
+					return StatusCode(500, new { message = "Failed when writing code to database" });
+				}
+
+				string emailResult = _emailService.SendVerifiedConfirmationEmail(account.Email, $"{account.FirstName} {account.LastName}");
+
+				if (emailResult != "success")
+				{
+					return StatusCode(500, new { message = "Failed when sending Email\n\n" + emailResult });
+				}
+
+				return Ok(new { message = "success" });
 			}
 			catch (Exception ex)
 			{
@@ -85,7 +136,7 @@ namespace AuthAPI.Controllers
 		{
 			try
 			{
-				if(request.Email.IsNullOrEmpty() || request.Password.IsNullOrEmpty())
+				if (request.Email.IsNullOrEmpty() || request.Password.IsNullOrEmpty())
 				{
 					return BadRequest(new { message = "Data incomplete, check request body." });
 				}
@@ -102,10 +153,22 @@ namespace AuthAPI.Controllers
 					return BadRequest(new { message = "Incorrect log in details" });
 				}
 
-				string token = GenerateToken();
-				_databaseService.AssignToken(account.ID, token);
+				string role = _databaseService.GetAccountRoleName(account);
 
-				return Ok(new { token = token });
+				if (role.IsNullOrEmpty())
+				{
+					return StatusCode(StatusCodes.Status403Forbidden, new { message = "Role not found." });
+				}
+
+				string token = GenerateToken();
+				string dbResult = _databaseService.AssignToken(account.ID, token);
+
+				if(dbResult != "true")
+				{
+					return BadRequest(new { message = "Failed to assign token during login" });
+				}
+
+				return Ok(new { token = token, role });
 			}
 			catch (Exception ex)
 			{
@@ -113,7 +176,7 @@ namespace AuthAPI.Controllers
 			}
 		}
 
-		[HttpPost("Verify-token")]
+		[HttpPost("verify-token")]
 		public IActionResult VerifyToken([FromBody] VerifyTokenRequest request)
 		{
 			if (request == null)
@@ -131,16 +194,11 @@ namespace AuthAPI.Controllers
 				return BadRequest(new { message = "Token is in an invalid format" });
 			}
 
-			if (_databaseService.GetAccountByID(request.accountID) == null)
-			{
-				return BadRequest(new { message = "Account doesn't exist" });
-			}
-
 			try
 			{
-				string result = _databaseService.VerifyToken(request);
+				string result = _databaseService.VerifyToken(request.token);
 
-				if (result == "valid")
+				if (result != null)
 				{
 					return Ok(new { message = "Token is valid" });
 				}
@@ -148,6 +206,41 @@ namespace AuthAPI.Controllers
 				{
 					return BadRequest(new { message = "Token is invalid" });
 				}
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later. " + ex.ToString() });
+			}
+		}
+
+		[HttpPost("get-city-role-by-token/{userApiToken}")]
+		public IActionResult VerifyUserToken(string userApiToken, [FromHeader] string Authorization)
+		{
+			try
+			{
+				if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
+				{
+					return Unauthorized(new { message = "Authorization header is missing or invalid." });
+				}
+
+				var inventoryApiKey = Authorization.Substring("Bearer ".Length).Trim();
+				if (inventoryApiKey != _inventoryAPIKey)
+				{
+					return Unauthorized(new { message = "Invalid Inventory Key." });
+				}
+
+				CityRoleDTO cityRoleDTO = _databaseService.GetCityRoleFromToken(userApiToken);
+
+				if (cityRoleDTO == null)
+				{
+					return NotFound(new { message = "User API Token is invalid or not found." });
+				}
+
+				return Ok(new
+				{
+					role = cityRoleDTO.Role,
+					city = cityRoleDTO.City
+				});
 			}
 			catch (Exception ex)
 			{
@@ -164,7 +257,7 @@ namespace AuthAPI.Controllers
 		{
 			string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-		var stringBuilder = new StringBuilder(length);
+			var stringBuilder = new StringBuilder(length);
 			using (var rng = RandomNumberGenerator.Create())
 			{
 				byte[] randomBytes = new byte[length];
