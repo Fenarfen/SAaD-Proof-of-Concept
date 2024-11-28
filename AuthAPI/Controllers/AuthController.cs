@@ -18,6 +18,9 @@ namespace AuthAPI.Controllers
 		private readonly IDatabaseService _databaseService;
 		private readonly IEmailService _emailService;
 		private const string _inventoryAPIKey = "testinventorykey";
+		private const string _userAPIKey = "testuserkey";
+		private const string _reportAPIKey = "testreportkey";
+
 		public AuthController(IConfiguration config, IDatabaseService databaseService, IEmailService emailService)
 		{
 			_config = config;
@@ -26,10 +29,21 @@ namespace AuthAPI.Controllers
 		}
 
 		[HttpPost("send-email-verification-code/{accountID}")]
-		public IActionResult SendEmailVerification(int accountID)
+		public IActionResult SendEmailVerification(int accountID, [FromHeader] string Authorization)
 		{
 			try
 			{
+				if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
+				{
+					return Unauthorized(new { message = "Authorization header is missing or invalid." });
+				}
+
+				var inventoryApiKey = Authorization.Substring("Bearer ".Length).Trim();
+				if (inventoryApiKey != _userAPIKey)
+				{
+					return Unauthorized(new { message = "Invalid User Key." });
+				}
+
 				Account account = _databaseService.GetAccountByID(accountID);
 
 				if (account == null)
@@ -67,10 +81,21 @@ namespace AuthAPI.Controllers
 		}
 
 		[HttpPost("verify-account")]
-		public IActionResult VerifyAccount([FromBody] VerifyCodeRequest verifyCodeRequest)
+		public IActionResult VerifyAccount([FromBody] VerifyCodeRequest verifyCodeRequest, [FromHeader] string Authorization)
 		{
 			try
 			{
+				if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
+				{
+					return Unauthorized(new { message = "Authorization header is missing or invalid." });
+				}
+
+				var inventoryApiKey = Authorization.Substring("Bearer ".Length).Trim();
+				if (inventoryApiKey != _userAPIKey)
+				{
+					return Unauthorized(new { message = "Invalid User Key." });
+				}
+
 				Account account = _databaseService.GetAccountByID(verifyCodeRequest.id);
 
 				if (account == null)
