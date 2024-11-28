@@ -21,7 +21,7 @@ public class DatabaseService : IDatabaseService
 		{
 			connection.Open();
 
-			string query = @"insert into Account values (null, 1, @Password, @Email, @FirstName, @LastName, GETDATE(), 0)";
+			string query = @"insert into Account output inserted.ID values (null, 1, @Email, @Password, @FirstName, @LastName, GETDATE(), 0)";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
@@ -30,16 +30,7 @@ public class DatabaseService : IDatabaseService
 				command.Parameters.AddWithValue("@LastName", account.LastName);
 				command.Parameters.AddWithValue("@Password", account.Password);
 
-				int result = command.ExecuteNonQuery();
-
-				if (result == 1)
-				{
-					return "success";
-				}
-				else
-				{
-					return "failure";
-				}
+				return Convert.ToString(command.ExecuteScalar()); // returns null if no record is created, otherwise will be the id of the record created
 			}
 		}
 	}
