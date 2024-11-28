@@ -184,7 +184,7 @@ public class DatabaseService : IDatabaseService
 				command.Parameters.AddWithValue("@Token", token);
 
 				//This time it matters so check a record is created
-				if (Convert.ToInt32(command.ExecuteScalar()) > 0)
+				if (command.ExecuteNonQuery() > 0)
 				{
 					return "true";
 				}
