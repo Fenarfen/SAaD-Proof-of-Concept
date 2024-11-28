@@ -15,4 +15,5 @@ public interface IDatabaseService
 	public string AssignToken(int id, string token);
 	public string VerifyToken(string request);
 	public CityRoleDTO GetCityRoleFromToken(string token);
+	public string GetAccountRoleName(Account account);
 }
