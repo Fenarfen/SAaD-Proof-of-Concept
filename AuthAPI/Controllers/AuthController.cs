@@ -90,8 +90,8 @@ namespace AuthAPI.Controllers
 					return Unauthorized(new { message = "Authorization header is missing or invalid." });
 				}
 
-				var inventoryApiKey = Authorization.Substring("Bearer ".Length).Trim();
-				if (inventoryApiKey != _userAPIKey)
+				var userApiKey = Authorization.Substring("Bearer ".Length).Trim();
+				if (userApiKey != _userAPIKey)
 				{
 					return Unauthorized(new { message = "Invalid User Key." });
 				}
