@@ -176,12 +176,6 @@ namespace AuthAPI.Controllers
 			}
 		}
 
-		[HttpGet("test")]
-		public IActionResult Test()
-		{
-			return Ok(new { message = "fuck docker containers" });
-		}
-
 		[HttpPost("get-city-role-by-token/{userApiToken}")]
 		public IActionResult VerifyUserToken(string userApiToken, [FromHeader] string Authorization)
 		{
