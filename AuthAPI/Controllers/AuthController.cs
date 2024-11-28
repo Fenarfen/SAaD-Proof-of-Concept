@@ -132,10 +132,21 @@ namespace AuthAPI.Controllers
 		}
 
 		[HttpPost("login")]
-		public IActionResult Login([FromBody] LoginRequest request)
+		public IActionResult Login([FromBody] LoginRequest request, [FromHeader] string Authorization)
 		{
 			try
 			{
+                if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
+                {
+                    return Unauthorized(new { message = "Authorization header is missing or invalid." });
+                }
+
+                var userApiKey = Authorization.Substring("Bearer ".Length).Trim();
+                if (userApiKey != _userAPIKey)
+                {
+                    return Unauthorized(new { message = "Invalid User Key." });
+                }
+
 				if (request.Email.IsNullOrEmpty() || request.Password.IsNullOrEmpty())
 				{
 					return BadRequest(new { message = "Data incomplete, check request body." });
