@@ -25,7 +25,7 @@ namespace AuthAPI.Controllers
 			_emailService = emailService;
 		}
 
-		[HttpPost("start-verification/{accountID}")]
+		[HttpPost("send-email-verification-code/{accountID}")]
 		public IActionResult SendEmailVerification(int accountID)
 		{
 			try
