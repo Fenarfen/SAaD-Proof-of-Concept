@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AMLWebAplication")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+df83ccd78199f59620f961bb18778f4e52c91f29")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+55738cd367e09cc711d110dec3e02347244a4839")]
 [assembly: System.Reflection.AssemblyProductAttribute("AMLWebAplication")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AMLWebAplication")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
