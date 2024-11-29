@@ -170,15 +170,15 @@ else
     private async Task RefreshInventory()
     {
         var branchRequest = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32772/api/Branch");
+            "http://localhost:32768/api/Branch");
         branchRequest.Headers.Add("Accept", "application/json");
-        branchRequest.Headers.Add("Authorization", "Bearer APIKey");
+        branchRequest.Headers.Add("Authorization", "Bearer Uid9s4LmaDv8Nz5gIn0uwXtoblM4uI3JOxVgNC7Q9aFm5CWwSTExCiMhAUfEXWy0");
         branchRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
 
         var inventoryRequest = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32772/api/Inventory");
+            "http://localhost:32768/api/Inventory");
         inventoryRequest.Headers.Add("Accept", "application/json");
-        inventoryRequest.Headers.Add("Authorization", "Bearer APIKey");
+        inventoryRequest.Headers.Add("Authorization", "Bearer Uid9s4LmaDv8Nz5gIn0uwXtoblM4uI3JOxVgNC7Q9aFm5CWwSTExCiMhAUfEXWy0");
         inventoryRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
 
         var client = ClientFactory.CreateClient();
@@ -248,11 +248,11 @@ else
         var transferRequest = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-                RequestUri = new Uri("http://localhost:32772/api/Inventory/Transfer"),
+                RequestUri = new Uri("http://localhost:32768/api/Inventory/Transfer"),
             Content = content
         };
         transferRequest.Headers.Add("Accept", "application/json");
-        transferRequest.Headers.Add("Authorization", "Bearer APIKey");
+        transferRequest.Headers.Add("Authorization", "Bearer Uid9s4LmaDv8Nz5gIn0uwXtoblM4uI3JOxVgNC7Q9aFm5CWwSTExCiMhAUfEXWy0");
         transferRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
         transferRequest.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 

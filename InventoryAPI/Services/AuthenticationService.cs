@@ -2,11 +2,14 @@
 using InventoryAPI.Models;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using System.Text.Json.Nodes;
 
 namespace InventoryAPI.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
+    private const string key = "testinventorykey";
+
     public string GetToken(HttpRequest request)
     {
         string? authHeader = request.Headers[HeaderNames.Authorization];
@@ -22,34 +25,51 @@ public class AuthenticationService : IAuthenticationService
         return headers[1];
     }
 
-    public async Task<Account> GetAccount(string token)
+    public async Task<Account?> GetAccount(string token)
     {
-        // TODO:
-        // Call Authentication API with bearer token to get User information
-        // Fake call for now
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Post,
+            RequestUri = new Uri($"http://host.docker.internal:32769/api/auth/get-city-role-by-token/{token}"),
+        };
+        request.Headers.Add("Accept", "application/json");
+        request.Headers.Add("Authorization", $"Bearer {key}");
+        request.Headers.Add("User-Agent", "HttpClientFactory-Media");
+
+        HttpClient client = new();
+
+        HttpResponseMessage response = new();
+
+        response = await client.SendAsync(request);
+        
+        if (!response.IsSuccessStatusCode)
+            return null;
+
+        var jsonResponse = JsonObject.Parse(await response.Content.ReadAsStringAsync());
+
+        string role = jsonResponse["role"].GetValue<string>();
+        string city = jsonResponse["city"].GetValue<string>();
 
         return new()
         {
-            ID = 1,
+            ID = 0,
             Token = new()
             {
-                ID = 1,
-                UserID = 1,
+                ID = 0,
+                UserID = 0,
                 Value = token,
                 Created = DateTime.Now,
             },
             Role = new()
             {
-                ID = 1,
-                Name = "Manager"
+                ID = 0,
+                Name = role
             },
-            Username = "SamSam",
-            Password = "ndwa638nd3v7732",
-            Email = @"sam@sam.co.uk",
-            FirstName = "Sam",
-            LastName = "Sam",
-            Created = DateTime.Now,
-            Verified = true
+            Address = new()
+            {
+                Id = 0,
+                City = city,
+            }
         };
     }
 }
