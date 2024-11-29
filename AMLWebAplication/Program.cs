@@ -1,5 +1,6 @@
 using AMLWebAplication.Components;
 using AMLWebAplication.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AMLWebAplication
@@ -22,6 +23,14 @@ namespace AMLWebAplication
 
             builder.Services.AddHttpClient();
 
+            builder.Services.AddScoped<APIAuthenticationService>(); 
+            builder.Services.AddScoped<AuthenticationStateProvider>(
+                provider => provider.GetRequiredService<APIAuthenticationService>());
+
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication();
+            builder.Services.AddCascadingAuthenticationState();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -36,6 +45,9 @@ namespace AMLWebAplication
 
             app.UseStaticFiles();
             app.UseAntiforgery();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();

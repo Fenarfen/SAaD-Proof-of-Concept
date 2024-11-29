@@ -1,0 +1,38 @@
+﻿@page "/Login"
+
+@using AMLWebAplication.Services
+@using Microsoft.AspNetCore.Authorization
+@inject APIAuthenticationService AuthenticationStateProvider
+
+@rendermode InteractiveServer
+
+<AuthorizeView>
+    <Authorized>
+        <h3>Signed In</h3>
+
+        <p>Hello, @context.User.Identity?.Name, you're signed in!</p>
+    </Authorized>
+    <NotAuthorized>
+        <h3>Login</h3>
+        <label>
+            eMail: 
+            <input @bind="userEmail" />
+        </label><br />
+        <label>
+            Password: 
+            <input @bind="userPassword" />
+        </label><br />
+        
+        <button @onclick="@SignIn">Sign in</button>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    public string userEmail = string.Empty;
+    public string userPassword = string.Empty;
+
+    public void SignIn()
+    {
+        AuthenticationStateProvider.AuthenticateUser(userEmail, userPassword);
+    }
+}
