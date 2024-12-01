@@ -81,22 +81,11 @@ namespace AuthAPI.Controllers
 		}
 
 		[HttpPost("verify-account")]
-		public IActionResult VerifyAccount([FromBody] VerifyCodeRequest verifyCodeRequest, [FromHeader] string Authorization)
+		public IActionResult VerifyAccount([FromBody] VerifyCodeRequest verifyCodeRequest)
 		{
 			try
 			{
-				if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
-				{
-					return Unauthorized(new { message = "Authorization header is missing or invalid." });
-				}
-
-				var userApiKey = Authorization.Substring("Bearer ".Length).Trim();
-				if (userApiKey != _userAPIKey)
-				{
-					return Unauthorized(new { message = "Invalid User Key." });
-				}
-
-				Account account = _databaseService.GetAccountByID(verifyCodeRequest.id);
+				Account account = _databaseService.GetAccountByEmail(verifyCodeRequest.Email);
 
 				if (account == null)
 				{
@@ -104,12 +93,12 @@ namespace AuthAPI.Controllers
 				}
 
 				//check code against latest code assigned to this userID
-				if (_databaseService.CheckCode(verifyCodeRequest.id, verifyCodeRequest.Code) != "true")
+				if (_databaseService.CheckCode(verifyCodeRequest.Email, verifyCodeRequest.Code) != "true")
 				{
 					return BadRequest(new { message = "Code is incorrect." });
 				}
 
-				string dbResult = _databaseService.VerifyAccountEmail(verifyCodeRequest.id);
+				string dbResult = _databaseService.VerifyAccountEmail(verifyCodeRequest.Email);
 
 				if (dbResult != "success")
 				{
@@ -132,34 +121,23 @@ namespace AuthAPI.Controllers
 		}
 
 		[HttpPost("login")]
-		public IActionResult Login([FromBody] LoginRequest request, [FromHeader] string Authorization)
+		public IActionResult Login([FromBody] LoginRequest request)
 		{
 			try
 			{
-                if (string.IsNullOrEmpty(Authorization) || !Authorization.StartsWith("Bearer "))
-                {
-                    return Unauthorized(new { message = "Authorization header is missing or invalid." });
-                }
-
-                var userApiKey = Authorization.Substring("Bearer ".Length).Trim();
-                if (userApiKey != _userAPIKey)
-                {
-                    return Unauthorized(new { message = "Invalid User Key." });
-                }
-
-				if (request.Email.IsNullOrEmpty() || request.Password.IsNullOrEmpty())
+				if (request.email.IsNullOrEmpty() || request.password.IsNullOrEmpty())
 				{
 					return BadRequest(new { message = "Data incomplete, check request body." });
 				}
 
-				Account account = _databaseService.GetAccountByEmail(request.Email);
+				Account account = _databaseService.GetAccountByEmail(request.email);
 
 				if (account == null)
 				{
 					return BadRequest(new { message = "Incorrect log in details" });
 				}
 
-				if (request.Password != account.Password)
+				if (request.password != account.Password)
 				{
 					return BadRequest(new { message = "Incorrect log in details" });
 				}
