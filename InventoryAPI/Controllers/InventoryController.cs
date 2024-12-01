@@ -42,7 +42,7 @@ public class InventoryController(
 
         try
         {
-            return Ok(await _mediaRepository.GetMediaByCity(Request.Path, "Sheffield"));
+            return Ok(await _mediaRepository.GetMediaByCity(Request.Path, account.Address.City));
         }
         catch (Exception ex)
         {

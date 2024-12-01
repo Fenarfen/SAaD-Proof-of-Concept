@@ -3,6 +3,7 @@
 @using System.Text.Json
 @using System.Text.Json.Serialization
 @inject IHttpClientFactory ClientFactory
+@inject AMLWebAplication.Services.HttpClientService HttpClientService
 @using Microsoft.AspNetCore.Components.QuickGrid
 @rendermode InteractiveServer
 
@@ -102,7 +103,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32772/api/Media");
+            "http://localhost:32784/api/Media");
         request.Headers.Add("Accept", "application/json");
         request.Headers.Add("User-Agent", "HttpClientFactory-Media");
 
