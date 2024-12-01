@@ -22,6 +22,7 @@ namespace AMLWebAplication
             builder.Services.AddSingleton<NetworkMonitorService>();
             builder.Services.AddSingleton<SystemMonitorService>();
             builder.Services.AddSingleton<HttpClientService>();
+			builder.Services.AddSingleton<LoginStateService>();
             builder.Services.AddBlazoredSessionStorage();
             builder.Services.AddHttpClient();
 
