@@ -27,7 +27,7 @@ namespace UserAPI.Controllers
 
 			httpClient = new()
 			{
-				BaseAddress = new Uri("http://host.docker.internal:32776/api/")
+				BaseAddress = new Uri("http://host.docker.internal:32784/api/")
 			};
 
 			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "testuserkey");
@@ -93,45 +93,19 @@ namespace UserAPI.Controllers
 			return Ok( new { message = "Account created successfully, awaiting verification." });
 		}
 
-		[HttpPost("update/{id}")]
-		public IActionResult UpdateAccount(string id, [FromBody] AccountUpdateDto updatedAccount)
+		[HttpPost("update")]
+		public IActionResult UpdateAccount([FromBody] ProfileManagementDTO updatedAccount)
 		{
-			if (id == null)
-			{
-				return BadRequest(new { message = "Account ID is required." });
-			}
-
-			int userID = -1;
-
-			try
-			{
-				userID = Convert.ToInt32(id);
-			}
-			catch
-			{
-				return BadRequest(new { message = "ID given is not an integer." });
-			}
-
-
 			if (updatedAccount == null)
 			{
-				return BadRequest(new { message = "Account data is required." });
-			}
+                return BadRequest(new { message = "Expecting ProfileManagementDTO from body of the request" });
+            }
 
-			var currentUser = _databaseService.GetAccountByID(userID);
+			var currentUser = _databaseService.GetAccountByID(updatedAccount.ID);
 
 			if (currentUser == null)
 			{
 				return NotFound(new { message = "User not found." });
-			}
-
-			//Validate account info
-			if (updatedAccount.Password.IsNullOrEmpty() ||
-				updatedAccount.FirstName.IsNullOrEmpty() ||
-				updatedAccount.Email.IsNullOrEmpty() ||
-				updatedAccount.LastName.IsNullOrEmpty())
-			{
-				return UnprocessableEntity(new { message = "Updated account information is null or empty" });
 			}
 
 			if (!IsValidEmail(updatedAccount.Email))
@@ -160,7 +134,7 @@ namespace UserAPI.Controllers
 
 			try
 			{
-				resultOfUpdateUser = _databaseService.EditAccount(userID, updatedAccount);
+				resultOfUpdateUser = _databaseService.EditAccount(updatedAccount);
 			}
 			catch (Exception ex)
 			{
@@ -175,7 +149,7 @@ namespace UserAPI.Controllers
 			return Ok(new { message = "Account updated successfully." });
 		}
 
-		[HttpGet("does-email-exist/{email}")]
+        [HttpGet("does-email-exist/{email}")]
 		public IActionResult DoesEmailExist(string email)
 		{
 			if (email.IsNullOrEmpty())
@@ -191,6 +165,24 @@ namespace UserAPI.Controllers
 			try
 			{
 				return Ok(new { exists = _databaseService.DoesEmailExist(email) });
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, new { message = "An error occurred while processing your request. Please try again later." + ex.ToString() });
+			}
+		}
+
+		[HttpGet("get-profile-management-dto/{token}")]
+		public IActionResult GetProfileManagementDTO(string token)
+		{
+			if (token.IsNullOrEmpty())
+			{
+				return BadRequest(new { message = "Token is missing." });
+			}
+
+			try
+			{
+				return Ok(new { profileManagementDTO = _databaseService.GetProfileManagementDTOfromToken(token) });
 			}
 			catch (Exception ex)
 			{
