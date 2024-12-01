@@ -1,5 +1,160 @@
-﻿<h3>ProfileManagement</h3>
+﻿@page "/profile-management"
+@using AMLWebAplication.Data
+@using AMLWebAplication.Services
+@using System.Text.Json
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject AMLWebAplication.Services.HttpClientService HttpClientService
+
+<h3>Profile Management</h3>
+<p>@GeneralError</p>
+
+@if (Profile != null)
+{
+		<h4>Basic Information</h4>
+		<div class="form-group">
+			<label>Email:</label>
+			<input @bind="Profile.Email" class="form-control" readonly />
+		</div>
+		<div class="form-group">
+			<label>First Name:</label>
+			<input @bind="Profile.FirstName" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label>Last Name:</label>
+			<input @bind="Profile.LastName" class="form-control" />
+		</div>
+		<div class="form-group">
+			<label>Role:</label>
+			<input @bind="Profile.Role" class="form-control" readonly />
+		</div>
+
+		<h4>Addresses</h4>
+		<button class="btn btn-success" @onclick="AddAddress">Add Address</button>
+
+	@if (Profile.Addresses.Any())
+	{
+		<ul>
+			@foreach (var address in Profile.Addresses)
+			{
+				<li>
+					<form>
+						<h5>Address</h5>
+						<div class="form-group">
+							<label>First Line (required):</label>
+							<input @bind="address.FirstLine" class="form-control" />
+						</div>
+						<div class="form-group">
+							<label>City (required):</label>
+							<input @bind="address.City" class="form-control" />
+						</div>
+						<div class="form-group">
+							<label>Postcode:</label>
+							<input @bind="address.Postcode" class="form-control" />
+						</div>
+						<div class="form-check">
+							<input type="checkbox" class="form-check-input" @bind="address.IsDefault" />
+							<label class="form-check-label">Set as Default</label>
+						</div>
+						<button class="btn btn-danger" @onclick="() => RemoveAddress(address)">Remove</button>
+					</form>
+				</li>
+			}
+		</ul>
+	}
+	else
+	{
+				<p>No addresses added yet.</p>
+	}
+
+		<button class="btn btn-primary" @onclick="SaveProfile">Save Changes</button>
+}
+else
+{
+		<p>@OnLoadMessage</p>
+}
 
 @code {
+	private ProfileManagementDTO Profile { get; set; }
+	private bool _isInitialized = false;
+	private string GeneralError;
+	private string OnLoadMessage = "Loading...";
 
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && !_isInitialized)
+		{
+			_isInitialized = true;
+
+			var token = await SessionStorage.GetItemAsync<string>("token");
+
+			if (!string.IsNullOrWhiteSpace(token))
+			{
+				HttpResponseMessage response = null;
+				try
+				{
+					HttpClient userAPI = HttpClientService.GetUserHttpClient();
+
+					var userAPIEndpoint = $"Account/get-profile-management-dto/{token}";
+					Console.WriteLine(userAPI.BaseAddress + userAPIEndpoint);
+					response = await userAPI.GetAsync(userAPIEndpoint);
+					response.EnsureSuccessStatusCode();
+
+					var responseBody = await response.Content.ReadAsStringAsync();
+					Console.WriteLine($"Response Body: {responseBody}");
+
+					Profile = JsonSerializer.Deserialize<ProfileManagementDTO>(responseBody, new JsonSerializerOptions
+						{
+							PropertyNameCaseInsensitive = true
+						});
+
+					StateHasChanged();
+				}
+				catch (HttpRequestException httpEx)
+				{
+					Console.WriteLine("content: " + await response.Content.ReadAsStringAsync());
+					Console.WriteLine($"Request failed: {httpEx.ToString()}");
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"An error occurred: {ex.ToString()}");
+				}
+			}
+			else
+			{
+				OnLoadMessage = "Please log in to view this page.";
+			}
+		}
+	}
+
+	private void AddAddress()
+	{
+		Profile.Addresses.Add(new Address());
+		StateHasChanged();
+	}
+
+	private void RemoveAddress(Address address)
+	{
+		Profile.Addresses.Remove(address);
+
+		if (address.IsDefault && Profile.Addresses.Any())
+		{
+			Profile.Addresses.First().IsDefault = true;
+		}
+		StateHasChanged();
+	}
+
+	private void SetAsDefault(Address address)
+	{
+		foreach (var addr in Profile.Addresses)
+		{
+			addr.IsDefault = false;
+		}
+
+		address.IsDefault = true;
+	}
+
+	private async Task SaveProfile()
+	{
+
+	}
 }
