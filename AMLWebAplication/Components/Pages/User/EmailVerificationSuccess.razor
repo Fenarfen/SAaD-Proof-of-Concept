@@ -1,0 +1,15 @@
+﻿@page "/email-verification-success"
+@inject NavigationManager Navigation
+
+<h3>Email Verification Successful</h3>
+
+<p>Your email address has been successfully verified. Log in to continue.</p>
+
+<button class="btn btn-primary" @onclick="RedirectToLogIn">Log In</button>
+
+@code {
+    private void RedirectToLogIn()
+    {
+        Navigation.NavigateTo("/signin");
+    }
+}
