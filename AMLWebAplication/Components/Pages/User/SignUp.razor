@@ -1,0 +1,234 @@
+﻿@page "/signup"
+@using System.Net.Http.Json;
+@using System.Text.RegularExpressions;
+@using System.Net.Http;
+@using System.Text.Json;
+@inject AMLWebAplication.Services.HttpClientService HttpClientService
+@inject NavigationManager Navigation
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+
+
+<h3>Sign Up</h3>
+
+<div class="form-group">
+	<label for="email">Email:</label>
+	<input id="email" type="email" @bind="Email" class="form-control">
+	<button class="btn btn-secondary" @onclick="CheckEmailAvailability">Check Availability</button>
+	<div style="color: red;" class="error-message">@EmailError</div>
+	<div style="color: @EmailAvailabilityMessageColor" class="error-message">@EmailAvailabilityMessage</div>
+</div>
+
+<div class="form-group">
+	<label for="password">Password:</label>
+	<input id="password" type="password" @bind="Password" class="form-control" />
+</div>
+
+<div class="form-group">
+	<label for="confirmPassword">Confirm Password:</label>
+	<input id="confirmPassword" type="password" @bind="ConfirmPassword" class="form-control" />
+	<div style="color: red;" class="error-message">@PasswordMatchError</div>
+</div>
+
+<div class="form-group">
+	<label for="firstName">First Name:</label>
+	<input id="firstName" type="text" @bind="FirstName" class="form-control" />
+</div>
+
+<div class="form-group">
+	<label for="lastName">Last Name:</label>
+	<input id="lastName" type="text" @bind="LastName" class="form-control" />
+</div>
+
+<button class="btn btn-primary" @onclick="AttemptSignUp" disabled="@IsSignUpButtonDisabled">Sign Up</button>
+<div style="color: @GeneralErrorColor;" class="error-message">@GeneralError</div>
+
+@code {
+	private string Email { get; set; }
+	private string Password { get; set; }
+	private string ConfirmPassword { get; set; }
+	private string FirstName { get; set; }
+	private string LastName { get; set; }
+
+	private string EmailError { get; set; }
+	private string PasswordMatchError { get; set; }
+	private string GeneralError { get; set; }
+	private string GeneralErrorColor { get; set; }
+	private string EmailAvailabilityMessage { get; set; }
+	private string EmailAvailabilityMessageColor { get; set; }
+
+	private bool IsSignUpButtonDisabled { get; set; } = false;
+	private bool _isInitialized = false;
+
+	private void ValidateEmail()
+	{
+		string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+		Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+
+		if (!regex.IsMatch(Email))
+		{
+			EmailError = "Please enter a valid email address.";
+		}
+		else
+		{
+			EmailError = null;
+		}
+	}
+
+	private bool ValidatePasswordMatch()
+	{
+		if (Password != ConfirmPassword)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	private async Task CheckEmailAvailability()
+	{
+		if (string.IsNullOrWhiteSpace(Email))
+		{
+			EmailAvailabilityMessageColor = "red";
+			EmailAvailabilityMessage = "Please enter an email";
+			GeneralError = null;
+			return;
+		}
+
+		HttpClient userAPI = HttpClientService.GetUserHttpClient();
+		var apiEndpoint = $"Account/does-email-exist/{Email}";
+
+		try
+		{
+			Console.WriteLine($"Sending request to {userAPI.BaseAddress}{apiEndpoint}");
+			EmailAvailabilityMessage = "Checking...";
+			var response = await userAPI.GetAsync(apiEndpoint);
+
+			var jsonResponse = await response.Content.ReadAsStringAsync();
+			var result = JsonSerializer.Deserialize<ExistsResponse>(jsonResponse);
+
+			if (result.exists == "false")
+			{
+				EmailAvailabilityMessageColor = "Green";
+				GeneralError = null;
+				EmailAvailabilityMessage = "Available";
+			}
+			else if (result.exists == "true")
+			{
+				EmailAvailabilityMessageColor = "Red";
+				GeneralError = null;
+				EmailAvailabilityMessage = $"That email is already in use";
+			}
+			else if (result.message == "Invalid email format.")
+			{
+				EmailAvailabilityMessageColor = "Red";
+				GeneralError = null;
+				EmailAvailabilityMessage = $"Please enter a valid email format.";
+			}
+			else
+			{
+				EmailAvailabilityMessageColor = "Red";
+				EmailAvailabilityMessage = null;
+				GeneralError = "Unexpected response from Account/does-email-exist - " + jsonResponse;
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.ToString());
+			EmailAvailabilityMessageColor = "Red";
+			EmailAvailabilityMessage = "Error checking email availability.";
+		}
+	}
+
+	private async Task AttemptSignUp()
+	{
+		GeneralError = null;
+
+		if (string.IsNullOrWhiteSpace(Email) ||
+			string.IsNullOrWhiteSpace(Password) ||
+			string.IsNullOrWhiteSpace(ConfirmPassword) ||
+			string.IsNullOrWhiteSpace(FirstName) ||
+			string.IsNullOrWhiteSpace(LastName) ||
+			EmailError != null ||
+			PasswordMatchError != null)
+		{
+			GeneralErrorColor = "red";
+			GeneralError = "Please fill out all fields correctly.";
+			return;
+		}
+
+		if (!ValidatePasswordMatch())
+		{
+			GeneralErrorColor = "red";
+			GeneralError = "Passwords do not match.";
+			return;
+		}
+
+		var signUpData = new
+		{
+			email = Email,
+			password = Password,
+			firstName = FirstName,
+			lastName = LastName
+		};
+
+		try
+		{
+			HttpClient userAPI = HttpClientService.GetUserHttpClient();
+
+			var apiEndpoint = "Account/create";
+			GeneralErrorColor = "Black";
+			GeneralError = "Attempting to create account, please wait...";
+
+			var response = await userAPI.PostAsJsonAsync(apiEndpoint, signUpData);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				string errorBody = await response.Content.ReadAsStringAsync();
+				GeneralError = "Sign up failed. Please try again later.\n\n" + errorBody;
+			}
+			else
+			{
+				Navigation.NavigateTo($"/email-verification-prompt?email={Email}");
+			}
+		}
+		catch
+		{
+			GeneralErrorColor = "Red";
+			GeneralError = "Error signing up. Please try again.";
+		}
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && !_isInitialized)
+		{
+			_isInitialized = true;
+
+			var token = await SessionStorage.GetItemAsync<string>("token");
+
+			if (!string.IsNullOrWhiteSpace(token))
+			{
+				SetLoggedOn();
+			}
+		}
+	}
+
+	private void SetLoggedOn()
+	{
+		IsSignUpButtonDisabled = true;
+		GeneralErrorColor = "red";
+		GeneralError = "You are already logged on, please log out before creating a new account";
+	}
+
+	public class ExistsResponse()
+	{
+		public string? exists { get; set; }
+		public string? message { get; set; }
+	}
+
+	public class SignInResponse()
+	{
+		public string? token { get; set; }
+		public string? role { get; set; }
+	}
+}

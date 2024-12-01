@@ -1,0 +1,89 @@
+﻿@page "/email-verification-prompt"
+@inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
+@inject AMLWebAplication.Services.HttpClientService HttpClientService
+
+<h3>Account Created!</h3>
+<p>Please verify your account by entering the code sent to your email below</p>
+<p>email: @DisplayEmail</p>
+<p>code: @DisplayCode</p>
+
+<div class="form-group">
+    <input id="code" type="text" @bind="VerificationCode" class="form-control" />
+    <div style="color: red;" class="error-message">@CodeError</div>
+</div>
+
+<button class="btn btn-primary" @onclick="VerifyCode">Verify</button>
+<div style="color: red;" class="error-message">@GeneralError</div>
+
+@code {
+    public string Email { get; set; }
+    private string VerificationCode { get; set; }
+    private string CodeError { get; set; }
+    private string GeneralError { get; set; }
+    private string Value;
+
+    private string DisplayEmail;
+    private string DisplayCode;
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            var uri = new Uri(Navigation.ToAbsoluteUri(Navigation.Uri).ToString());
+            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+            Email = query.Get("email");
+        }
+        catch
+        {
+            GeneralError = "Could not get value from url";
+        }
+    }
+
+    private async Task VerifyCode()
+    {
+        GeneralError = null;
+
+        if (string.IsNullOrWhiteSpace(VerificationCode) || VerificationCode.Length != 6 || !VerificationCode.All(char.IsDigit))
+        {
+            CodeError = "The verification code must be exactly 6 digits.";
+        }
+        else
+        {
+            CodeError = string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(CodeError))
+        {
+            GeneralError = "Please enter a code";
+            return;
+        }
+
+        try
+        {
+            HttpClient authAPI = HttpClientService.GetAuthHttpClient();
+            var apiEndpoint = "auth/verify-account";
+
+            Console.WriteLine(authAPI.BaseAddress + apiEndpoint);
+
+            DisplayCode = VerificationCode;
+            DisplayEmail = Email;
+
+            var response = await authAPI.PostAsJsonAsync(apiEndpoint, new { email = Email, code = VerificationCode });
+
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/email-verification-success");
+            }
+            else
+            {
+                Console.WriteLine(response.Content);
+                GeneralError = "The code you entered is incorrect. Please try again.";
+            }
+        }
+        catch
+        {
+            GeneralError = "An error occurred during verification. Please try again.";
+        }
+    }
+}
