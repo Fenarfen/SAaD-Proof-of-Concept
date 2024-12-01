@@ -122,17 +122,19 @@ public class DatabaseService : IDatabaseService
 		}
 	}
 
-	public string CheckCode(int accountID, string code)
+	public string CheckCode(string email, string code)
 	{
 		using (SqlConnection connection = new SqlConnection(_connectionString))
 		{
 			connection.Open();
 
-			string query = @"select count(*) from AccountVerificationCode where AccountID = @AccountID and Code = @Code and CreatedAt >= DATEADD(MINUTE, -10, GETUTCDATE());";
+			string query = @"select count(*) from AccountVerificationCode av
+							 join Account a on av.AccountID = a.ID
+							 where Email = @Email and Code = @Code and CreatedAt >= DATEADD(MINUTE, -10, GETUTCDATE())";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
-				command.Parameters.AddWithValue("@AccountID", accountID);
+				command.Parameters.AddWithValue("@Email", email);
 				command.Parameters.AddWithValue("@Code", code);
 
 				if (Convert.ToInt32(command.ExecuteScalar()) > 0)
@@ -141,12 +143,14 @@ public class DatabaseService : IDatabaseService
 				}
 			}
 
-			query = @"select count(*) from AccountVerificationCode where AccountID = @AccountID and Code = @Code";
+			query = @"select count(*) from AccountVerificationCode av
+					  join Account a on av.AccountID = a.ID
+					  where Email = @Email and Code = @Code";
 
 			//If not found, lets check for an expired code to inform the user
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
-				command.Parameters.AddWithValue("@AccountID", accountID);
+				command.Parameters.AddWithValue("@Email", email);
 				command.Parameters.AddWithValue("@Code", code);
 
 				if (Convert.ToInt32(command.ExecuteScalar()) > 0)
@@ -226,17 +230,17 @@ public class DatabaseService : IDatabaseService
 		}
 	}
 
-	public string VerifyAccountEmail(int accountID)
+	public string VerifyAccountEmail(string email)
 	{
 		using (SqlConnection connection = new SqlConnection(_connectionString))
 		{
 			connection.Open();
 
-			string query = @"update Account set Verified = 1 where ID = @ID";
+			string query = @"update Account set Verified = 1 where Email = @Email";
 
 			using (SqlCommand command = new SqlCommand(query, connection))
 			{
-				command.Parameters.AddWithValue("@ID", accountID);
+				command.Parameters.AddWithValue("@Email", email);
 
 				if (command.ExecuteNonQuery() > 0)
 				{

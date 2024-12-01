@@ -10,8 +10,8 @@ public interface IDatabaseService
 	public string StoreVerificationCode(int accountID, string code);
 	public Account GetAccountByID(int accountID);
 	public Account GetAccountByEmail(string email);
-	public string CheckCode(int accountID, string code);
-	public string VerifyAccountEmail(int accountID);
+	public string CheckCode(string email, string code);
+	public string VerifyAccountEmail(string email);
 	public string AssignToken(int id, string token);
 	public string VerifyToken(string request);
 	public CityRoleDTO GetCityRoleFromToken(string token);
