@@ -1,7 +1,25 @@
 ﻿@page "/"
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+@code{
+	private bool _isInitialized = false;
+	private string token;
+	private string role;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && !_isInitialized)
+		{
+			_isInitialized = true;
+
+			var _token = await SessionStorage.GetItemAsync<string>("token");
+			var _role = await SessionStorage.GetItemAsync<string>("role");
+		}
+	}
+}
