@@ -9,7 +9,7 @@ using ReportAPI.Models;
 using ReportAPI.DTOs;
 using ReportAPI.Services;
 
-namespace LibraryReportingSystem.API.Services
+namespace ReportAPI.Services
 {
     public class MediaLoanService : IMediaLoanService
     {
@@ -22,7 +22,7 @@ namespace LibraryReportingSystem.API.Services
 
         public async Task<List<MediaLoan>> GetMediaLoansAsync()
         {
-            const string sql = "SELECT MediaID, AccountID, BranchID, LoanedDate, DueDate, ReturnedDate, Status FROM MediaLoan";
+            const string sql = "SELECT * FROM MediaLoan";
             return (await _db.QueryAsync<MediaLoan>(sql)).ToList();
         }
 
@@ -85,7 +85,7 @@ namespace LibraryReportingSystem.API.Services
                     m.Title,
                     COUNT(*) as LoanCount
                 FROM MediaLoan ml
-                JOIN Media m ON ml.MediaID = m.MediaID
+                JOIN Media m ON ml.MediaID = m.ID
                 WHERE ml.BranchID = @BranchId
                 AND ml.LoanedDate BETWEEN @StartDate AND @EndDate
                 GROUP BY m.MediaID, m.Title
@@ -112,16 +112,17 @@ namespace LibraryReportingSystem.API.Services
         public async Task<List<PopularMediaItem>> GetPopularMediaItemsAsync(int branchId, DateTime startDate, DateTime endDate)
         {
             const string sql = @"
-                SELECT TOP 10
-                    m.MediaID,
-                    m.Title,
-                    COUNT(*) as LoanCount
-                FROM MediaLoan ml
-                JOIN Media m ON ml.MediaID = m.MediaID
-                WHERE ml.BranchID = @BranchId
-                AND ml.LoanedDate BETWEEN @StartDate AND @EndDate
-                GROUP BY m.MediaID, m.Title
-                ORDER BY LoanCount DESC";
+            SELECT TOP 10
+                m.ID as MediaID,
+                m.Title,
+                COUNT(*) as LoanCount
+            FROM MediaLoan ml
+            JOIN Media m ON ml.MediaID = m.ID
+            WHERE ml.BranchID = @BranchId
+            AND ml.LoanedDate BETWEEN @StartDate AND @EndDate
+            GROUP BY m.ID, m.Title
+            ORDER BY LoanCount DESC";
+
 
             return (await _db.QueryAsync<PopularMediaItem>(sql, new { BranchId = branchId, StartDate = startDate, EndDate = endDate })).ToList();
         }

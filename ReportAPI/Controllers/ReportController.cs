@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ReportAPI.Services;
 using ReportAPI.DTOs;
 using ReportAPI.Models;
 
-namespace AMLWebAplication.Controllers
+namespace ReportAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -18,6 +20,7 @@ namespace AMLWebAplication.Controllers
             _mediaLoanService = mediaLoanService;
         }
 
+        // GET api/report/branch/{branchId}/report?startDate={startDate}&endDate={endDate}
         [HttpGet("branch/{branchId}/report")]
         public async Task<IActionResult> GetBranchReport(int branchId, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
         {

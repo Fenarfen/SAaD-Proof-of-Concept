@@ -1,0 +1,50 @@
+@page "/report-generation"
+@using AMLWebAplication.DTOs
+@inject ReportApiService ReportApiService
+
+<h3>Branch Report Generation</h3>
+
+<div>
+    <label for="branchId">Branch ID:</label>
+    <input type="number" @bind="branchId" id="branchId" />
+
+    <label for="startDate">Start Date:</label>
+    <input type="date" @bind="startDate" id="startDate" />
+
+    <label for="endDate">End Date:</label>
+    <input type="date" @bind="endDate" id="endDate" />
+
+    <button @onclick="GenerateReport">Generate Report</button>
+</div>
+
+@if (report != null)
+{
+    <h4>Branch Report</h4>
+    <p><strong>Total Loans:</strong> @report.BorrowingStats.TotalLoans</p>
+    <p><strong>Unique Users:</strong> @report.BorrowingStats.UniqueUsers</p>
+    <p><strong>Overdue Loans:</strong> @report.BorrowingStats.OverdueLoans</p>
+
+    <h5>Popular Media Items</h5>
+    <ul>
+        @foreach (var item in report.PopularItems)
+        {
+            <li>@item.Title (Loan Count: @item.LoanCount)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No report generated yet.</p>
+}
+
+@code {
+    private int branchId;
+    private DateTime startDate = DateTime.Now.AddMonths(-1); // Default to last month
+    private DateTime endDate = DateTime.Now; // Default to today
+    private BranchReportDto report;
+
+    private async Task GenerateReport()
+    {
+        report = await ReportApiService.GetBranchReportAsync(branchId, startDate, endDate);
+    }
+}
