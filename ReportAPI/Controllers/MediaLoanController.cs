@@ -7,7 +7,7 @@ using ReportAPI.Services;
 using ReportAPI.DTOs;
 using ReportAPI.Models;
 
-
+//first test api just to grab all current media loans, functionality expanded in reports
 [ApiController]
 [Route("api/[controller]")]
 public class MediaLoanController : ControllerBase
@@ -29,7 +29,6 @@ public class MediaLoanController : ControllerBase
         }
         catch (Exception ex)
         {
-            // Log the exception
             return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }

@@ -7,6 +7,7 @@ using ReportAPI.Services;
 using ReportAPI.DTOs;
 using ReportAPI.Models;
 
+// endpoint return ex: /api/report/branch/1/report?startDate=2023-01-01&endDate=2024-12-31
 namespace ReportAPI.Controllers
 {
     [Route("api/[controller]")]
