@@ -154,16 +154,16 @@ public class DatabaseService : IDatabaseService
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@AccountID", address.AccountID);
-                command.Parameters.AddWithValue("@FirstLine", address.FirstLine);
-                command.Parameters.AddWithValue("@SecondLine", address.SecondLine);
-                command.Parameters.AddWithValue("@ThirdLine", address.ThirdLine);
-                command.Parameters.AddWithValue("@FourthLine", address.FourthLine);
-                command.Parameters.AddWithValue("@City", address.City);
-                command.Parameters.AddWithValue("@County", address.County);
-                command.Parameters.AddWithValue("@Country", address.Country);
-                command.Parameters.AddWithValue("@Postcode", address.PostCode);
-				command.Parameters.AddWithValue("@IsDefault", address.IsDefault);
+                command.Parameters.AddWithValue("@AccountID", address.AccountID);       //required
+                command.Parameters.AddWithValue("@FirstLine", address.FirstLine);       //required
+                command.Parameters.AddWithValue("@SecondLine", address.SecondLine.IsNullOrEmpty() ? "" : address.SecondLine);
+                command.Parameters.AddWithValue("@ThirdLine", address.ThirdLine.IsNullOrEmpty() ? "" : address.ThirdLine);
+                command.Parameters.AddWithValue("@FourthLine", address.FourthLine.IsNullOrEmpty() ? "" : address.FourthLine);
+                command.Parameters.AddWithValue("@City", address.City);                 //required
+                command.Parameters.AddWithValue("@County", address.County.IsNullOrEmpty() ? "" : address.County);
+                command.Parameters.AddWithValue("@Country", address.Country.IsNullOrEmpty() ? "" : address.Country);
+                command.Parameters.AddWithValue("@Postcode", address.PostCode);         //required
+				command.Parameters.AddWithValue("@IsDefault", address.IsDefault);       //required
 
 				int result = command.ExecuteNonQuery();
 
@@ -199,15 +199,15 @@ public class DatabaseService : IDatabaseService
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@FirstLine", address.FirstLine);
-                command.Parameters.AddWithValue("@SecondLine", address.SecondLine);
-                command.Parameters.AddWithValue("@ThirdLine", address.ThirdLine);
-                command.Parameters.AddWithValue("@FourthLine", address.FourthLine);
-                command.Parameters.AddWithValue("@City", address.City);
-                command.Parameters.AddWithValue("@County", address.County);
-                command.Parameters.AddWithValue("@Country", address.Country);
-                command.Parameters.AddWithValue("@Postcode", address.PostCode);
-                command.Parameters.AddWithValue("@IsDefault", address.IsDefault);
+                command.Parameters.AddWithValue("@FirstLine", address.FirstLine);       //required
+                command.Parameters.AddWithValue("@SecondLine", address.SecondLine.IsNullOrEmpty() ? "" : address.SecondLine);
+                command.Parameters.AddWithValue("@ThirdLine", address.ThirdLine.IsNullOrEmpty() ? "" : address.ThirdLine);
+                command.Parameters.AddWithValue("@FourthLine", address.FourthLine.IsNullOrEmpty() ? "" : address.FourthLine);
+                command.Parameters.AddWithValue("@City", address.City);                 //required
+                command.Parameters.AddWithValue("@County", address.County.IsNullOrEmpty() ? "" : address.County);
+                command.Parameters.AddWithValue("@Country", address.Country.IsNullOrEmpty() ? "" : address.Country);
+                command.Parameters.AddWithValue("@Postcode", address.PostCode);         //required
+                command.Parameters.AddWithValue("@IsDefault", address.IsDefault);       //required
                 command.Parameters.AddWithValue("@ID", address.ID);
 
                 int result = command.ExecuteNonQuery();
