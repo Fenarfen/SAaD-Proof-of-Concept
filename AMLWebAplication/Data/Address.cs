@@ -15,5 +15,6 @@ namespace AMLWebAplication.Data
 		public string Country { get; set; }
 		public string Postcode { get; set; }
         public bool IsDefault { get; set; }
+		public List<string> ValidationErrors { get; set; } = new List<string>();
     }
 }
