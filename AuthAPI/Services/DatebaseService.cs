@@ -171,15 +171,19 @@ public class DatabaseService : IDatabaseService
 
 			string deleteQuery = @"delete from Token where UserID = @UserID";
 			string insertquery = @"insert into Token values (@UserID, @Token, GETUTCDATE())";
+			string updateQuery = @"update Account
+								   set TokenID = (select top 1 ID from Token where UserID = @UserID order by Created desc)
+								   where ID = @UserID";
+
 
 			//start by removing old tokens
-			using (SqlCommand command = new SqlCommand(deleteQuery, connection))
-			{
-				command.Parameters.AddWithValue("@UserID", id);
+			//using (SqlCommand command = new SqlCommand(deleteQuery, connection))
+			//{
+			//	command.Parameters.AddWithValue("@UserID", id);
 
-				//doesn't matter if nothing is deleted here so skip any checks
-				command.ExecuteNonQuery();
-			}
+			//	//doesn't matter if nothing is deleted here so skip any checks
+			//	command.ExecuteNonQuery();
+			//}
 
 			//save new token
 			using (SqlCommand command = new SqlCommand(insertquery, connection))
@@ -187,7 +191,19 @@ public class DatabaseService : IDatabaseService
 				command.Parameters.AddWithValue("@UserID", id);
 				command.Parameters.AddWithValue("@Token", token);
 
-				//This time it matters so check a record is created
+				//cancel if no record created
+				if (command.ExecuteNonQuery() == 0)
+				{
+					return "false";
+				}
+			}
+
+			//Update account
+			using (SqlCommand command = new SqlCommand(updateQuery, connection))
+			{
+				command.Parameters.AddWithValue("@UserID", id);
+
+				//return result status
 				if (command.ExecuteNonQuery() > 0)
 				{
 					return "true";

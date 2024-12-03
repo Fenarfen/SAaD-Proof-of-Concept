@@ -11,6 +11,7 @@ using UserAPI.Models.Entities;
 using UserAPI.Models.Dtos;
 using System.Net.Http;
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
 
 namespace UserAPI.Controllers
 {
@@ -27,7 +28,7 @@ namespace UserAPI.Controllers
 
 			httpClient = new()
 			{
-				BaseAddress = new Uri("http://host.docker.internal:32784/api/")
+				BaseAddress = new Uri("http://host.docker.internal:32774/api/")
 			};
 
 			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "testuserkey");
@@ -182,7 +183,9 @@ namespace UserAPI.Controllers
 
 			try
 			{
-				return Ok(new { profileManagementDTO = _databaseService.GetProfileManagementDTOfromToken(token) });
+				ProfileManagementDTO dto = _databaseService.GetProfileManagementDTOfromToken(token);
+
+				return Ok(new { dto.ID, dto.Role, dto.Email, dto.FirstName, dto.LastName, dto.CreatedAt, dto.Verified, dto.Addresses });
 			}
 			catch (Exception ex)
 			{

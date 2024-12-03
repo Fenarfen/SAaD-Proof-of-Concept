@@ -43,7 +43,6 @@ public class DatabaseService : IDatabaseService
 
             string query = @"update Account
 							 set Email = @Email,
-							 Password = @Password,
 							 FirstName = @FirstName,
 							 LastName = @LastName
 							 where ID = @ID";
@@ -136,35 +135,37 @@ public class DatabaseService : IDatabaseService
         }
     }
 
-    public string CreateAddress(Address memberAddress)
+    public string CreateAddress(Address address)
     {
         using (SqlConnection connection = new SqlConnection(_connectionString))
         {
             connection.Open();
 
-            string query = @"insert into MemberAddress values (@AccountID, 
-															   @FirstLine, 
-															   @SecondLine, 
-															   @ThirdLine, 
-															   @FourthLine, 
-															   @City, 
-															   @County, 
-															   @Country, 
-															   @Postcode)";
+            string query = @"insert into Address values (@AccountID, 
+														 @FirstLine, 
+														 @SecondLine, 
+														 @ThirdLine, 
+														 @FourthLine, 
+														 @City, 
+														 @County, 
+														 @Country, 
+														 @Postcode,
+                                                         @IsDefault)";
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
-                command.Parameters.AddWithValue("@AccountID", memberAddress.AccountID);
-                command.Parameters.AddWithValue("@FirstLine", memberAddress.FirstLine);
-                command.Parameters.AddWithValue("@SecondLine", memberAddress.SecondLine);
-                command.Parameters.AddWithValue("@ThirdLine", memberAddress.ThirdLine);
-                command.Parameters.AddWithValue("@FourthLine", memberAddress.FourthLine);
-                command.Parameters.AddWithValue("@City", memberAddress.City);
-                command.Parameters.AddWithValue("@County", memberAddress.County);
-                command.Parameters.AddWithValue("@Country", memberAddress.Country);
-                command.Parameters.AddWithValue("@Postcode", memberAddress.PostCode);
+                command.Parameters.AddWithValue("@AccountID", address.AccountID);
+                command.Parameters.AddWithValue("@FirstLine", address.FirstLine);
+                command.Parameters.AddWithValue("@SecondLine", address.SecondLine);
+                command.Parameters.AddWithValue("@ThirdLine", address.ThirdLine);
+                command.Parameters.AddWithValue("@FourthLine", address.FourthLine);
+                command.Parameters.AddWithValue("@City", address.City);
+                command.Parameters.AddWithValue("@County", address.County);
+                command.Parameters.AddWithValue("@Country", address.Country);
+                command.Parameters.AddWithValue("@Postcode", address.PostCode);
+				command.Parameters.AddWithValue("@IsDefault", address.IsDefault);
 
-                int result = command.ExecuteNonQuery();
+				int result = command.ExecuteNonQuery();
 
                 if (result == 1)
                 {
@@ -184,7 +185,7 @@ public class DatabaseService : IDatabaseService
         {
             connection.Open();
 
-            string query = @"update MemberAddress
+            string query = @"update Address
 							 set FirstLine = @FirstLine,
 							 SecondLine = @SecondLine,
 							 ThirdLine = @ThirdLine,
@@ -193,7 +194,7 @@ public class DatabaseService : IDatabaseService
 							 County = @County,
 							 Country = @Country,
 							 Postcode = @Postcode,
-							 IsDefault = @IsDefault,
+							 IsDefault = @IsDefault
 							 where ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection))
@@ -229,7 +230,7 @@ public class DatabaseService : IDatabaseService
         {
             connection.Open();
 
-            string query = @"delete from MemberAddress where ID = @ID";
+            string query = @"delete from Address where ID = @ID";
 
             using (SqlCommand command = new SqlCommand(query, connection))
             {
@@ -315,7 +316,7 @@ public class DatabaseService : IDatabaseService
 
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
-                    if (reader.Read())
+                    while(reader.Read())
                     {
                         profileManagementDTO = new ProfileManagementDTO
                         {
@@ -328,7 +329,8 @@ public class DatabaseService : IDatabaseService
                             Verified = reader.GetBoolean(6)
                         };
                     }
-                    else
+                    
+                    if(profileManagementDTO == null)
                     {
                         return null;
                     }
@@ -345,7 +347,8 @@ public class DatabaseService : IDatabaseService
                     {
                         profileManagementDTO.Addresses.Add(new Address
                         {
-                            AccountID = reader.GetInt32(0),     //required
+                            ID = reader.GetInt32(0),            //required
+							AccountID = reader.GetInt32(1),     //required
                             FirstLine = reader.GetString(2),    //required
                             SecondLine = reader.IsDBNull(3) ? string.Empty : reader.GetString(3),
                             ThirdLine = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
