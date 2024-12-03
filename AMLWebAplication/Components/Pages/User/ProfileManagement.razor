@@ -106,6 +106,13 @@
 						<div class="form-check">
 							<input type="checkbox" class="form-check-input" @bind="address.IsDefault" />
 							<label class="form-check-label">Set as Default</label>
+							
+						</div>
+						<div>
+							@if (address.ValidationErrors.Contains("Only one address can be marked as default."))
+							{
+								<span class="text-danger">Only one address can be marked as default.</span>
+							}
 						</div>
 						<button class="btn btn-danger" @onclick="() => RemoveAddress(address)">Remove</button>
 					</form>
@@ -289,6 +296,8 @@ else
 
 		bool addressValidationFailed = false;
 
+		int countDefault = 0;
+
 		foreach(Address address in Profile.Addresses)
 		{
 			if (string.IsNullOrEmpty(address.FirstLine))
@@ -307,6 +316,21 @@ else
 			{
 				address.ValidationErrors.Add("Postcode is required");
 				addressValidationFailed = true;
+			}
+
+			if (address.IsDefault)
+			{
+				countDefault++;
+			}
+		}
+
+		if(countDefault > 1)
+		{
+			addressValidationFailed = true;
+
+			foreach(Address address in Profile.Addresses)
+			{
+				address.ValidationErrors.Add("Only one address can be marked as default.");
 			}
 		}
 
