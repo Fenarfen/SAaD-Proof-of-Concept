@@ -11,6 +11,9 @@ using UserAPI.Models.Entities;
 using UserAPI.Models.Dtos;
 using System.Net.Http;
 using System.Text.Json;
+using Azure.Core;
+using System.Security.Cryptography;
+using System.Text;
 using Microsoft.AspNetCore.Identity;
 
 namespace UserAPI.Controllers
@@ -28,7 +31,7 @@ namespace UserAPI.Controllers
 
 			httpClient = new()
 			{
-				BaseAddress = new Uri("http://host.docker.internal:32774/api/")
+				BaseAddress = new Uri("http://host.docker.internal:32784/api/")
 			};
 
 			httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "testuserkey");
@@ -70,11 +73,13 @@ namespace UserAPI.Controllers
 			if (resultOfEmailAlreadyExists == "true")
 			{
 				return Conflict(new { message = "Email is already registered to an account." });
-			}
+            }
+            string resultOfCreateUser = string.Empty;
 
-			string resultOfCreateUser = string.Empty;
+			var hash = SHA3_256.HashData(Encoding.ASCII.GetBytes(account.Password));
+            account.Password = Encoding.ASCII.GetString(hash);
 
-			try
+            try
 			{
 				resultOfCreateUser = _databaseService.CreateMemberUser(account);
 			}

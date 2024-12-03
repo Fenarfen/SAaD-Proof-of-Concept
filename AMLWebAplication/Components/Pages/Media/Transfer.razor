@@ -4,7 +4,9 @@
 @using System.Text.Json.Serialization
 @inject IHttpClientFactory ClientFactory
 @inject NavigationManager _navigationManager
+@inject AMLWebAplication.Services.HttpClientService HttpClientService
 @using Microsoft.AspNetCore.Components.QuickGrid
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 @rendermode InteractiveServer
 
 <h3>Media Transfer</h3>
@@ -162,6 +164,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        var token = await SessionStorage.GetItemAsync<string>("role");
+
+        if (token != "Manager")
+        {
+            _navigationManager.NavigateTo("/signin");
+        }
+
         await RefreshInventory();
 
         shouldRender = true;
@@ -169,16 +178,18 @@ else
 
     private async Task RefreshInventory()
     {
+        var token = await SessionStorage.GetItemAsync<string>("token");
+
         var branchRequest = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32772/api/Branch");
+            "http://localhost:32784/api/Branch");
         branchRequest.Headers.Add("Accept", "application/json");
-        branchRequest.Headers.Add("Authorization", "Bearer APIKey");
+        branchRequest.Headers.Add("Authorization", $"Bearer {token}");
         branchRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
 
         var inventoryRequest = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32772/api/Inventory");
+            "http://localhost:32784/api/Inventory");
         inventoryRequest.Headers.Add("Accept", "application/json");
-        inventoryRequest.Headers.Add("Authorization", "Bearer APIKey");
+        inventoryRequest.Headers.Add("Authorization", $"Bearer {token}");
         inventoryRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
 
         var client = ClientFactory.CreateClient();
@@ -242,17 +253,19 @@ else
 
     protected async void SendTransferRequests()
     {
+        var token = await SessionStorage.GetItemAsync<string>("token");
+
         var json = JsonSerializer.Serialize(transfers);
         var content = new System.Net.Http.StringContent(json);
 
         var transferRequest = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-                RequestUri = new Uri("http://localhost:32772/api/Inventory/Transfer"),
+                RequestUri = new Uri("http://localhost:32784/api/Inventory/Transfer"),
             Content = content
         };
         transferRequest.Headers.Add("Accept", "application/json");
-        transferRequest.Headers.Add("Authorization", "Bearer APIKey");
+        transferRequest.Headers.Add("Authorization", $"Bearer {token}");
         transferRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
         transferRequest.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
 

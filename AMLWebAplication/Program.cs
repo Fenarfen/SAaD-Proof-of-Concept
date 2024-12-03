@@ -1,5 +1,7 @@
 using AMLWebAplication.Components;
+using AMLWebAplication.Models;
 using AMLWebAplication.Services;
+using Blazored.SessionStorage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AMLWebAplication
@@ -19,7 +21,9 @@ namespace AMLWebAplication
                 .AddInteractiveServerComponents();
             builder.Services.AddSingleton<NetworkMonitorService>();
             builder.Services.AddSingleton<SystemMonitorService>();
-
+            builder.Services.AddSingleton<HttpClientService>();
+			builder.Services.AddSingleton<LoginStateService>();
+            builder.Services.AddBlazoredSessionStorage();
             builder.Services.AddHttpClient();
 
             var app = builder.Build();
@@ -32,7 +36,7 @@ namespace AMLWebAplication
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseStaticFiles();
             app.UseAntiforgery();
