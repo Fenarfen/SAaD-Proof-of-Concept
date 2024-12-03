@@ -137,7 +137,9 @@ namespace AuthAPI.Controllers
 					return BadRequest(new { message = "Incorrect log in details" });
 				}
 
-				if (request.password != account.Password)
+				var hash = SHA3_256.HashData(Encoding.ASCII.GetBytes(request.password));
+				string stringHash = Encoding.ASCII.GetString(hash);
+                if (stringHash != account.Password)
 				{
 					return BadRequest(new { message = "Incorrect log in details" });
 				}
