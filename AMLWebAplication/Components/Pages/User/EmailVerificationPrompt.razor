@@ -5,8 +5,6 @@
 
 <h3>Account Created!</h3>
 <p>Please verify your account by entering the code sent to your email below</p>
-<p>email: @DisplayEmail</p>
-<p>code: @DisplayCode</p>
 
 <div class="form-group">
     <input id="code" type="text" @bind="VerificationCode" class="form-control" />
@@ -22,9 +20,6 @@
     private string CodeError { get; set; }
     private string GeneralError { get; set; }
     private string Value;
-
-    private string DisplayEmail;
-    private string DisplayCode;
 
     protected override void OnInitialized()
     {
@@ -65,9 +60,6 @@
             var apiEndpoint = "auth/verify-account";
 
             Console.WriteLine(authAPI.BaseAddress + apiEndpoint);
-
-            DisplayCode = VerificationCode;
-            DisplayEmail = Email;
 
             var response = await authAPI.PostAsJsonAsync(apiEndpoint, new { email = Email, code = VerificationCode });
 

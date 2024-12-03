@@ -3,6 +3,7 @@
 @using System.Text.RegularExpressions;
 @using System.Net.Http;
 @using System.Text.Json;
+@using AMLWebAplication.Data
 @inject AMLWebAplication.Services.HttpClientService HttpClientService
 @inject NavigationManager Navigation
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
@@ -104,7 +105,7 @@
 			var response = await userAPI.GetAsync(apiEndpoint);
 
 			var jsonResponse = await response.Content.ReadAsStringAsync();
-			var result = JsonSerializer.Deserialize<ExistsResponse>(jsonResponse);
+			var result = JsonSerializer.Deserialize<EmailExistsResponse>(jsonResponse);
 
 			if (result.exists == "false")
 			{
@@ -156,28 +157,34 @@
 			return;
 		}
 
+		await CheckEmailAvailability();
+
 		if (!ValidatePasswordMatch())
 		{
 			GeneralErrorColor = "red";
 			GeneralError = "Passwords do not match.";
-			return;
 		}
-
-		var signUpData = new
-		{
-			email = Email,
-			password = Password,
-			firstName = FirstName,
-			lastName = LastName
-		};
 
 		try
 		{
+			if (!string.IsNullOrEmpty(GeneralError))
+			{
+				return;
+			}
+
 			HttpClient userAPI = HttpClientService.GetUserHttpClient();
 
 			var apiEndpoint = "Account/create";
 			GeneralErrorColor = "Black";
 			GeneralError = "Attempting to create account, please wait...";
+
+			var signUpData = new
+			{
+				email = Email,
+				password = Password,
+				firstName = FirstName,
+				lastName = LastName
+			};
 
 			var response = await userAPI.PostAsJsonAsync(apiEndpoint, signUpData);
 
@@ -218,12 +225,6 @@
 		IsSignUpButtonDisabled = true;
 		GeneralErrorColor = "red";
 		GeneralError = "You are already logged on, please log out before creating a new account";
-	}
-
-	public class ExistsResponse()
-	{
-		public string? exists { get; set; }
-		public string? message { get; set; }
 	}
 
 	public class SignInResponse()
