@@ -157,28 +157,34 @@
 			return;
 		}
 
+		await CheckEmailAvailability();
+
 		if (!ValidatePasswordMatch())
 		{
 			GeneralErrorColor = "red";
 			GeneralError = "Passwords do not match.";
-			return;
 		}
-
-		var signUpData = new
-		{
-			email = Email,
-			password = Password,
-			firstName = FirstName,
-			lastName = LastName
-		};
 
 		try
 		{
+			if (!string.IsNullOrEmpty(GeneralError))
+			{
+				return;
+			}
+
 			HttpClient userAPI = HttpClientService.GetUserHttpClient();
 
 			var apiEndpoint = "Account/create";
 			GeneralErrorColor = "Black";
 			GeneralError = "Attempting to create account, please wait...";
+
+			var signUpData = new
+			{
+				email = Email,
+				password = Password,
+				firstName = FirstName,
+				lastName = LastName
+			};
 
 			var response = await userAPI.PostAsJsonAsync(apiEndpoint, signUpData);
 
