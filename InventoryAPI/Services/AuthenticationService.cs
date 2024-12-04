@@ -29,7 +29,7 @@ public class AuthenticationService : IAuthenticationService
         var request = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-            RequestUri = new Uri($"http://host.docker.internal:32777/api/auth/get-city-role-by-token/{token}"),
+            RequestUri = new Uri($"https://localhost:32782/api/auth/get-city-role-by-token/{token}"),
         };
         request.Headers.Add("Accept", "application/json");
         request.Headers.Add("Authorization", "Bearer testinventorykey");
