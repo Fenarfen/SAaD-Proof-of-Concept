@@ -6,10 +6,11 @@ namespace UserAPI.Interfaces;
 public interface IDatabaseService
 {
 	public string CreateMemberUser(AccountCreateDto account);
-	public string EditAccount(int id, AccountUpdateDto account);
-	public string CreateMemberAddress(AddressCreateUpdateDto memberAddress);
-	public string EditMemberAddress(int id, Address memberAddress);
-	public string DeleteMemberAddress(int addressID);
+	public string EditAccount(ProfileManagementDTO account);
+	public string CreateAddress(Address address);
+	public string UpdateAddress(Address address);
+	public string DeleteAddress(int addressID);
 	public string DoesEmailExist(string email);
 	public Account GetAccountByID(int accountID);
+	public ProfileManagementDTO GetProfileManagementDTOfromToken(string token);
 }

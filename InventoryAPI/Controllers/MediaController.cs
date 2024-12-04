@@ -10,11 +10,11 @@ public class MediaController(MediaRepository mediaRepository) : ControllerBase
     private readonly MediaRepository _mediaRepository = mediaRepository;
 
     [HttpGet]
-    public IActionResult GetAllMedia()
+    public async Task<IActionResult> GetAllMedia()
     {
         try
         {
-            return Ok(_mediaRepository.GetAllMedia());
+            return Ok(await _mediaRepository.GetAllMedia(Request.Path));
         }
         catch (Exception ex)
         {

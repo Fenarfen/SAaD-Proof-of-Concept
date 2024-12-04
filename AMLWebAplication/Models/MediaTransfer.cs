@@ -1,4 +1,4 @@
-﻿namespace InventoryAPI.Models;
+﻿namespace AMLWebAplication.Models;
 
 public class MediaTransfer
 {
@@ -7,7 +7,7 @@ public class MediaTransfer
     public Branch OriginBranch { get; set; } = new();
     public Branch DestinationBranch { get; set; } = new();
     public int AccountID { get; set; }
-    public DateTime? Approved { get; set; }
+    public bool? Approved { get; set; }
     public DateTime Created { get; set; }
-    public DateTime? Completed { get; set; }
+    public bool? Completed { get; set; }
 }

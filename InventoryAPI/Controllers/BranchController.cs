@@ -33,7 +33,7 @@ public class BranchController(
     }
 
     [HttpGet]
-    public IActionResult GetBranches()
+    public async Task<IActionResult> GetBranches()
     {
         Account? account = Authenticate(Request);
 
@@ -42,7 +42,7 @@ public class BranchController(
 
         try
         {
-            return Ok(_branchRepository.GetBranches());
+            return Ok(await _branchRepository.GetBranches(Request.Path));
         }
         catch (Exception ex)
         {
