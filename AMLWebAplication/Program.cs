@@ -15,6 +15,16 @@ namespace AMLWebAplication
             // Add services to the container.
             builder.Services.AddScoped<IMonitorService, MonitorService>();
             builder.Services.AddScoped<IMediaLoanService, MediaLoanService>();
+
+            builder.Services.AddScoped<ReportApiService>();
+            builder.Services.AddHttpClient<LoanApiService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5001");
+            });
+            builder.Services.AddSingleton<LoanApiService>(); 
+            
+            builder.Services.AddHttpClient();
+
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
             builder.Services.AddRazorComponents()
