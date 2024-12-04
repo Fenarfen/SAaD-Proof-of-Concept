@@ -75,100 +75,16 @@ else if (errorMessage != null)
     <p class="text-danger">@errorMessage</p>
 }
 
-<h3>Loans by Account.</h3>
-<div class="mb-3">
-    <input type="text" @bind-Value="accountId" @bind-Value:event="ValueChanged" />
-    <button class="btn btn-primary ms-2" @onclick="LoadLoansAndUpdateTableAsync">Search</button>
-</div>
-@if (accountLoans == null)
-{
-    <p><em>Loading...</em></p>
-}
-else if (!accountLoans.Any())
-{
-    <p>No active loans.</p>
-}
-else
-{
-    <QuickGrid Items="@accountLoans.AsQueryable()" Pagination="@accountLoansPagination">
-        <PropertyColumn Property="@(l => l.MediaID)" Sortable="true" Title="Media ID" />
-        <PropertyColumn Property="@(l => l.AccountID)" Sortable="true" Title="Account ID" />
-        <PropertyColumn Property="@(l => l.BranchID)" Sortable="true" Title="Branch ID" />
-        <PropertyColumn Property="@(l => l.LoanedDate)" Sortable="true" Title="Loaned Date" />
-        <PropertyColumn Property="@(l => l.DueDate)" Sortable="true" Title="Due Date" />
-        <PropertyColumn Property="@(l => l.Status)" Sortable="true" Title="Status" />
-    </QuickGrid>
-    <Paginator State="@accountLoansPagination" />
-}
-
-
-<h3>Active Loans</h3>
-
-@if (activeLoans == null)
-{
-    <p><em>Loading...</em></p>
-}
-else if (!activeLoans.Any())
-{
-    <p>No active loans.</p>
-}
-else
-{
-    <QuickGrid Items="@activeLoans" Pagination="@pagination">
-        <PropertyColumn Property="@(l => l.MediaID)" Sortable="true" Title="Media ID" />
-        <PropertyColumn Property="@(l => l.AccountID)" Sortable="true" Title="Account ID" />
-        <PropertyColumn Property="@(l => l.BranchID)" Sortable="true" Title="Branch ID" />
-        <PropertyColumn Property="@(l => l.LoanedDate)" Sortable="true" Title="Loaned Date" />
-        <PropertyColumn Property="@(l => l.DueDate)" Sortable="true" Title="Due Date" />
-        <PropertyColumn Property="@(l => l.Status)" Sortable="true" Title="Status" />
-    </QuickGrid>
-    <Paginator State="@pagination" />
-}
-
-
-<h3>Overdue Loans</h3>
-
-@if (overdueLoans == null)
-{
-    <p>Loading overdue loans...</p>
-}
-else
-{
-    <QuickGrid Items="@overdueLoans.AsQueryable()" Pagination="@overdueLoansPagination">
-        <PropertyColumn Property="@(l => l.MediaID)" Sortable="true" Title="Media ID" />
-        <PropertyColumn Property="@(l => l.AccountID)" Sortable="true" Title="Account ID" />
-        <PropertyColumn Property="@(l => l.LoanedDate)" Sortable="true" Title="Loaned Date" />
-        <PropertyColumn Property="@(l => l.DueDate)" Sortable="true" Title="Due Date" />
-        <TemplateColumn Title="Returned Date">
-            <CellTemplate>
-                @(context.ReturnedDate?.ToShortDateString() ?? "Not Returned")
-            </CellTemplate>
-        </TemplateColumn>
-        <TemplateColumn Title="Status">
-            <CellTemplate>
-                @(context.Status ?? "Overdue")
-            </CellTemplate>
-        </TemplateColumn>
-    </QuickGrid>
-    <Paginator State="@overdueLoansPagination" />
-}
+<AMLWebAplication.Components.OverdueLoans />
+<AMLWebAplication.Components.AccountLoans />
 
 @code {
-    private IQueryable<MediaLoan> activeLoans;
-    private IEnumerable<MediaLoan> accountLoans;
-    private IEnumerable<MediaLoan> overdueLoans;
-    private int accountId = 1; // HARDCODED CHANGE
-    private List<MediaLoan> loans;
     private int branchId;
     private DateTime startDate;
     private DateTime endDate;
     private BranchReport branchReport;
     private bool loading = false;
     private string errorMessage;
-
-    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
-    private PaginationState accountLoansPagination = new PaginationState { ItemsPerPage = 10 };
-    private PaginationState overdueLoansPagination = new PaginationState { ItemsPerPage = 10 };
 
     private async Task GenerateReport()
     {
@@ -186,20 +102,5 @@ else
         {
             loading = false;
         }
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        activeLoans = (await MediaLoanService.GetActiveLoansAsync()).AsQueryable();
-        overdueLoans = await MediaLoanService.GetOverdueLoansAsync();
-        accountLoans = await MediaLoanService.GetLoansByAccountAsync(accountId);
-        await LoadLoansAndUpdateTableAsync();
-    }
-
-    private async Task LoadLoansAndUpdateTableAsync()
-    {
-        Console.WriteLine("activated");
-        accountLoans = await MediaLoanService.GetLoansByAccountAsync(accountId);
-        StateHasChanged();
     }
 }
