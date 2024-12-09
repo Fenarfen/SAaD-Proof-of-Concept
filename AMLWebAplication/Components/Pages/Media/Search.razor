@@ -103,7 +103,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         var request = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32784/api/Media");
+            "http://localhost:32779/api/Media");
         request.Headers.Add("Accept", "application/json");
         request.Headers.Add("User-Agent", "HttpClientFactory-Media");
 

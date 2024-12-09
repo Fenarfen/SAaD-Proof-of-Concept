@@ -27,7 +27,7 @@
     {
         try
         {
-            var loans = await Http.GetFromJsonAsync<List<MediaLoan>>($"http://localhost:5001/api/loan/account/{accountId}/loans");
+            var loans = await Http.GetFromJsonAsync<List<MediaLoan>>($"http://localhost:32776/api/loan/account/{accountId}/loans");
             mediaLoans = loans.AsQueryable();
         }
         catch (Exception ex)

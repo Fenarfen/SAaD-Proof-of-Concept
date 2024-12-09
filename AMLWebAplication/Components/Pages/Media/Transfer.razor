@@ -181,13 +181,13 @@ else
         var token = await SessionStorage.GetItemAsync<string>("token");
 
         var branchRequest = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32784/api/Branch");
+            "http://localhost:32779/api/Branch");
         branchRequest.Headers.Add("Accept", "application/json");
         branchRequest.Headers.Add("Authorization", $"Bearer {token}");
         branchRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
 
         var inventoryRequest = new HttpRequestMessage(HttpMethod.Get,
-            "http://localhost:32784/api/Inventory");
+            "http://localhost:32779/api/Inventory");
         inventoryRequest.Headers.Add("Accept", "application/json");
         inventoryRequest.Headers.Add("Authorization", $"Bearer {token}");
         inventoryRequest.Headers.Add("User-Agent", "HttpClientFactory-Media");
@@ -261,7 +261,7 @@ else
         var transferRequest = new HttpRequestMessage
         {
             Method = HttpMethod.Post,
-                RequestUri = new Uri("http://localhost:32784/api/Inventory/Transfer"),
+                RequestUri = new Uri("http://localhost:32779/api/Inventory/Transfer"),
             Content = content
         };
         transferRequest.Headers.Add("Accept", "application/json");
