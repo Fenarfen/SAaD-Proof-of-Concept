@@ -13,27 +13,36 @@ public class CacheService_SatisfiesInterface
     {
         ConfigurationOptions configOptions = new()
         {
-            EndPoints = { "172.17.0.2:6379" },
-            AbortOnConnectFail = true,
+            EndPoints = { "localhost:6379" },
         };
         _cacheService = new(configOptions);
     }
 
-    [Test] 
+    [Test, Order(1)]
+    public async Task SetKey()
+    {
+        _cacheService.Set("TEST", "testString");
+
+        var result = await _cacheService.Get<string>("TEST");
+
+        Assert.That(result, Is.EqualTo("testString"));
+    }
+
+    [Test, Order(2)] 
     public async Task GetKey()
     {
+        var result = await _cacheService.Get<string>("TEST");
 
+        Assert.That(result, Is.Not.Null);
     }
 
-    [Test]
-    public void SetKey()
+    [Test, Order(3)]
+    public async Task DropKey()
     {
+        _cacheService.Drop("TEST");
 
-    }
+        var result = await _cacheService.Get<string>("TEST");
 
-    [Test]
-    public void DropKey()
-    {
-
+        Assert.That(result, Is.Null);
     }
 }
