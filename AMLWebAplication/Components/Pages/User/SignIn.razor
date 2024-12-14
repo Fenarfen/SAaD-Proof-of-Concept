@@ -8,31 +8,103 @@
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 @inject LoginStateService LoginStateService
 
-<h3>Sign In</h3>
-
-<div>
-    <label for="email">Email:</label>
-    <input id="email" type="email" @bind="email" />
+<div class="signin-container">
+    <h3>Sign In</h3>
+    <div class="input-group">
+        <label for="email">Email:</label>
+        <input id="email" type="email" @bind="email" />
+        <p class="error-message">@EmailError</p>
+    </div>
+    <div class="input-group">
+        <label for="password">Password:</label>
+        <input id="password" type="password" @bind="password" />
+        <p class="error-message">@PasswordError</p>
+    </div>
+    <p class="error-message">@GeneralError</p>
+    <button class="signin-button" @onclick="AttemptSignIn">Sign In</button>
+    <p class="status-message">@statusMessage</p>
 </div>
-<div>
-    <label for="password">Password:</label>
-    <input id="password" type="password" @bind="password" />
-</div>
-<p>@GeneralError</p>
-<button @onclick="AttemptSignIn">Sign In</button>
 
-<p>@statusMessage</p>
+<style>
+    .signin-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+    .input-group {
+        margin-bottom: 15px;
+    }
+    .input-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .input-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    .signin-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .signin-button:hover {
+        background-color: #0056b3;
+    }
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    .status-message {
+        color: green;
+        font-size: 14px;
+    }
+</style>
 
 @code {
     private string email;
     private string password;
     private string statusMessage;
     private string GeneralError;
+    private string EmailError;
+    private string PasswordError;
 
     private async Task AttemptSignIn()
     {
         try
         {
+            GeneralError = string.Empty;
+            EmailError = string.Empty;
+            PasswordError = string.Empty;
+
+            if (string.IsNullOrEmpty(email))
+            {
+                EmailError = "Email is missing\n";
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                PasswordError = "Password is missing";
+            }
+
+            if (!string.IsNullOrEmpty(EmailError) || !string.IsNullOrEmpty(PasswordError))
+            {
+                return;
+            }
+
             HttpClient authAPI = HttpClientService.GetAuthHttpClient();
 
             var apiEndpoint = "auth/login";
@@ -42,7 +114,7 @@
             if (!response.IsSuccessStatusCode)
             {
                 string errorBody = await response.Content.ReadAsStringAsync();
-                GeneralError = "Log in attempt failed. Email or password incorrect.\n\n" + errorBody;
+                GeneralError = "Log in attempt failed. Email or password incorrect.";
             }
             else
             {

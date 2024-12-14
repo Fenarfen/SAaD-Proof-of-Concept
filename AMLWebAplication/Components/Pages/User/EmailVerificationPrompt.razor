@@ -3,16 +3,69 @@
 @inject NavigationManager NavigationManager
 @inject AMLWebAplication.Services.HttpClientService HttpClientService
 
-<h3>Account Created!</h3>
-<p>Please verify your account by entering the code sent to your email below</p>
-
-<div class="form-group">
-    <input id="code" type="text" @bind="VerificationCode" class="form-control" />
-    <div style="color: red;" class="error-message">@CodeError</div>
+<div class="verification-container">
+    <h3>Email Verification</h3>
+    <p>Please verify your account by entering the code sent to your email below:</p>
+    <div class="input-group">
+        <label for="code">Verification Code:</label>
+        <input id="code" type="text" @bind="VerificationCode" />
+        <div class="error-message">@CodeError</div>
+    </div>
+    <button class="primary-button" @onclick="VerifyCode">Verify</button>
+    <div class="error-message">@GeneralError</div>
 </div>
 
-<button class="btn btn-primary" @onclick="VerifyCode">Verify</button>
-<div style="color: red;" class="error-message">@GeneralError</div>
+<style>
+    .verification-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+    .primary-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+        .primary-button:hover {
+            background-color: #0056b3;
+        }
+
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+</style>
 
 @code {
     public string Email { get; set; }
