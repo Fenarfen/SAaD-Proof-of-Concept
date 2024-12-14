@@ -239,7 +239,7 @@ namespace AuthAPI.Controllers
 			}
 		}
 
-		private string GenerateVerificationCode()
+		public static string GenerateVerificationCode()
 		{
 			return new Random().Next(100000, 1000000).ToString();
 		}
