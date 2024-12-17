@@ -25,7 +25,6 @@ Backend Technology Stack:
 
 * ASP.NET Core
 * Node.js
-* React
 
 ## Decision Outcome
 
@@ -61,7 +60,6 @@ The decision to use ASP.NET Core will be re-evaluated during the prototyping pha
 * Good, has a large ecosystem of packages accessible through NPM.
 * Good, allows for scalable networked applications, making it a good contender for the implementaiton of microservices which require real time capabilities.
 * Bad, possible performance bottleneck when performing computational tasks, due to the single-threaded event loop model.
-* Bad, the team is currently unfamiliar with the technology, requiring a steeper learning curve and potentially adding delays.
-* Bad, less comprehensive tooling in regards to security, logging and the development of APIs.
-* Bad, would require a restructure of existing C# code to implement.
 
+### More Information
+ASP.NET Core is the most efficient choice, allowing for the utilisation of the current capabilties of the team, and offers good scalability as well as robust performance.
