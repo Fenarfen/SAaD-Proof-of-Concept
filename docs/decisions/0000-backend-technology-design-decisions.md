@@ -57,6 +57,11 @@ The decision to use ASP.NET Core will be re-evaluated during the prototyping pha
 * Bad, can be resource intensive compared to more minimalist backend frameworks.
 
 #### Node.js
-
-#### React
+* Good, allows for JS everywhere, if going for a JS approach over C# .NET.
+* Good, has a large ecosystem of packages accessible through NPM.
+* Good, allows for scalable networked applications, making it a good contender for the implementaiton of microservices which require real time capabilities.
+* Bad, possible performance bottleneck when performing computational tasks, due to the single-threaded event loop model.
+* Bad, the team is currently unfamiliar with the technology, requiring a steeper learning curve and potentially adding delays.
+* Bad, less comprehensive tooling in regards to security, logging and the development of APIs.
+* Bad, would require a restructure of existing C# code to implement.
 
