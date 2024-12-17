@@ -9,12 +9,12 @@ Title: Decision to choose the frontend technology for the Library Management Sys
 
 ## Context and Problem Statement
 
-The applications needs an appropriate frontend technology, able to integrate with our ASP.NET Core backend, providing a robust user interface.
+The application needs an appropriate frontend technology, able to integrate with our ASP.NET Core backend, providing a robust user interface.
 
 ## Considered Options
 
 * Blazor
-* React with .NET Core API Backend
+* React
 
 ## Decision Outcome
 
