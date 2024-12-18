@@ -22,44 +22,19 @@ else
             <PropertyColumn Property="@(m => m.Title)" Sortable="true">
                 <ColumnOptions>
                     <div class="search-box">
-                        <input type="search" list="titleList" autofocus @bind="titleFilter" @bind:event="oninput" />
-                        <datalist id="titleList">
-                            @foreach (var title in media.Select(m => m.Title).Distinct())
-                            {
-                                <option value="@title" />
-                            }
-                        </datalist>
+                        <input type="search" autofocus @bind="titleFilter" @bind:event="oninput" />
                     </div>
                 </ColumnOptions>
             </PropertyColumn>
             <PropertyColumn Property="@(m => m.Author)" Sortable="true" >
                 <ColumnOptions>
                     <div class="search-box">
-                        <input type="search" list="authorList" autofocus @bind="authorFilter" @bind:event="oninput" />
-                        <datalist id="authorList">
-                            @foreach (var author in media.Select(m => m.Author).Distinct())
-                            {
-                                <option value="@author" />
-                            }
-                        </datalist>
-                    </div>
-                </ColumnOptions>
-            </PropertyColumn>
-            <PropertyColumn Property="@(m => m.Genre)" Sortable="true" >
-                <ColumnOptions>
-                    <div class="search-box">
-                        <input type="search" list="genreList" autofocus @bind="genreFilter" @bind:event="oninput" />
-                        <datalist id="genreList">
-                            @foreach (var genre in media.Select(m => m.Genre).Distinct())
-                            {
-                                <option value="@genre" />
-                            }
-                        </datalist>
+                        <input type="search" autofocus @bind="authorFilter" @bind:event="oninput" />
                     </div>
                 </ColumnOptions>
             </PropertyColumn>
             <PropertyColumn Property="@(m => m.Released.ToShortDateString())" Title="Release Date" />
-            <PropertyColumn Property="@(m => m.Branch.Name)" Title="Branch Name" Sortable="true" />
+            <PropertyColumn Property="@(m => m.Branch.Name)" Sortable="true" />
             <PropertyColumn Property="@(m => m.Branch.City)" Sortable="true" />
             <PropertyColumn Property="@(m => m.Type)" />
         </QuickGrid>
@@ -77,7 +52,6 @@ else
 
     private string titleFilter = string.Empty;
     private string authorFilter = string.Empty;
-    private string genreFilter = string.Empty;
 
     private IQueryable<Media>? filteredMedia
     {
@@ -90,9 +64,6 @@ else
 
             if (!string.IsNullOrEmpty(authorFilter))
                 result = result?.Where(m => m.Author.Contains(authorFilter));
-
-            if (!string.IsNullOrEmpty(genreFilter))
-                result = result?.Where(m => m.Genre.Contains(genreFilter));
 
             return result;
         }
