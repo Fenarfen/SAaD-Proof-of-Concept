@@ -1,32 +1,131 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">AMLWebAplication</a>
-    </div>
+﻿@using AMLWebAplication.Services
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject LoginStateService LoginStateService
+
+<div class="top-row ps-3 navbar navbar-dark">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="">AMLWebAplication</a>
+	</div>
 </div>
 
 <input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">  
+	<nav class="flex-column">
+		@if (IsLoggedIn == false)
+		{
+			<div class="nav-item px-3">
 
-            <NavLink class="nav-link" href="/reports">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Reports
-            </NavLink>  
+				<NavLink class="nav-link" href="/signin">
+					<span class="oi oi-list-rich" aria-hidden="true"></span> Log in
+				</NavLink>
 
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/monitorsystem">  
+			</div>
+			<div class="nav-item px-3">
 
-                <span class="oi oi-monitor" aria-hidden="true"></span> Monitor System
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/Search">
+				<NavLink class="nav-link" href="/signup">
+					<span class="oi oi-list-rich" aria-hidden="true"></span> Sign Up
+				</NavLink>
+
+			</div>
+			<div class="nav-item px-3">
+				
+				<NavLink class="nav-link" href="/signup">
+                	<span class="oi oi-monitor" aria-hidden="true"></span> Monitor System
+            	</NavLink>
+        	
+			</div>
+        	<div class="nav-item px-3">
+
+           		<NavLink class="nav-link" href="/Search">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Search Media
-            </NavLink>
-        </div>
+            	</NavLink>
+        	
+			</div>
+		}
+		else
+		{
+			<div class="nav-item px-3">
 
-    </nav>
+				<NavLink class="nav-link" href="/profile-management">
+					<span class="oi oi-list-rich" aria-hidden="true"></span> Manage Profile
+				</NavLink>
+
+			</div>
+
+			<div class="nav-item px-3">
+
+				<button class="btn btn-link nav-link" @onclick="Logout">
+					<span class="oi oi-list-rich" aria-hidden="true"></span> Log Out
+				</button>
+
+			</div>
+		}
+		<div class="nav-item px-3">
+
+			<NavLink class="nav-link" href="/reports">
+				<span class="oi oi-list-rich" aria-hidden="true"></span> Reports
+			</NavLink>
+
+		</div>
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="/monitorsystem">
+
+				<span class="oi oi-monitor" aria-hidden="true"></span> Monitor System
+			</NavLink>
+		</div>
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="/Search">
+				<span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Search Media
+			</NavLink>
+		</div>
+		<div class="nav-item px-3">
+			<NavLink class="nav-link" href="/Transfer">
+				<span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Transfer Media
+			</NavLink>
+		</div>
+
+	</nav>
 </div>
 
+@code {
+	private string token;
+	private string role;
+	private bool IsLoggedIn;
+
+	private bool _isInitialised = false;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && !_isInitialised)
+		{
+			IsLoggedIn = await IsUserLoggedInAsync();
+			StateHasChanged();
+		}
+	}
+
+	private async Task<bool> IsUserLoggedInAsync()
+	{
+		token = await SessionStorage.GetItemAsync<string>("token");
+		role = await SessionStorage.GetItemAsync<string>("role");
+		return !string.IsNullOrEmpty(token);
+	}
+
+	private void HandleLoginStateChanged()
+	{
+		InvokeAsync(async () =>
+		{
+			IsLoggedIn = await IsUserLoggedInAsync();
+			StateHasChanged();
+		});
+	}
+
+	private async Task Logout()
+	{
+		await SessionStorage.RemoveItemAsync("token");
+		await SessionStorage.RemoveItemAsync("role");
+		IsLoggedIn = false;
+
+		LoginStateService.NotifyLoginStateChanged();
+	}
+}

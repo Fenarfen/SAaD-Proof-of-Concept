@@ -1,0 +1,421 @@
+﻿@page "/profile-management"
+@using AMLWebAplication.Data
+@using AMLWebAplication.Services
+@using System.Text.Json
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+@inject AMLWebAplication.Services.HttpClientService HttpClientService
+@inject NavigationManager Navigation
+
+@if (Profile != null)
+{
+	<div class="profile-container">
+		<h3>Profile Management</h3>
+		<div class="error-message">@GeneralError</div>
+		<div class="input-group">
+			<label>Email:</label>
+			<input @bind="Profile.Email" />
+			@if (ValidationErrors.Contains("Email is not the correct format."))
+			{
+				<span class="text-danger">Email is not the correct format.</span>
+			}
+			@if (ValidationErrors.Contains("Email is already taken."))
+			{
+				<span class="text-danger">Email is already taken.</span>
+			}
+			@if (ValidationErrors.Contains("Email is required."))
+			{
+				<span class="text-danger">Email is required.</span>
+			}
+		</div>
+		<div class="input-group">
+			<label>First Name:</label>
+			<input @bind="Profile.FirstName" />
+			@if (ValidationErrors.Contains("First Name is required."))
+			{
+				<span class="text-danger">First Name is required.</span>
+			}
+		</div>
+		<div class="input-group">
+			<label>Last Name:</label>
+			<input @bind="Profile.LastName" />
+			@if (ValidationErrors.Contains("Last Name is required."))
+			{
+				<span class="text-danger">Last Name is required.</span>
+			}
+		</div>
+		<div class="input-group">
+			<label>Role:</label>
+			<input class="gray-background" @bind="Profile.Role" readonly />
+		</div>
+
+		<h4>Addresses</h4>
+		<button class="success-button" @onclick="AddAddress">Add Address</button>
+
+		@if (Profile.Addresses.Any())
+		{
+			@foreach (var address in Profile.Addresses)
+			{
+				<div class="address-container">
+					<div class="input-group">
+						<label>First Line (required):</label>
+						<input @bind="address.FirstLine" />
+						@if (address.ValidationErrors.Contains("First Line is required."))
+						{
+							<span class="text-danger">First Line is required.</span>
+						}
+					</div>
+					<div class="input-group">
+						<label>Second Line:</label>
+						<input @bind="address.SecondLine" />
+					</div>
+					<div class="input-group">
+						<label>Third Line:</label>
+						<input @bind="address.ThirdLine" />
+					</div>
+					<div class="input-group">
+						<label>Fourth Line:</label>
+						<input @bind="address.FourthLine" />
+					</div>
+					<div class="input-group">
+						<label>City (required):</label>
+						<input @bind="address.City" />
+						@if (address.ValidationErrors.Contains("City is required."))
+						{
+							<span class="text-danger">City is required.</span>
+						}
+					</div>
+					<div class="input-group">
+						<label>County:</label>
+						<input @bind="address.County" />
+					</div>
+					<div class="input-group">
+						<label>Country:</label>
+						<input @bind="address.Country" />
+					</div>
+					<div class="input-group">
+						<label>Postcode (required):</label>
+						<input @bind="address.Postcode" />
+						@if (address.ValidationErrors.Contains("Postcode is required."))
+						{
+							<span class="text-danger">Postcode is required.</span>
+						}
+					</div>
+					<div class="form-check">
+						<input type="checkbox" class="form-check-input" @bind="address.IsDefault" />
+						<label class="form-check-label">Set as Default</label>
+					</div>
+					<button class="danger-button" @onclick="() => RemoveAddress(address)">Remove</button>
+				</div>
+			}
+		}
+		else
+		{
+			<p>No addresses added yet.</p>
+		}
+
+		<button class="primary-button" @onclick="SaveProfile">Save Changes</button>
+	</div>
+}
+else
+{
+	<p>@OnLoadMessage</p>
+}
+
+<style>
+	.profile-container {
+		max-width: 600px;
+		margin: 50px auto;
+		padding: 20px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		background-color: #f9f9f9;
+	}
+
+	.input-group {
+		margin-bottom: 15px;
+	}
+
+		.input-group label {
+			display: block;
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
+
+		.input-group input {
+			width: 100%;
+			padding: 8px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			box-sizing: border-box;
+		}
+
+	.gray-background {
+		background-color: #adadad;
+	}
+
+	.address-container {
+		padding: 15px;
+		margin-bottom: 10px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		background-color: #f1f1f1;
+	}
+
+	.primary-button, .success-button, .danger-button {
+		width: 100%;
+		padding: 10px;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		font-size: 16px;
+		cursor: pointer;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+
+	.primary-button {
+		background-color: #007bff;
+	}
+
+		.primary-button:hover {
+			background-color: #0056b3;
+		}
+
+	.success-button {
+		background-color: #28a745;
+	}
+
+		.success-button:hover {
+			background-color: #218838;
+		}
+
+	.danger-button {
+		background-color: #dc3545;
+	}
+
+		.danger-button:hover {
+			background-color: #c82333;
+		}
+
+	.error-message {
+		color: red;
+		font-size: 14px;
+	}
+
+	.text-danger {
+		color: red;
+		font-size: 14px;
+	}
+</style>
+
+@code {
+	private ProfileManagementDTO Profile { get; set; }
+	private bool _isInitialized = false;
+	private string GeneralError;
+	private string OnLoadMessage = "Loading...";
+	private List<string> ValidationErrors = new List<string>();
+	private string initialEmail;
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && !_isInitialized)
+		{
+			_isInitialized = true;
+
+			var token = await SessionStorage.GetItemAsync<string>("token");
+
+			if (!string.IsNullOrWhiteSpace(token))
+			{
+				HttpResponseMessage response = null;
+				try
+				{
+					HttpClient userAPI = HttpClientService.GetUserHttpClient();
+
+					var userAPIEndpoint = $"Account/get-profile-management-dto/{token}";
+					response = await userAPI.GetAsync(userAPIEndpoint);
+					response.EnsureSuccessStatusCode();
+
+					var jsonResponse = await response.Content.ReadAsStringAsync();
+
+					Profile = JsonSerializer.Deserialize<ProfileManagementDTO>(jsonResponse, new JsonSerializerOptions
+						{
+							PropertyNameCaseInsensitive = true
+						});
+
+
+					initialEmail = Profile.Email;
+					StateHasChanged();
+				}
+				catch (HttpRequestException httpEx)
+				{
+					Console.WriteLine("content: " + await response.Content.ReadAsStringAsync());
+					Console.WriteLine($"Request failed: {httpEx.ToString()}");
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine($"An error occurred: {ex.ToString()}");
+				}
+			}
+			else
+			{
+				OnLoadMessage = "Please log in to view this page.";
+			}
+		}
+	}
+
+	private void AddAddress()
+	{
+		Profile.Addresses.Add(new Address() { AccountID = Profile.ID });
+		StateHasChanged();
+	}
+
+	private void RemoveAddress(Address address)
+	{
+		Profile.Addresses.Remove(address);
+
+		if (address.IsDefault && Profile.Addresses.Any())
+		{
+			Profile.Addresses.First().IsDefault = true;
+		}
+		StateHasChanged();
+	}
+
+	private void SetAsDefault(Address address)
+	{
+		foreach (var addr in Profile.Addresses)
+		{
+			addr.IsDefault = false;
+		}
+
+		address.IsDefault = true;
+		StateHasChanged();
+	}
+
+	private async Task SaveProfile()
+	{
+		if (!await ValidateProfile())
+		{
+			GeneralError = "Failed to update profile information";
+			StateHasChanged();
+			return;
+		}
+
+		HttpClient userAPI = HttpClientService.GetUserHttpClient();
+
+		var apiEndpoint = "Account/update";
+
+		var response = await userAPI.PostAsJsonAsync(apiEndpoint, new { Profile.ID, Profile.Role, Profile.Email, Profile.FirstName, Profile.LastName, Profile.CreatedAt, Profile.Verified, Profile.Addresses });
+
+		if (!response.IsSuccessStatusCode)
+		{
+			string errorBody = await response.Content.ReadAsStringAsync();
+			GeneralError = "Error when updating account.\n\n" + errorBody;
+
+			return;
+		}
+
+		Navigation.NavigateTo("/profile-management-saved");
+	}
+
+	private async Task<bool> ValidateProfile()
+	{
+		ValidationErrors.Clear();
+
+		foreach (Address address in Profile.Addresses)
+		{
+			address.ValidationErrors.Clear();
+		}
+
+		if (string.IsNullOrEmpty(Profile.Email))
+		{
+			ValidationErrors.Add("Email is required.");
+		}
+		else if (Profile.Email != initialEmail)
+		{
+			HttpClient userAPI = HttpClientService.GetUserHttpClient();
+
+			var apiEndpoint = $"Account/does-email-exist/{Profile.Email}";
+
+			var response = await userAPI.GetAsync(apiEndpoint);
+			var jsonResponse = await response.Content.ReadAsStringAsync();
+			var result = JsonSerializer.Deserialize<EmailExistsResponse>(jsonResponse);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				string errorBody = await response.Content.ReadAsStringAsync();
+				ValidationErrors.Add("Email is taken.");
+			}
+
+			if (result.exists == "true")
+			{
+				ValidationErrors.Add("Email is taken.");
+			}
+			else if (result.message == "Invalid email format.")
+			{
+				ValidationErrors.Add("Email is not the correct format.");
+			}
+			else
+			{
+				ValidationErrors.Add("Unexpected response when checking whether email is in use");
+			}
+		}
+
+		if (string.IsNullOrEmpty(Profile.FirstName))
+		{
+			ValidationErrors.Add("First Name is required.");
+		}
+
+		if (string.IsNullOrEmpty(Profile.LastName))
+		{
+			ValidationErrors.Add("Last Name is required.");
+		}
+
+		bool addressValidationFailed = false;
+
+		int countDefault = 0;
+
+		foreach (Address address in Profile.Addresses)
+		{
+			if (string.IsNullOrEmpty(address.FirstLine))
+			{
+				address.ValidationErrors.Add("First Line is required.");
+				addressValidationFailed = true;
+			}
+
+			if (string.IsNullOrEmpty(address.City))
+			{
+				address.ValidationErrors.Add("City is required.");
+				addressValidationFailed = true;
+			}
+
+			if (string.IsNullOrEmpty(address.Postcode))
+			{
+				address.ValidationErrors.Add("Postcode is required");
+				addressValidationFailed = true;
+			}
+
+			if (address.IsDefault)
+			{
+				countDefault++;
+			}
+		}
+
+		if (countDefault > 1)
+		{
+			addressValidationFailed = true;
+
+			foreach (Address address in Profile.Addresses)
+			{
+				address.ValidationErrors.Add("Only one address can be marked as default.");
+			}
+		}
+
+		if (ValidationErrors.Count > 0 || addressValidationFailed)
+		{
+			return false;
+		}
+
+		return true;
+	}
+}

@@ -1,0 +1,304 @@
+﻿@page "/signup"
+@using System.Net.Http.Json;
+@using System.Text.RegularExpressions;
+@using System.Net.Http;
+@using System.Text.Json;
+@using AMLWebAplication.Data
+@inject AMLWebAplication.Services.HttpClientService HttpClientService
+@inject NavigationManager Navigation
+@inject Blazored.SessionStorage.ISessionStorageService SessionStorage
+
+<div class="signup-container">
+	<h3>Sign Up</h3>
+	<div class="input-group">
+		<label for="email">Email:</label>
+		<input id="email" type="email" @bind="Email" />
+		<button class="secondary-button" @onclick="CheckEmailAvailability">Check Availability</button>
+		<div class="error-message">@EmailError</div>
+		<div class="status-message" style="color: @EmailAvailabilityMessageColor">@EmailAvailabilityMessage</div>
+	</div>
+
+	<div class="input-group">
+		<label for="password">Password:</label>
+		<input id="password" type="password" @bind="Password" />
+	</div>
+
+	<div class="input-group">
+		<label for="confirmPassword">Confirm Password:</label>
+		<input id="confirmPassword" type="password" @bind="ConfirmPassword" />
+		<div class="error-message">@PasswordMatchError</div>
+	</div>
+
+	<div class="input-group">
+		<label for="firstName">First Name:</label>
+		<input id="firstName" type="text" @bind="FirstName" />
+	</div>
+
+	<div class="input-group">
+		<label for="lastName">Last Name:</label>
+		<input id="lastName" type="text" @bind="LastName" />
+	</div>
+
+	<button class="primary-button" @onclick="AttemptSignUp" disabled="@IsSignUpButtonDisabled">Sign Up</button>
+	<div class="error-message" style="color: @GeneralErrorColor">@GeneralError</div>
+</div>
+
+<style>
+	.signup-container {
+		max-width: 400px;
+		margin: 50px auto;
+		padding: 20px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		background-color: #f9f9f9;
+	}
+
+	.input-group {
+		margin-bottom: 15px;
+	}
+
+		.input-group label {
+			display: block;
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
+
+		.input-group input {
+			width: 100%;
+			padding: 8px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			box-sizing: border-box;
+		}
+
+	.primary-button, .secondary-button {
+		width: 100%;
+		padding: 10px;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		font-size: 16px;
+		cursor: pointer;
+		margin-top: 10px;
+	}
+
+	.primary-button {
+		background-color: #007bff;
+	}
+
+		.primary-button:hover {
+			background-color: #0056b3;
+		}
+
+	.secondary-button {
+		background-color: #6c757d;
+		margin-top: 0;
+	}
+
+		.secondary-button:hover {
+			background-color: #5a6268;
+		}
+
+	.error-message {
+		color: red;
+		font-size: 14px;
+		margin-top: 5px;
+	}
+
+	.status-message {
+		font-size: 14px;
+		margin-top: 5px;
+	}
+</style>
+
+@code {
+	private string Email { get; set; }
+	private string Password { get; set; }
+	private string ConfirmPassword { get; set; }
+	private string FirstName { get; set; }
+	private string LastName { get; set; }
+
+	private string EmailError { get; set; }
+	private string PasswordMatchError { get; set; }
+	private string GeneralError { get; set; }
+	private string GeneralErrorColor { get; set; }
+	private string EmailAvailabilityMessage { get; set; }
+	private string EmailAvailabilityMessageColor { get; set; }
+
+	private bool IsSignUpButtonDisabled { get; set; } = false;
+	private bool _isInitialized = false;
+
+	private void ValidateEmail()
+	{
+		string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+		Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+
+		if (!regex.IsMatch(Email))
+		{
+			EmailError = "Please enter a valid email address.";
+		}
+		else
+		{
+			EmailError = null;
+		}
+	}
+
+	private bool ValidatePasswordMatch()
+	{
+		if (Password != ConfirmPassword)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	private async Task CheckEmailAvailability()
+	{
+		if (string.IsNullOrWhiteSpace(Email))
+		{
+			EmailAvailabilityMessageColor = "red";
+			EmailAvailabilityMessage = "Please enter an email";
+			GeneralError = null;
+			return;
+		}
+
+		HttpClient userAPI = HttpClientService.GetUserHttpClient();
+		var apiEndpoint = $"Account/does-email-exist/{Email}";
+
+		try
+		{
+			Console.WriteLine($"Sending request to {userAPI.BaseAddress}{apiEndpoint}");
+			EmailAvailabilityMessage = "Checking...";
+			var response = await userAPI.GetAsync(apiEndpoint);
+
+			var jsonResponse = await response.Content.ReadAsStringAsync();
+			var result = JsonSerializer.Deserialize<EmailExistsResponse>(jsonResponse);
+
+			if (result.exists == "false")
+			{
+				EmailAvailabilityMessageColor = "Green";
+				GeneralError = null;
+				EmailAvailabilityMessage = "Available";
+			}
+			else if (result.exists == "true")
+			{
+				EmailAvailabilityMessageColor = "Red";
+				GeneralError = null;
+				EmailAvailabilityMessage = $"That email is already in use";
+			}
+			else if (result.message == "Invalid email format.")
+			{
+				EmailAvailabilityMessageColor = "Red";
+				GeneralError = null;
+				EmailAvailabilityMessage = $"Please enter a valid email format.";
+			}
+			else
+			{
+				EmailAvailabilityMessageColor = "Red";
+				EmailAvailabilityMessage = null;
+				GeneralError = "Unexpected response from Account/does-email-exist - " + jsonResponse;
+			}
+		}
+		catch (Exception ex)
+		{
+			Console.WriteLine(ex.ToString());
+			EmailAvailabilityMessageColor = "Red";
+			EmailAvailabilityMessage = "Error checking email availability.";
+		}
+	}
+
+	private async Task AttemptSignUp()
+	{
+		GeneralError = null;
+
+		if (string.IsNullOrWhiteSpace(Email) ||
+			string.IsNullOrWhiteSpace(Password) ||
+			string.IsNullOrWhiteSpace(ConfirmPassword) ||
+			string.IsNullOrWhiteSpace(FirstName) ||
+			string.IsNullOrWhiteSpace(LastName) ||
+			EmailError != null ||
+			PasswordMatchError != null)
+		{
+			GeneralErrorColor = "red";
+			GeneralError = "Please fill out all fields correctly.";
+			return;
+		}
+
+		await CheckEmailAvailability();
+
+		if (!ValidatePasswordMatch())
+		{
+			GeneralErrorColor = "red";
+			GeneralError = "Passwords do not match.";
+		}
+
+		try
+		{
+			if (!string.IsNullOrEmpty(GeneralError))
+			{
+				return;
+			}
+
+			HttpClient userAPI = HttpClientService.GetUserHttpClient();
+
+			var apiEndpoint = "Account/create";
+			GeneralErrorColor = "Black";
+			GeneralError = "Attempting to create account, please wait...";
+
+			var signUpData = new
+			{
+				email = Email,
+				password = Password,
+				firstName = FirstName,
+				lastName = LastName
+			};
+
+			var response = await userAPI.PostAsJsonAsync(apiEndpoint, signUpData);
+
+			if (!response.IsSuccessStatusCode)
+			{
+				string errorBody = await response.Content.ReadAsStringAsync();
+				GeneralError = "Sign up failed. Please try again later.\n\n" + errorBody;
+			}
+			else
+			{
+				Navigation.NavigateTo($"/email-verification-prompt?email={Email}");
+			}
+		}
+		catch
+		{
+			GeneralErrorColor = "Red";
+			GeneralError = "Error signing up. Please try again.";
+		}
+	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender && !_isInitialized)
+		{
+			_isInitialized = true;
+
+			var token = await SessionStorage.GetItemAsync<string>("token");
+
+			if (!string.IsNullOrWhiteSpace(token))
+			{
+				SetLoggedOn();
+			}
+		}
+	}
+
+	private void SetLoggedOn()
+	{
+		IsSignUpButtonDisabled = true;
+		GeneralErrorColor = "red";
+		GeneralError = "You are already logged on, please log out before creating a new account";
+	}
+
+	public class SignInResponse()
+	{
+		public string? token { get; set; }
+		public string? role { get; set; }
+	}
+}

@@ -1,0 +1,134 @@
+﻿@page "/email-verification-prompt"
+@inject NavigationManager Navigation
+@inject NavigationManager NavigationManager
+@inject AMLWebAplication.Services.HttpClientService HttpClientService
+
+<div class="verification-container">
+    <h3>Email Verification</h3>
+    <p>Please verify your account by entering the code sent to your email below:</p>
+    <div class="input-group">
+        <label for="code">Verification Code:</label>
+        <input id="code" type="text" @bind="VerificationCode" />
+        <div class="error-message">@CodeError</div>
+    </div>
+    <button class="primary-button" @onclick="VerifyCode">Verify</button>
+    <div class="error-message">@GeneralError</div>
+</div>
+
+<style>
+    .verification-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+    .primary-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+        .primary-button:hover {
+            background-color: #0056b3;
+        }
+
+    .error-message {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+</style>
+
+@code {
+    public string Email { get; set; }
+    private string VerificationCode { get; set; }
+    private string CodeError { get; set; }
+    private string GeneralError { get; set; }
+    private string Value;
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            var uri = new Uri(Navigation.ToAbsoluteUri(Navigation.Uri).ToString());
+            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+            Email = query.Get("email");
+        }
+        catch
+        {
+            GeneralError = "Could not get value from url";
+        }
+    }
+
+    private async Task VerifyCode()
+    {
+        GeneralError = null;
+
+        if (string.IsNullOrWhiteSpace(VerificationCode) || VerificationCode.Length != 6 || !VerificationCode.All(char.IsDigit))
+        {
+            CodeError = "The verification code must be exactly 6 digits.";
+        }
+        else
+        {
+            CodeError = string.Empty;
+        }
+
+        if (!string.IsNullOrWhiteSpace(CodeError))
+        {
+            GeneralError = "Please enter a code";
+            return;
+        }
+
+        try
+        {
+            HttpClient authAPI = HttpClientService.GetAuthHttpClient();
+            var apiEndpoint = "auth/verify-account";
+
+            Console.WriteLine(authAPI.BaseAddress + apiEndpoint);
+
+            var response = await authAPI.PostAsJsonAsync(apiEndpoint, new { email = Email, code = VerificationCode });
+
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/email-verification-success");
+            }
+            else
+            {
+                Console.WriteLine(response.Content);
+                GeneralError = "The code you entered is incorrect. Please try again.";
+            }
+        }
+        catch
+        {
+            GeneralError = "An error occurred during verification. Please try again.";
+        }
+    }
+}

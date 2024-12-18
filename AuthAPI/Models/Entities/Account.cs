@@ -4,12 +4,12 @@
 	{
 		public int ID { get; set; }
 		public int? TokenID { get; set; }
-		public required int RoleID { get; set; }
-		public required string Email { get; set; }
-		public required string Password { get; set; }
-		public required string FirstName { get; set; }
-		public required string LastName { get; set; }
-		public required DateTime Created { get; set; }
-		public required bool Verified { get; set; }
+		public int RoleID { get; set; }
+		public string Email { get; set; }
+		public string Password { get; set; }
+		public string FirstName { get; set; }
+		public string LastName { get; set; }
+		public DateTime Created { get; set; }
+		public bool Verified { get; set; }
 	}
 }

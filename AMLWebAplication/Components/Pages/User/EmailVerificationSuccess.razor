@@ -1,0 +1,42 @@
+﻿@page "/email-verification-success"
+@inject NavigationManager Navigation
+
+<div class="success-container">
+    <h3>Email Verification Successful</h3>
+    <p>Log in to continue.</p>
+    <button class="primary-button" @onclick="RedirectToLogIn">Log In</button>
+</div>
+
+<style>
+    .success-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+        text-align: center;
+    }
+    .primary-button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .primary-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+@code {
+    private void RedirectToLogIn()
+    {
+        Navigation.NavigateTo("/signin");
+    }
+}
