@@ -35,7 +35,6 @@ public class EmailServiceTests
 	[Test]
 	public void SendVerificationEmail_ReturnsSuccess_WhenEmailSent()
 	{
-		// Arrange
 		string emailContent = "<html>{{VERIFICATION_CODE}}</html>";
 		_mockFileWrapper.Setup(f => f.ReadAllText(It.IsAny<string>())).Returns(emailContent);
 
@@ -45,10 +44,8 @@ public class EmailServiceTests
 					   .Returns("Email sent successfully");
 		_mockSmtpClient.Setup(client => client.Disconnect(true, default)).Verifiable();
 
-		// Act
 		var result = _emailService.SendVerificationEmail("recipient@test.com", "123456");
 
-		// Assert
 		Assert.That(result, Is.EqualTo("success"));
 		_mockSmtpClient.Verify(client => client.Connect(_smtpUrl, _smtpPort, false, default), Times.Once);
 		_mockSmtpClient.Verify(client => client.Authenticate(_smtpEmail, _smtpPassword, default), Times.Once);
@@ -68,7 +65,6 @@ public class EmailServiceTests
 					   .Returns("failed");
 		_mockSmtpClient.Setup(client => client.Disconnect(true, default)).Verifiable();
 
-		// Act
 		var result = _emailService.SendVerificationEmail("recipient@test.com", "123456");
 
 		Assert.That(result, Is.EqualTo("Failed to send verification email"));
@@ -81,16 +77,13 @@ public class EmailServiceTests
 	[Test]
 	public void SendVerifiedConfirmationEmail_ReturnsSuccess_WhenEmailSent()
 	{
-		// Arrange
 		_mockFileWrapper.Setup(f => f.ReadAllText(It.IsAny<string>()))
 			.Returns("<html>{{VERIFICATION_CODE}}</html>");
 
 		_mockSmtpClient.Setup(client => client.Send(It.IsAny<MimeMessage>(), default, default)).Verifiable();
 
-		// Act
 		var result = _emailService.SendVerifiedConfirmationEmail("recipient@test.com", "John Doe");
 
-		// Assert
 		Assert.That(result, Is.EqualTo("success"));
 		_mockSmtpClient.Verify(client => client.Send(It.IsAny<MimeMessage>(), default, default), Times.Once);
 	}
@@ -98,17 +91,14 @@ public class EmailServiceTests
 	[Test]
 	public void SendVerifiedConfirmationEmail_ReturnsFailure_WhenEmailFailsToSend()
 	{
-		// Arrange
 		_mockFileWrapper.Setup(f => f.ReadAllText(It.IsAny<string>()))
 			.Returns("<html>{{VERIFICATION_CODE}}</html>");
 
 		_mockSmtpClient.Setup(client => client.Send(It.IsAny<MimeMessage>(), default, default))
 			.Throws(new Exception("Failed to send email"));
 
-		// Act
 		var result = _emailService.SendVerifiedConfirmationEmail("recipient@test.com", "John Doe");
 
-		// Assert
 		Assert.That(result.Contains("Failed to send email"));
 	}
 }
