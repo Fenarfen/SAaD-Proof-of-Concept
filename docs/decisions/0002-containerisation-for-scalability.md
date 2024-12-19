@@ -26,6 +26,7 @@ Chosen option: Kubernetes
 - Good, allows for use of container types other than Docker, so more flexibility.
 - Good, wide range of useful and automatic features.
 - Neutral, source code available so potential for vulnerabilities to be found, open source so lot's of security research.
+- Bad, because {negative consequence, e.g., compromising one or more desired qualities, …}
 
 ## Pros and Cons of the Options
 
