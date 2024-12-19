@@ -5,32 +5,41 @@ using AuthAPI.Models;
 using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using AuthAPI.Models.DTOs;
+using System.Data;
+using Newtonsoft.Json.Linq;
 
 namespace AuthAPI.Services;
 
 public class DatabaseService : IDatabaseService
 {
-	private readonly string _connectionString;
+	private readonly IDbConnection _connection;
 
-	public DatabaseService(string connectionString)
+	public DatabaseService(IDbConnection connection)
 	{
-		_connectionString = connectionString;
+		_connection = connection;
 	}
 
 	public string StoreVerificationCode(int accountID, string code)
 	{
-		using (SqlConnection connection = new SqlConnection(_connectionString))
+		try
 		{
-			connection.Open();
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
 
 			string query = @"insert into AccountVerificationCode values (@AccountID,
-																	  @Code,
-																      GETUTCDATE())";
+																	 @Code,
+																     GETUTCDATE())";
 
-			using (SqlCommand command = new SqlCommand(query, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@AccountID", accountID);
-				command.Parameters.AddWithValue("@Code", code);
+				command.CommandText = query;
+
+				AddParameter(command, "@AccountID", accountID);
+				AddParameter(command, "@Code", code);
 
 				int result = command.ExecuteNonQuery();
 
@@ -44,21 +53,35 @@ public class DatabaseService : IDatabaseService
 				}
 			}
 		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
 	}
 
 	public Account GetAccountByID(int accountID)
 	{
-		using (SqlConnection connection = new SqlConnection(_connectionString))
+		try
 		{
-			connection.Open();
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
 
 			string query = @"select ID, TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where ID = @ID";
 
-			using (SqlCommand command = new SqlCommand(query, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@ID", accountID);
+				command.CommandText = query;
 
-				using (SqlDataReader reader = command.ExecuteReader())
+				AddParameter(command, "@ID", accountID);
+
+				using (IDataReader reader = command.ExecuteReader())
 				{
 					if (reader.Read())
 					{
@@ -80,23 +103,37 @@ public class DatabaseService : IDatabaseService
 						return null;
 					}
 				}
+			}
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
 			}
 		}
 	}
 
 	public Account GetAccountByEmail(string email)
 	{
-		using (SqlConnection connection = new SqlConnection(_connectionString))
+		try
 		{
-			connection.Open();
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
 
 			string query = @"select ID, TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where Email = @Email";
 
-			using (SqlCommand command = new SqlCommand(query, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@Email", email);
+				command.CommandText = query;
 
-				using (SqlDataReader reader = command.ExecuteReader())
+				AddParameter(command, "@Email", email);
+
+				using (IDataReader reader = command.ExecuteReader())
 				{
 					if (reader.Read())
 					{
@@ -120,22 +157,36 @@ public class DatabaseService : IDatabaseService
 				}
 			}
 		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
 	}
 
 	public string CheckCode(string email, string code)
 	{
-		using (SqlConnection connection = new SqlConnection(_connectionString))
+		try
 		{
-			connection.Open();
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
 
 			string query = @"select count(*) from AccountVerificationCode av
 							 join Account a on av.AccountID = a.ID
 							 where Email = @Email and Code = @Code and CreatedAt >= DATEADD(MINUTE, -10, GETUTCDATE())";
 
-			using (SqlCommand command = new SqlCommand(query, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@Email", email);
-				command.Parameters.AddWithValue("@Code", code);
+				command.CommandText = query;
+
+				AddParameter(command, "@Email", email);
+				AddParameter(command, "@Code", code);
 
 				if (Convert.ToInt32(command.ExecuteScalar()) > 0)
 				{
@@ -148,10 +199,12 @@ public class DatabaseService : IDatabaseService
 					  where Email = @Email and Code = @Code";
 
 			//If not found, lets check for an expired code to inform the user
-			using (SqlCommand command = new SqlCommand(query, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@Email", email);
-				command.Parameters.AddWithValue("@Code", code);
+				command.CommandText = query;
+
+				AddParameter(command, "@Email", email);
+				AddParameter(command, "@Code", code);
 
 				if (Convert.ToInt32(command.ExecuteScalar()) > 0)
 				{
@@ -161,13 +214,25 @@ public class DatabaseService : IDatabaseService
 
 			return "false";
 		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
 	}
 
 	public string AssignToken(int id, string token)
 	{
-		using (SqlConnection connection = new SqlConnection(_connectionString))
+		try
 		{
-			connection.Open();
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
 
 			string deleteQuery = @"delete from Token where UserID = @UserID";
 			string insertquery = @"insert into Token values (@UserID, @Token, GETUTCDATE())";
@@ -186,10 +251,12 @@ public class DatabaseService : IDatabaseService
 			//}
 
 			//save new token
-			using (SqlCommand command = new SqlCommand(insertquery, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@UserID", id);
-				command.Parameters.AddWithValue("@Token", token);
+				command.CommandText = insertquery;
+
+				AddParameter(command, "@UserID", id);
+				AddParameter(command, "@Token", token);
 
 				//cancel if no record created
 				if (command.ExecuteNonQuery() == 0)
@@ -199,9 +266,11 @@ public class DatabaseService : IDatabaseService
 			}
 
 			//Update account
-			using (SqlCommand command = new SqlCommand(updateQuery, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@UserID", id);
+				command.CommandText = updateQuery;
+
+				AddParameter(command, "@UserID", id);
 
 				//return result status
 				if (command.ExecuteNonQuery() > 0)
@@ -214,21 +283,35 @@ public class DatabaseService : IDatabaseService
 				}
 			}
 		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
 	}
 
 	public string VerifyToken(string request)
 	{
-		using (SqlConnection connection = new SqlConnection(_connectionString))
+		try
 		{
-			connection.Open();
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
 
 			string query = @"select Created from Token where Value = @Token order by Created desc";
 
-			using (SqlCommand command = new SqlCommand(query, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@Token", request);
+				command.CommandText = query;
 
-				using (SqlDataReader reader = command.ExecuteReader())
+				AddParameter(command, "@Token", request);
+
+				using (IDataReader reader = command.ExecuteReader())
 				{
 					if (!reader.Read())
 					{
@@ -244,19 +327,33 @@ public class DatabaseService : IDatabaseService
 				}
 			}
 		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
 	}
 
 	public string VerifyAccountEmail(string email)
 	{
-		using (SqlConnection connection = new SqlConnection(_connectionString))
+		try
 		{
-			connection.Open();
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
 
 			string query = @"update Account set Verified = 1 where Email = @Email";
 
-			using (SqlCommand command = new SqlCommand(query, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@Email", email);
+				command.CommandText = query;
+
+				AddParameter(command, "@Email", email);
 
 				if (command.ExecuteNonQuery() > 0)
 				{
@@ -268,13 +365,25 @@ public class DatabaseService : IDatabaseService
 				}
 			}
 		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
 	}
 
 	public CityRoleDTO GetCityRoleFromToken(string token)
 	{
-		using (SqlConnection connection = new SqlConnection(_connectionString))
+		try
 		{
-			connection.Open();
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
 
 			string query = @"select r.Name, ad.City 
 							 from Token t
@@ -284,11 +393,13 @@ public class DatabaseService : IDatabaseService
 							 where t.Value = @Token
 							   and (ad.IsDefault = 1 or ad.IsDefault is null)";
 
-			using (SqlCommand command = new SqlCommand(query, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@Token", token);
+				command.CommandText = query;
 
-				using (SqlDataReader reader = command.ExecuteReader())
+				AddParameter(command, "@Token", token);
+
+				using (IDataReader reader = command.ExecuteReader())
 				{
 					if (!reader.Read())
 					{
@@ -303,21 +414,35 @@ public class DatabaseService : IDatabaseService
 				}
 			}
 		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
 	}
 
 	public string GetAccountRoleName(Account account)
 	{
-		using (SqlConnection connection = new SqlConnection(_connectionString))
+		try
 		{
-			connection.Open();
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
 
 			string query = @"select Name from Role where ID = @ID";
 
-			using (SqlCommand command = new SqlCommand(query, connection))
+			using (IDbCommand command = _connection.CreateCommand())
 			{
-				command.Parameters.AddWithValue("@ID", account.RoleID);
+				command.CommandText = query;
 
-				using (SqlDataReader reader = command.ExecuteReader())
+				AddParameter(command, "@ID", account.RoleID);
+
+				using (IDataReader reader = command.ExecuteReader())
 				{
 					if (!reader.Read())
 					{
@@ -328,5 +453,20 @@ public class DatabaseService : IDatabaseService
 				}
 			}
 		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
+
+	private void AddParameter(IDbCommand command, string parameterName, object value)
+	{
+		IDbDataParameter parameter = command.CreateParameter();
+		parameter.ParameterName = parameterName;
+		parameter.Value = value ?? DBNull.Value;
+		command.Parameters.Add(parameter);
 	}
 }

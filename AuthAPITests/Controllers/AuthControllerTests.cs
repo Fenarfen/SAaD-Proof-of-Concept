@@ -9,6 +9,9 @@ using Assert = NUnit.Framework.Assert;
 using AuthAPI.Models.Requests;
 using AuthAPI.Models.DTOs;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+
+namespace AuthAPI.Tests;
 
 [TestFixture]
 public class AuthControllerTests
@@ -34,12 +37,15 @@ public class AuthControllerTests
 	{
 		var result = _controller.SendEmailVerification(1, null);
 
-		Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
-		var unauthorizedResult = result as UnauthorizedObjectResult;
-		Assert.That(
-			unauthorizedResult?.Value?.GetType().GetProperty("message")?.GetValue(unauthorizedResult.Value, null),
-			Is.EqualTo("Authorization header is missing or invalid.")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
+			var unauthorizedResult = result as UnauthorizedObjectResult;
+			Assert.That(
+				unauthorizedResult?.Value?.GetType().GetProperty("message")?.GetValue(unauthorizedResult.Value, null),
+				Is.EqualTo("Authorization header is missing or invalid.")
+			);
+		});
 	}
 
 	[Test]
@@ -47,13 +53,16 @@ public class AuthControllerTests
 	{
 		var result = _controller.SendEmailVerification(1, "Bearer invalidkey");
 
-		Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
-		var unauthorizedResult = result as UnauthorizedObjectResult;
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
+			var unauthorizedResult = result as UnauthorizedObjectResult;
 
-		Assert.That(
-			unauthorizedResult?.Value?.GetType().GetProperty("message")?.GetValue(unauthorizedResult.Value, null),
-			Is.EqualTo("Invalid User Key.")
-		);
+			Assert.That(
+				unauthorizedResult?.Value?.GetType().GetProperty("message")?.GetValue(unauthorizedResult.Value, null),
+				Is.EqualTo("Invalid User Key.")
+			);
+		});
 	}
 
 	[Test]
@@ -63,13 +72,16 @@ public class AuthControllerTests
 
 		var result = _controller.SendEmailVerification(1, "Bearer testuserkey");
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
 
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("User does not exist.")
-		);
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("User does not exist.")
+			);
+		});
 	}
 
 	[Test]
@@ -80,13 +92,16 @@ public class AuthControllerTests
 
 		var result = _controller.SendEmailVerification(1, "Bearer testuserkey");
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
 
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("Account is already verified")
-		);
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("Account is already verified")
+			);
+		});
 	}
 
 	[Test]
@@ -98,13 +113,16 @@ public class AuthControllerTests
 
 		var result = _controller.SendEmailVerification(1, "Bearer testuserkey");
 
-		Assert.That(result, Is.InstanceOf<ObjectResult>());
-		var serverErrorResult = result as ObjectResult;
-		Assert.That(
-			serverErrorResult?.StatusCode,
-			Is.EqualTo(500)
-		);
-		Assert.That((bool)(serverErrorResult?.Value?.ToString().Contains("Failed when writing code to database")));
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<ObjectResult>());
+			var serverErrorResult = result as ObjectResult;
+			Assert.That(
+				serverErrorResult?.StatusCode,
+				Is.EqualTo(500)
+			);
+			Assert.That((bool)(serverErrorResult?.Value?.ToString().Contains("Failed when writing code to database")));
+		});
 	}
 
 	[Test]
@@ -117,13 +135,16 @@ public class AuthControllerTests
 
 		var result = _controller.SendEmailVerification(1, "Bearer testuserkey");
 
-		Assert.That(result, Is.InstanceOf<ObjectResult>());
-		var serverErrorResult = result as ObjectResult;
-		Assert.That(
-			serverErrorResult?.StatusCode,
-			Is.EqualTo(500)
-		);
-		Assert.That((bool)serverErrorResult?.Value?.ToString().Contains("Failed when sending Email"));
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<ObjectResult>());
+			var serverErrorResult = result as ObjectResult;
+			Assert.That(
+				serverErrorResult?.StatusCode,
+				Is.EqualTo(500)
+			);
+			Assert.That((bool)serverErrorResult?.Value?.ToString().Contains("Failed when sending Email"));
+		});
 	}
 
 	[Test]
@@ -136,12 +157,16 @@ public class AuthControllerTests
 
 		var result = _controller.SendEmailVerification(1, "Bearer testuserkey");
 
-		Assert.That(result, Is.InstanceOf<OkObjectResult>());
-		var okResult = result as OkObjectResult;
-		Assert.That(
-			okResult?.Value?.GetType().GetProperty("message")?.GetValue(okResult.Value, null),
-			Is.EqualTo("success")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<OkObjectResult>());
+			var okResult = result as OkObjectResult;
+			Assert.That(
+				okResult?.Value?.GetType().GetProperty("message")?.GetValue(okResult.Value, null),
+				Is.EqualTo("success")
+			);
+		});
+		
 	}
 
 	[Test]
@@ -152,12 +177,16 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyAccount(request);
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("User does not exist.")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("User does not exist.")
+			);
+		});
+		
 	}
 
 	[Test]
@@ -170,12 +199,16 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyAccount(request);
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("Code is incorrect.")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("Code is incorrect.")
+			);
+		});
+		
 	}
 
 	[Test]
@@ -189,13 +222,17 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyAccount(request);
 
-		Assert.That(result, Is.InstanceOf<ObjectResult>());
-		var serverErrorResult = result as ObjectResult;
-		Assert.That(serverErrorResult?.StatusCode, Is.EqualTo(500));
-		Assert.That(
-			serverErrorResult?.Value?.ToString(),
-			Does.Contain("Failed when writing code to database")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<ObjectResult>());
+			var serverErrorResult = result as ObjectResult;
+			Assert.That(serverErrorResult?.StatusCode, Is.EqualTo(500));
+			Assert.That(
+				serverErrorResult?.Value?.ToString(),
+				Does.Contain("Failed when writing code to database")
+			);
+		});
+		
 	}
 
 	[Test]
@@ -210,13 +247,17 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyAccount(request);
 
-		Assert.That(result, Is.InstanceOf<ObjectResult>());
-		var serverErrorResult = result as ObjectResult;
-		Assert.That(serverErrorResult?.StatusCode, Is.EqualTo(500));
-		Assert.That(
-			serverErrorResult?.Value?.ToString(),
-			Does.Contain("Failed when sending Email")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<ObjectResult>());
+			var serverErrorResult = result as ObjectResult;
+			Assert.That(serverErrorResult?.StatusCode, Is.EqualTo(500));
+			Assert.That(
+				serverErrorResult?.Value?.ToString(),
+				Does.Contain("Failed when sending Email")
+			);
+		});
+		
 	}
 
 	[Test]
@@ -231,12 +272,16 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyAccount(request);
 
-		Assert.That(result, Is.InstanceOf<OkObjectResult>());
-		var okResult = result as OkObjectResult;
-		Assert.That(
-			okResult?.Value?.GetType().GetProperty("message")?.GetValue(okResult.Value, null),
-			Is.EqualTo("success")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<OkObjectResult>());
+			var okResult = result as OkObjectResult;
+			Assert.That(
+				okResult?.Value?.GetType().GetProperty("message")?.GetValue(okResult.Value, null),
+				Is.EqualTo("success")
+			);
+		});
+		
 	}
 
 	[Test]
@@ -246,12 +291,16 @@ public class AuthControllerTests
 
 		var result = _controller.Login(request);
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("Data incomplete, check request body.")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("Data incomplete, check request body.")
+			);
+		});
+		
 	}
 
 	[Test]
@@ -262,12 +311,16 @@ public class AuthControllerTests
 
 		var result = _controller.Login(request);
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("Incorrect log in details")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("Incorrect log in details")
+			);
+		});
+		
 	}
 
 	[Test]
@@ -279,37 +332,47 @@ public class AuthControllerTests
 
 		var result = _controller.Login(request);
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("Incorrect log in details")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("Incorrect log in details")
+			);
+		});
+		
 	}
 
 	[Test]
 	public void Login_RoleNotFound_ReturnsForbidden()
 	{
-		var mockAccount = new Account { ID = 1, Email = "test@example.com", Password = "hashedpassword" };
+		var hashedPassword = AuthController.ComputeSHA256Hash("password123");
+		var mockAccount = new Account { ID = 1, Email = "test@example.com", Password = hashedPassword };
 		_mockDatabaseService.Setup(db => db.GetAccountByEmail(It.IsAny<string>())).Returns(mockAccount);
 		_mockDatabaseService.Setup(db => db.GetAccountRoleName(mockAccount)).Returns(string.Empty);
 		var request = new LoginRequest { email = "test@example.com", password = "password123" };
 
 		var result = _controller.Login(request);
 
-		Assert.That(result, Is.InstanceOf<ObjectResult>());
-		var forbiddenResult = result as ObjectResult;
-		Assert.That(forbiddenResult?.StatusCode, Is.EqualTo(403));
-		Assert.That(
-			forbiddenResult?.Value?.GetType().GetProperty("message")?.GetValue(forbiddenResult.Value, null),
-			Is.EqualTo("Role not found.")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<ObjectResult>());
+			var forbiddenResult = result as ObjectResult;
+			Assert.That(forbiddenResult?.StatusCode, Is.EqualTo(403));
+			Assert.That(
+				forbiddenResult?.Value?.GetType().GetProperty("message")?.GetValue(forbiddenResult.Value, null),
+				Is.EqualTo("Role not found.")
+			);
+		});
+		
 	}
 
 	[Test]
 	public void Login_DatabaseFailsToAssignToken_ReturnsBadRequest()
 	{
-		var mockAccount = new Account { ID = 1, Email = "test@example.com", Password = "hashedpassword" };
+		var hashedPassword = AuthController.ComputeSHA256Hash("password123");
+		var mockAccount = new Account { ID = 1, Email = "test@example.com", Password = hashedPassword };
 		_mockDatabaseService.Setup(db => db.GetAccountByEmail(It.IsAny<string>())).Returns(mockAccount);
 		_mockDatabaseService.Setup(db => db.GetAccountRoleName(mockAccount)).Returns("User");
 		_mockDatabaseService.Setup(db => db.AssignToken(It.IsAny<int>(), It.IsAny<string>())).Returns("false");
@@ -317,18 +380,22 @@ public class AuthControllerTests
 
 		var result = _controller.Login(request);
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("Failed to assign token during login")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("Failed to assign token during login")
+			);
+		});
 	}
 
 	[Test]
 	public void Login_SuccessfulLogin_ReturnsOk()
 	{
-		var mockAccount = new Account { ID = 1, Email = "test@example.com", Password = "hashedpassword" };
+		var hashedPassword = AuthController.ComputeSHA256Hash("password123");
+		var mockAccount = new Account { ID = 1, Email = "test@example.com", Password = hashedPassword };
 		_mockDatabaseService.Setup(db => db.GetAccountByEmail(It.IsAny<string>())).Returns(mockAccount);
 		_mockDatabaseService.Setup(db => db.GetAccountRoleName(mockAccount)).Returns("User");
 		_mockDatabaseService.Setup(db => db.AssignToken(It.IsAny<int>(), It.IsAny<string>())).Returns("true");
@@ -336,12 +403,20 @@ public class AuthControllerTests
 
 		var result = _controller.Login(request);
 
-		Assert.That(result, Is.InstanceOf<ObjectResult>());
-		var okResult = result as OkObjectResult;
-		dynamic? responseObject = okResult.Value;
+		Assert.Multiple(() =>
+		{
+			Assert.That(result, Is.InstanceOf<OkObjectResult>());
 
-		Assert.That((string)responseObject.token, Is.Not.Null);
-		Assert.That((string)responseObject.role, Is.EqualTo("User"));
+			var okResult = result as OkObjectResult;
+			Assert.That(okResult?.Value, Is.Not.Null);
+
+			// Use reflection to access the properties of the anonymous object
+			var tokenProperty = okResult?.Value.GetType().GetProperty("token")?.GetValue(okResult.Value, null);
+			var roleProperty = okResult?.Value.GetType().GetProperty("role")?.GetValue(okResult.Value, null);
+
+			Assert.That(tokenProperty, Is.Not.Null);
+			Assert.That(roleProperty, Is.EqualTo("User"));
+		});
 	}
 
 	[Test]
@@ -349,12 +424,15 @@ public class AuthControllerTests
 	{
 		var result = _controller.VerifyToken(null);
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("Request is null")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("Request is null")
+			);
+		});
 	}
 
 	[Test]
@@ -364,12 +442,16 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyToken(request);
 
-		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
-		var badRequestResult = result as BadRequestObjectResult;
-		Assert.That(
-			badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
-			Is.EqualTo("Token is missing or empty")
-		);
+		Assert.Multiple(() => 
+		{
+			Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
+			var badRequestResult = result as BadRequestObjectResult;
+			Assert.That(
+				badRequestResult?.Value?.GetType().GetProperty("message")?.GetValue(badRequestResult.Value, null),
+				Is.EqualTo("Token is missing or empty")
+			);
+		});
+		
 	}
 
 	[Test]
@@ -379,6 +461,7 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyToken(request);
 
+		Assert.Multiple(() => { });
 		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
 		var badRequestResult = result as BadRequestObjectResult;
 		Assert.That(
@@ -395,6 +478,7 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyToken(request);
 
+		Assert.Multiple(() => { });
 		Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
 		var badRequestResult = result as BadRequestObjectResult;
 		Assert.That(
@@ -411,6 +495,7 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyToken(request);
 
+		Assert.Multiple(() => { });
 		Assert.That(result, Is.InstanceOf<OkObjectResult>());
 		var okResult = result as OkObjectResult;
 		Assert.That(
@@ -427,6 +512,7 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyToken(request);
 
+		Assert.Multiple(() => { });
 		Assert.That(result, Is.InstanceOf<ObjectResult>());
 		var serverErrorResult = result as ObjectResult;
 		Assert.That(serverErrorResult?.StatusCode, Is.EqualTo(500));
@@ -441,6 +527,7 @@ public class AuthControllerTests
 	{
 		var result = _controller.VerifyUserToken("validUserToken", null);
 
+		Assert.Multiple(() => { });
 		Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
 		var unauthorizedResult = result as UnauthorizedObjectResult;
 		Assert.That(
@@ -454,6 +541,7 @@ public class AuthControllerTests
 	{
 		var result = _controller.VerifyUserToken("validUserToken", "Bearer invalidkey");
 
+		Assert.Multiple(() => { });
 		Assert.That(result, Is.InstanceOf<UnauthorizedObjectResult>());
 		var unauthorizedResult = result as UnauthorizedObjectResult;
 		Assert.That(
@@ -469,6 +557,7 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyUserToken("invalidUserToken", ValidAuthorizationHeader);
 
+		Assert.Multiple(() => { });
 		Assert.That(result, Is.InstanceOf<NotFoundObjectResult>());
 		var notFoundResult = result as NotFoundObjectResult;
 		Assert.That(
@@ -485,6 +574,7 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyUserToken("validUserToken", ValidAuthorizationHeader);
 
+		Assert.Multiple(() => { });
 		Assert.That(result, Is.InstanceOf<OkObjectResult>());
 		var okResult = result as OkObjectResult;
 		Assert.That(
@@ -504,6 +594,7 @@ public class AuthControllerTests
 
 		var result = _controller.VerifyUserToken("validUserToken", ValidAuthorizationHeader);
 
+		Assert.Multiple(() => { });
 		Assert.That(result, Is.InstanceOf<ObjectResult>());
 		var serverErrorResult = result as ObjectResult;
 		Assert.That(serverErrorResult?.StatusCode, Is.EqualTo(500));

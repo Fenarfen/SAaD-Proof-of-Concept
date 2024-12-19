@@ -13,14 +13,18 @@ public class EmailService : IEmailService
 	private readonly string _smtpEmail;
 	private readonly string _smtpPassword;
 	private readonly string _rootPath;
+	private readonly IFileWrapper _fileWrapper;
+	private readonly ISmtpClient _smtpClient;
 
-	public EmailService(string smtpUrl, int smtpPort, string smtpEmail, string smtpPassword, string rootPath)
+	public EmailService(string smtpUrl, int smtpPort, string smtpEmail, string smtpPassword, string rootPath, IFileWrapper fileWrapper, ISmtpClient smtpClient)
 	{
 		_smtpUrl = smtpUrl;
 		_smtpPort = smtpPort;
 		_smtpEmail = smtpEmail;
 		_smtpPassword = smtpPassword;
 		_rootPath = rootPath;
+		_fileWrapper = fileWrapper;
+		_smtpClient = smtpClient;
 	}
 
 	public string SendVerificationEmail(string recipient, string code)
@@ -29,7 +33,7 @@ public class EmailService : IEmailService
 		{
 			string filePath = Path.Combine(_rootPath, "Templates", "VerificationCodeEmail.html");
 
-			string htmlBody = File.ReadAllText(filePath).Replace("{{VERIFICATION_CODE}}", code);
+			string htmlBody = _fileWrapper.ReadAllText(filePath).Replace("{{VERIFICATION_CODE}}", code);
 
 			string response = SendEmail(recipient, "Your Verification Code", htmlBody);
 
@@ -52,7 +56,7 @@ public class EmailService : IEmailService
 		{
 			string filePath = Path.Combine(_rootPath, "Templates", "VerificationCompleteEmail.html");
 
-			string htmlBody = File.ReadAllText(filePath).Replace("{{NAME}}", name);
+			string htmlBody = _fileWrapper.ReadAllText(filePath).Replace("{{NAME}}", name);
 
 			SendEmail(recipient, "You are verified!", htmlBody);
 
@@ -75,20 +79,17 @@ public class EmailService : IEmailService
 			Text = body
 		};
 
-		using (var client = new SmtpClient())
+		_smtpClient.Connect(_smtpUrl, _smtpPort, false);
+		_smtpClient.Authenticate(_smtpEmail, _smtpPassword);
+		var response = _smtpClient.Send(message);
+		_smtpClient.Disconnect(true);
+
+		if (response == "failed")
 		{
-			client.Connect(_smtpUrl, _smtpPort, false);
-			client.Authenticate(_smtpEmail, _smtpPassword);
-			string response = "failed";
-			response = client.Send(message);
-			client.Disconnect(true);
-
-			if(response == "failed")
-			{
-				throw new Exception("Unknown error: Failed to send email");
-			}
-
-			return response;
+			return "failed";
 		}
+
+		return "success";
 	}
+
 }
