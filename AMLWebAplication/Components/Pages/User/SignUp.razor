@@ -8,40 +8,109 @@
 @inject NavigationManager Navigation
 @inject Blazored.SessionStorage.ISessionStorageService SessionStorage
 
+<div class="signup-container">
+	<h3>Sign Up</h3>
+	<div class="input-group">
+		<label for="email">Email:</label>
+		<input id="email" type="email" @bind="Email" />
+		<button class="secondary-button" @onclick="CheckEmailAvailability">Check Availability</button>
+		<div class="error-message">@EmailError</div>
+		<div class="status-message" style="color: @EmailAvailabilityMessageColor">@EmailAvailabilityMessage</div>
+	</div>
 
-<h3>Sign Up</h3>
+	<div class="input-group">
+		<label for="password">Password:</label>
+		<input id="password" type="password" @bind="Password" />
+	</div>
 
-<div class="form-group">
-	<label for="email">Email:</label>
-	<input id="email" type="email" @bind="Email" class="form-control">
-	<button class="btn btn-secondary" @onclick="CheckEmailAvailability">Check Availability</button>
-	<div style="color: red;" class="error-message">@EmailError</div>
-	<div style="color: @EmailAvailabilityMessageColor" class="error-message">@EmailAvailabilityMessage</div>
+	<div class="input-group">
+		<label for="confirmPassword">Confirm Password:</label>
+		<input id="confirmPassword" type="password" @bind="ConfirmPassword" />
+		<div class="error-message">@PasswordMatchError</div>
+	</div>
+
+	<div class="input-group">
+		<label for="firstName">First Name:</label>
+		<input id="firstName" type="text" @bind="FirstName" />
+	</div>
+
+	<div class="input-group">
+		<label for="lastName">Last Name:</label>
+		<input id="lastName" type="text" @bind="LastName" />
+	</div>
+
+	<button class="primary-button" @onclick="AttemptSignUp" disabled="@IsSignUpButtonDisabled">Sign Up</button>
+	<div class="error-message" style="color: @GeneralErrorColor">@GeneralError</div>
 </div>
 
-<div class="form-group">
-	<label for="password">Password:</label>
-	<input id="password" type="password" @bind="Password" class="form-control" />
-</div>
+<style>
+	.signup-container {
+		max-width: 400px;
+		margin: 50px auto;
+		padding: 20px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		background-color: #f9f9f9;
+	}
 
-<div class="form-group">
-	<label for="confirmPassword">Confirm Password:</label>
-	<input id="confirmPassword" type="password" @bind="ConfirmPassword" class="form-control" />
-	<div style="color: red;" class="error-message">@PasswordMatchError</div>
-</div>
+	.input-group {
+		margin-bottom: 15px;
+	}
 
-<div class="form-group">
-	<label for="firstName">First Name:</label>
-	<input id="firstName" type="text" @bind="FirstName" class="form-control" />
-</div>
+		.input-group label {
+			display: block;
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
 
-<div class="form-group">
-	<label for="lastName">Last Name:</label>
-	<input id="lastName" type="text" @bind="LastName" class="form-control" />
-</div>
+		.input-group input {
+			width: 100%;
+			padding: 8px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			box-sizing: border-box;
+		}
 
-<button class="btn btn-primary" @onclick="AttemptSignUp" disabled="@IsSignUpButtonDisabled">Sign Up</button>
-<div style="color: @GeneralErrorColor;" class="error-message">@GeneralError</div>
+	.primary-button, .secondary-button {
+		width: 100%;
+		padding: 10px;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		font-size: 16px;
+		cursor: pointer;
+		margin-top: 10px;
+	}
+
+	.primary-button {
+		background-color: #007bff;
+	}
+
+		.primary-button:hover {
+			background-color: #0056b3;
+		}
+
+	.secondary-button {
+		background-color: #6c757d;
+		margin-top: 0;
+	}
+
+		.secondary-button:hover {
+			background-color: #5a6268;
+		}
+
+	.error-message {
+		color: red;
+		font-size: 14px;
+		margin-top: 5px;
+	}
+
+	.status-message {
+		font-size: 14px;
+		margin-top: 5px;
+	}
+</style>
 
 @code {
 	private string Email { get; set; }

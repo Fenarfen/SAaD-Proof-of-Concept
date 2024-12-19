@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using UserAPI.Services;
 using UserAPI.Interfaces;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,10 +13,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IDatabaseService>(provider =>
+builder.Services.AddScoped<IDatabaseService, DatabaseService>();
+
+builder.Services.AddScoped<IDbConnection>(provider =>
 {
-	string connString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
-	return new DatabaseService(connString);
+	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+	return new SqlConnection(connectionString);
 });
 
 var app = builder.Build();

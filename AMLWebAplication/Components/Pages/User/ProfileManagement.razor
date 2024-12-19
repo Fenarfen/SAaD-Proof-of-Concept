@@ -6,131 +6,208 @@
 @inject AMLWebAplication.Services.HttpClientService HttpClientService
 @inject NavigationManager Navigation
 
-<h3>Profile Management</h3>
-<p>@GeneralError</p>
-
 @if (Profile != null)
 {
-	<h4>Basic Information</h4>
-	<div class="form-group">
-		<label>Email:</label>
-		<input @bind="Profile.Email" class="form-control" />
-		@if (ValidationErrors.Contains("Email is not the correct format."))
-		{
-			<span class="text-danger">Email is not the correct format.</span>
-		}
-		@if (ValidationErrors.Contains("Email is already taken."))
-		{
-			<span class="text-danger">Email is already taken.</span>
-		}
-		@if (ValidationErrors.Contains("Email is required."))
-		{
-			<span class="text-danger">Email is required.</span>
-		}
-	</div>
-	<div class="form-group">
-		<label>First Name:</label>
-		<input @bind="Profile.FirstName" class="form-control" />
-		@if (ValidationErrors.Contains("First Name is required."))
-		{
-			<span class="text-danger">First Name is required.</span>
-		}
-	</div>
-	<div class="form-group">
-		<label>Last Name:</label>
-		<input @bind="Profile.LastName" class="form-control" />
-		@if (ValidationErrors.Contains("Last Name is required."))
-		{
-			<span class="text-danger">Last Name is required.</span>
-		}
-	</div>
-	<div class="form-group">
-		<label>Role:</label>
-		<input @bind="Profile.Role" class="form-control" readonly />
-	</div>
+	<div class="profile-container">
+		<h3>Profile Management</h3>
+		<div class="error-message">@GeneralError</div>
+		<div class="input-group">
+			<label>Email:</label>
+			<input @bind="Profile.Email" />
+			@if (ValidationErrors.Contains("Email is not the correct format."))
+			{
+				<span class="text-danger">Email is not the correct format.</span>
+			}
+			@if (ValidationErrors.Contains("Email is already taken."))
+			{
+				<span class="text-danger">Email is already taken.</span>
+			}
+			@if (ValidationErrors.Contains("Email is required."))
+			{
+				<span class="text-danger">Email is required.</span>
+			}
+		</div>
+		<div class="input-group">
+			<label>First Name:</label>
+			<input @bind="Profile.FirstName" />
+			@if (ValidationErrors.Contains("First Name is required."))
+			{
+				<span class="text-danger">First Name is required.</span>
+			}
+		</div>
+		<div class="input-group">
+			<label>Last Name:</label>
+			<input @bind="Profile.LastName" />
+			@if (ValidationErrors.Contains("Last Name is required."))
+			{
+				<span class="text-danger">Last Name is required.</span>
+			}
+		</div>
+		<div class="input-group">
+			<label>Role:</label>
+			<input class="gray-background" @bind="Profile.Role" readonly />
+		</div>
 
-	<h4>Addresses</h4>
-	<button class="btn btn-success" @onclick="AddAddress">Add Address</button>
+		<h4>Addresses</h4>
+		<button class="success-button" @onclick="AddAddress">Add Address</button>
 
-	@if (Profile.Addresses.Any())
-	{
-		<ul>
+		@if (Profile.Addresses.Any())
+		{
 			@foreach (var address in Profile.Addresses)
 			{
-				<li>
-					<form>
-						<div class="form-group">
-							<label>First Line (required):</label>
-							<input @bind="address.FirstLine" class="form-control" />
-							@if (address.ValidationErrors.Contains("First Line is required."))
-							{
-								<span class="text-danger">First Line is required.</span>
-							}
-						</div>
-						<div class="form-group">
-							<label>Second Line:</label>
-							<input @bind="address.SecondLine" class="form-control" />
-						</div>
-						<div class="form-group">
-							<label>Third Line:</label>
-							<input @bind="address.ThirdLine" class="form-control" />
-						</div>
-						<div class="form-group">
-							<label>Fourth Line:</label>
-							<input @bind="address.FourthLine" class="form-control" />
-						</div>
-						<div class="form-group">
-							<label>City (required):</label>
-							<input @bind="address.City" class="form-control" />
-							@if (address.ValidationErrors.Contains("City is required."))
-							{
-								<span class="text-danger">City is required.</span>
-							}
-						</div>
-						<div class="form-group">
-							<label>County:</label>
-							<input @bind="address.County" class="form-control" />
-						</div>
-						<div class="form-group">
-							<label>Country:</label>
-							<input @bind="address.Country" class="form-control" />
-						</div>
-						<div class="form-group">
-							<label>Postcode:</label>
-							<input @bind="address.Postcode" class="form-control" />
-							@if (address.ValidationErrors.Contains("Postcode is required."))
-							{
-								<span class="text-danger">Postcode is required.</span>
-							}
-						</div>
-						<div class="form-check">
-							<input type="checkbox" class="form-check-input" @bind="address.IsDefault" />
-							<label class="form-check-label">Set as Default</label>
-							
-						</div>
-						<div>
-							@if (address.ValidationErrors.Contains("Only one address can be marked as default."))
-							{
-								<span class="text-danger">Only one address can be marked as default.</span>
-							}
-						</div>
-						<button class="btn btn-danger" @onclick="() => RemoveAddress(address)">Remove</button>
-					</form>
-				</li>
+				<div class="address-container">
+					<div class="input-group">
+						<label>First Line (required):</label>
+						<input @bind="address.FirstLine" />
+						@if (address.ValidationErrors.Contains("First Line is required."))
+						{
+							<span class="text-danger">First Line is required.</span>
+						}
+					</div>
+					<div class="input-group">
+						<label>Second Line:</label>
+						<input @bind="address.SecondLine" />
+					</div>
+					<div class="input-group">
+						<label>Third Line:</label>
+						<input @bind="address.ThirdLine" />
+					</div>
+					<div class="input-group">
+						<label>Fourth Line:</label>
+						<input @bind="address.FourthLine" />
+					</div>
+					<div class="input-group">
+						<label>City (required):</label>
+						<input @bind="address.City" />
+						@if (address.ValidationErrors.Contains("City is required."))
+						{
+							<span class="text-danger">City is required.</span>
+						}
+					</div>
+					<div class="input-group">
+						<label>County:</label>
+						<input @bind="address.County" />
+					</div>
+					<div class="input-group">
+						<label>Country:</label>
+						<input @bind="address.Country" />
+					</div>
+					<div class="input-group">
+						<label>Postcode (required):</label>
+						<input @bind="address.Postcode" />
+						@if (address.ValidationErrors.Contains("Postcode is required."))
+						{
+							<span class="text-danger">Postcode is required.</span>
+						}
+					</div>
+					<div class="form-check">
+						<input type="checkbox" class="form-check-input" @bind="address.IsDefault" />
+						<label class="form-check-label">Set as Default</label>
+					</div>
+					<button class="danger-button" @onclick="() => RemoveAddress(address)">Remove</button>
+				</div>
 			}
-		</ul>
-	}
-	else
-	{
-		<p>No addresses added yet.</p>
-	}
+		}
+		else
+		{
+			<p>No addresses added yet.</p>
+		}
 
-	<button class="btn btn-primary" @onclick="SaveProfile">Save Changes</button>
+		<button class="primary-button" @onclick="SaveProfile">Save Changes</button>
+	</div>
 }
 else
 {
 	<p>@OnLoadMessage</p>
 }
+
+<style>
+	.profile-container {
+		max-width: 600px;
+		margin: 50px auto;
+		padding: 20px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		background-color: #f9f9f9;
+	}
+
+	.input-group {
+		margin-bottom: 15px;
+	}
+
+		.input-group label {
+			display: block;
+			font-weight: bold;
+			margin-bottom: 5px;
+		}
+
+		.input-group input {
+			width: 100%;
+			padding: 8px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+			box-sizing: border-box;
+		}
+
+	.gray-background {
+		background-color: #adadad;
+	}
+
+	.address-container {
+		padding: 15px;
+		margin-bottom: 10px;
+		border: 1px solid #ccc;
+		border-radius: 8px;
+		background-color: #f1f1f1;
+	}
+
+	.primary-button, .success-button, .danger-button {
+		width: 100%;
+		padding: 10px;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		font-size: 16px;
+		cursor: pointer;
+		margin-top: 10px;
+		margin-bottom: 10px;
+	}
+
+	.primary-button {
+		background-color: #007bff;
+	}
+
+		.primary-button:hover {
+			background-color: #0056b3;
+		}
+
+	.success-button {
+		background-color: #28a745;
+	}
+
+		.success-button:hover {
+			background-color: #218838;
+		}
+
+	.danger-button {
+		background-color: #dc3545;
+	}
+
+		.danger-button:hover {
+			background-color: #c82333;
+		}
+
+	.error-message {
+		color: red;
+		font-size: 14px;
+	}
+
+	.text-danger {
+		color: red;
+		font-size: 14px;
+	}
+</style>
 
 @code {
 	private ProfileManagementDTO Profile { get; set; }
@@ -245,7 +322,7 @@ else
 	{
 		ValidationErrors.Clear();
 
-		foreach(Address address in Profile.Addresses)
+		foreach (Address address in Profile.Addresses)
 		{
 			address.ValidationErrors.Clear();
 		}
@@ -298,7 +375,7 @@ else
 
 		int countDefault = 0;
 
-		foreach(Address address in Profile.Addresses)
+		foreach (Address address in Profile.Addresses)
 		{
 			if (string.IsNullOrEmpty(address.FirstLine))
 			{
@@ -324,17 +401,17 @@ else
 			}
 		}
 
-		if(countDefault > 1)
+		if (countDefault > 1)
 		{
 			addressValidationFailed = true;
 
-			foreach(Address address in Profile.Addresses)
+			foreach (Address address in Profile.Addresses)
 			{
 				address.ValidationErrors.Add("Only one address can be marked as default.");
 			}
 		}
 
-		if(ValidationErrors.Count > 0 || addressValidationFailed)
+		if (ValidationErrors.Count > 0 || addressValidationFailed)
 		{
 			return false;
 		}

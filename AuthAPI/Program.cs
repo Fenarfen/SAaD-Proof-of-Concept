@@ -1,6 +1,9 @@
 using AuthAPI.Interfaces;
 using AuthAPI.Services;
+using MailKit.Net.Smtp;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
+using System.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,12 +14,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IDatabaseService>(provider =>
+builder.Services.AddScoped<IDatabaseService, DatabaseService>();
+
+builder.Services.AddScoped<IDbConnection>(provider =>
 {
-	string connString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
-	return new DatabaseService(connString);
+	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "";
+	return new SqlConnection(connectionString);
 });
 
+builder.Services.AddScoped<IFileWrapper, FileWrapper>();
+builder.Services.AddScoped<ISmtpClient, SmtpClient>();
 builder.Services.AddScoped<IEmailService>(provider =>
 {
 	var configuration = provider.GetRequiredService<IConfiguration>();
@@ -28,8 +35,10 @@ builder.Services.AddScoped<IEmailService>(provider =>
 	int smtpPort = smtpConfig.GetValue<int>("SmtpPort");
 	string smtpEmail = smtpConfig.GetValue<string>("Email");
 	string smtpPassword = smtpConfig.GetValue<string>("Password");
+	IFileWrapper fileWrapper = provider.GetRequiredService<IFileWrapper>();
+	ISmtpClient smtpClient = provider.GetRequiredService<ISmtpClient>();
 
-	return new EmailService(smtpUrl, smtpPort, smtpEmail, smtpPassword, env.ContentRootPath);
+	return new EmailService(smtpUrl, smtpPort, smtpEmail, smtpPassword, env.ContentRootPath, fileWrapper, smtpClient);
 });
 
 var app = builder.Build();

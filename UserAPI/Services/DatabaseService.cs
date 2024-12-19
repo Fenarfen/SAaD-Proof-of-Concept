@@ -3,145 +3,198 @@ using Microsoft.Data.SqlClient;
 using UserAPI.Models.Entities;
 using UserAPI.Models.Dtos;
 using Microsoft.Identity.Client;
+using System.Data;
 
 namespace UserAPI.Services;
 
 public class DatabaseService : IDatabaseService
 {
-    private readonly string _connectionString;
+	private readonly IDbConnection _connection;
 
-    public DatabaseService(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
+	public DatabaseService(IDbConnection connection)
+	{
+		_connection = connection;
+	}
 
-    public string CreateMemberUser(AccountCreateDto account)
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
+	public string CreateMemberUser(AccountCreateDto account)
+	{
+		try
+		{
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
 
-            string query = @"insert into Account output inserted.ID values (null, 1, @Email, @Password, @FirstName, @LastName, GETDATE(), 0)";
+			_connection.Open();
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@Email", account.Email);
-                command.Parameters.AddWithValue("@FirstName", account.FirstName);
-                command.Parameters.AddWithValue("@LastName", account.LastName);
-                command.Parameters.AddWithValue("@Password", account.Password);
+			string query = @"insert into Account output inserted.ID values (null, 1, @Email, @Password, @FirstName, @LastName, GETDATE(), 0)";
 
-                return Convert.ToString(command.ExecuteScalar()); // returns null if no record is created, otherwise will be the id of the record created
-            }
-        }
-    }
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = query;
 
-    public string EditAccount(ProfileManagementDTO account)
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
+				AddParameter(command, "@Email", account.Email);
+				AddParameter(command, "@FirstName", account.FirstName);
+				AddParameter(command, "@LastName", account.LastName);
+				AddParameter(command, "@Password", account.Password);
 
-            string query = @"update Account
+				return Convert.ToString(command.ExecuteScalar()); // returns null if no record is created, otherwise will be the id of the record created
+			}
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
+
+	public string EditAccount(ProfileManagementDTO account)
+	{
+		try
+		{
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
+
+			string query = @"update Account
 							 set Email = @Email,
 							 FirstName = @FirstName,
 							 LastName = @LastName
 							 where ID = @ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@Email", account.Email);
-                command.Parameters.AddWithValue("@FirstName", account.FirstName);
-                command.Parameters.AddWithValue("@LastName", account.LastName);
-                command.Parameters.AddWithValue("@ID", account.ID);
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = query;
 
-                int result = command.ExecuteNonQuery();
+				AddParameter(command, "@Email", account.Email);
+				AddParameter(command, "@FirstName", account.FirstName);
+				AddParameter(command, "@LastName", account.LastName);
+				AddParameter(command, "@ID", account.ID);
 
-                if (result == 1)
-                {
-                    SyncAddresses(account.Addresses);
-                    return "success";
-                }
-                else
-                {
-                    return "failure";
-                }
-            }
-        }
-    }
+				int result = command.ExecuteNonQuery();
 
-    public void SyncAddresses(List<Address> addresses)
-    {
-        int userID = addresses.First().AccountID;
+				if (result == 1)
+				{
+					SyncAddresses(account.Addresses);
+					return "success";
+				}
+				else
+				{
+					return "failure";
+				}
+			}
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
 
-        List<Address> currentAddresses = new List<Address>();
+	public void SyncAddresses(List<Address> addresses)
+	{
+		try
+		{
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
 
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
+			if (addresses == null || addresses.Count == 0)
+			{
+				throw new ArgumentException("Address list cannot be null or empty.");
+			}
 
-            string query = @"select * from Address where UserID = @UserID";
+			int userID = addresses.First().AccountID;
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@UserID", userID);
+			List<Address> currentAddresses = new List<Address>();
 
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        currentAddresses.Add(new Address
-                        {
-                            ID = reader.GetInt32(0),
-                            AccountID = reader.GetInt32(1),
-                            FirstLine = reader.GetString(2),
-                            SecondLine = reader.IsDBNull(3) ? null : reader.GetString(3),
-                            ThirdLine = reader.IsDBNull(4) ? null : reader.GetString(4),
-                            FourthLine = reader.IsDBNull(5) ? null : reader.GetString(5),
-                            City = reader.GetString(6),
-                            County = reader.IsDBNull(7) ? null : reader.GetString(7),
-                            Country = reader.IsDBNull(8) ? null : reader.GetString(8),
-                            PostCode = reader.GetString(9),
-                            IsDefault = reader.GetBoolean(10)
-                        });
-                    }
-                }
-            }
-        }
+			_connection.Open();
 
-        foreach (var currentAddress in currentAddresses)
-        {
-            // If the current address from the old list is not in the new list, delete it
-            if (!addresses.Any(a => a.ID == currentAddress.ID))
-            {
-                DeleteAddress(currentAddress.ID);
-            }
-        }
+			string query = @"select * from Address where UserID = @UserID";
 
-        foreach (var address in addresses)
-        {
-            // Check if the address from the new list exists in the old list
-            var existingAddress = currentAddresses.FirstOrDefault(ca => ca.ID == address.ID);
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = query;
 
-            if (existingAddress == null)
-            {
-                // If it doesn't exist, create a new address
-                CreateAddress(address);
-            }
-            else
-            {
-                // If it exists, update the address
-                UpdateAddress(address);
-            }
-        }
-    }
+				AddParameter(command, "@UserID", userID);
 
-    public string CreateAddress(Address address)
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
+				using (IDataReader reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						currentAddresses.Add(new Address
+						{
+							ID = reader.GetInt32(0),
+							AccountID = reader.GetInt32(1),
+							FirstLine = reader.GetString(2),
+							SecondLine = reader.IsDBNull(3) ? null : reader.GetString(3),
+							ThirdLine = reader.IsDBNull(4) ? null : reader.GetString(4),
+							FourthLine = reader.IsDBNull(5) ? null : reader.GetString(5),
+							City = reader.GetString(6),
+							County = reader.IsDBNull(7) ? null : reader.GetString(7),
+							Country = reader.IsDBNull(8) ? null : reader.GetString(8),
+							PostCode = reader.GetString(9),
+							IsDefault = reader.GetBoolean(10)
+						});
+					}
+				}
+			}
 
-            string query = @"insert into Address values (@AccountID, 
+			foreach (var currentAddress in currentAddresses)
+			{
+				// If the current address from the old list is not in the new list, delete it
+				if (!addresses.Any(a => a.ID == currentAddress.ID))
+				{
+					DeleteAddress(currentAddress.ID);
+				}
+			}
+
+			foreach (var address in addresses)
+			{
+				// Check if the address from the new list exists in the old list
+				var existingAddress = currentAddresses.FirstOrDefault(ca => ca.ID == address.ID);
+
+				if (existingAddress == null)
+				{
+					// If it doesn't exist, create a new address
+					CreateAddress(address);
+				}
+				else
+				{
+					// If it exists, update the address
+					UpdateAddress(address);
+				}
+			}
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
+
+	public string CreateAddress(Address address)
+	{
+		try
+		{
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			_connection.Open();
+
+			string query = @"insert into Address values (@AccountID, 
 														 @FirstLine, 
 														 @SecondLine, 
 														 @ThirdLine, 
@@ -152,40 +205,54 @@ public class DatabaseService : IDatabaseService
 														 @Postcode,
                                                          @IsDefault)";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@AccountID", address.AccountID);       //required
-                command.Parameters.AddWithValue("@FirstLine", address.FirstLine);       //required
-                command.Parameters.AddWithValue("@SecondLine", address.SecondLine.IsNullOrEmpty() ? "" : address.SecondLine);
-                command.Parameters.AddWithValue("@ThirdLine", address.ThirdLine.IsNullOrEmpty() ? "" : address.ThirdLine);
-                command.Parameters.AddWithValue("@FourthLine", address.FourthLine.IsNullOrEmpty() ? "" : address.FourthLine);
-                command.Parameters.AddWithValue("@City", address.City);                 //required
-                command.Parameters.AddWithValue("@County", address.County.IsNullOrEmpty() ? "" : address.County);
-                command.Parameters.AddWithValue("@Country", address.Country.IsNullOrEmpty() ? "" : address.Country);
-                command.Parameters.AddWithValue("@Postcode", address.PostCode);         //required
-				command.Parameters.AddWithValue("@IsDefault", address.IsDefault);       //required
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = query;
+
+				AddParameter(command, "@AccountID", address.AccountID);             // required
+				AddParameter(command, "@FirstLine", address.FirstLine);             // required
+				AddParameter(command, "@SecondLine", address.SecondLine ?? "");
+				AddParameter(command, "@ThirdLine", address.ThirdLine ?? "");
+				AddParameter(command, "@FourthLine", address.FourthLine ?? "");
+				AddParameter(command, "@City", address.City);                       // required
+				AddParameter(command, "@County", address.County ?? "");
+				AddParameter(command, "@Country", address.Country ?? "");
+				AddParameter(command, "@Postcode", address.PostCode);               // required
+				AddParameter(command, "@IsDefault", address.IsDefault);             // required
 
 				int result = command.ExecuteNonQuery();
 
-                if (result == 1)
-                {
-                    return "success";
-                }
-                else
-                {
-                    return "failure";
-                }
-            }
-        }
-    }
+				if (result == 1)
+				{
+					return "success";
+				}
+				else
+				{
+					return "failure";
+				}
+			}
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
 
-    public string UpdateAddress(Address address)
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
+	public string UpdateAddress(Address address)
+	{
+		try
+		{
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
 
-            string query = @"update Address
+			_connection.Open();
+
+			string query = @"update Address
 							 set FirstLine = @FirstLine,
 							 SecondLine = @SecondLine,
 							 ThirdLine = @ThirdLine,
@@ -197,199 +264,274 @@ public class DatabaseService : IDatabaseService
 							 IsDefault = @IsDefault
 							 where ID = @ID";
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@FirstLine", address.FirstLine);       //required
-                command.Parameters.AddWithValue("@SecondLine", address.SecondLine.IsNullOrEmpty() ? "" : address.SecondLine);
-                command.Parameters.AddWithValue("@ThirdLine", address.ThirdLine.IsNullOrEmpty() ? "" : address.ThirdLine);
-                command.Parameters.AddWithValue("@FourthLine", address.FourthLine.IsNullOrEmpty() ? "" : address.FourthLine);
-                command.Parameters.AddWithValue("@City", address.City);                 //required
-                command.Parameters.AddWithValue("@County", address.County.IsNullOrEmpty() ? "" : address.County);
-                command.Parameters.AddWithValue("@Country", address.Country.IsNullOrEmpty() ? "" : address.Country);
-                command.Parameters.AddWithValue("@Postcode", address.PostCode);         //required
-                command.Parameters.AddWithValue("@IsDefault", address.IsDefault);       //required
-                command.Parameters.AddWithValue("@ID", address.ID);
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = query;
 
-                int result = command.ExecuteNonQuery();
+				AddParameter(command, "@FirstLine", address.FirstLine);             // required
+				AddParameter(command, "@SecondLine", address.SecondLine ?? "");
+				AddParameter(command, "@ThirdLine", address.ThirdLine ?? "");
+				AddParameter(command, "@FourthLine", address.FourthLine ?? "");
+				AddParameter(command, "@City", address.City);                       // required
+				AddParameter(command, "@County", address.County ?? "");
+				AddParameter(command, "@Country", address.Country ?? "");
+				AddParameter(command, "@Postcode", address.PostCode);               // required
+				AddParameter(command, "@IsDefault", address.IsDefault);             // required
+				AddParameter(command, "@ID", address.ID);                           // required
 
-                if (result == 1)
-                {
-                    return "success";
-                }
-                else
-                {
-                    return "failure";
-                }
-            }
-        }
-    }
+				int result = command.ExecuteNonQuery();
 
-    public string DeleteAddress(int addressID)
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
+				if (result == 1)
+				{
+					return "success";
+				}
+				else
+				{
+					return "failure";
+				}
+			}
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
 
-            string query = @"delete from Address where ID = @ID";
+	public string DeleteAddress(int addressID)
+	{
+		try
+		{
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@ID", addressID);
+			_connection.Open();
 
-                int result = command.ExecuteNonQuery();
+			string query = @"delete from Address where ID = @ID";
 
-                if (result > 1)
-                {
-                    return "something went very wrong";
-                }
-                else if (result == 1)
-                {
-                    return "success";
-                }
-                else
-                {
-                    return "not found";
-                }
-            }
-        }
-    }
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = query;
 
-    public Account GetAccountByID(int accountID)
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
+				AddParameter(command, "@ID", addressID);
 
-            string query = @"select ID, TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where ID = @ID";
+				int result = command.ExecuteNonQuery();
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("ID", accountID);
+				if (result > 1)
+				{
+					return "something went very wrong";
+				}
+				else if (result == 1)
+				{
+					return "success";
+				}
+				else
+				{
+					return "not found";
+				}
+			}
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
 
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (reader.Read())
-                    {
-                        return new Account
-                        {
-                            ID = Convert.ToInt32(reader["ID"]),
-                            TokenID = reader["TokenID"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["TokenID"]),
-                            RoleID = Convert.ToInt32(reader["RoleID"]),
-                            Password = reader["Password"].ToString(),
-                            Email = reader["Email"].ToString(),
-                            FirstName = reader["FirstName"].ToString(),
-                            LastName = reader["LastName"].ToString(),
-                            Created = Convert.ToDateTime(reader["Created"]),
-                            Verified = Convert.ToBoolean(reader["Verified"])
-                        };
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-            }
-        }
-    }
+	public Account GetAccountByID(int accountID)
+	{
+		try
+		{
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
 
-    public ProfileManagementDTO GetProfileManagementDTOfromToken(string token)
-    {
-        ProfileManagementDTO profileManagementDTO = null;
+			_connection.Open();
 
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
+			string query = @"select ID, TokenID, RoleID, Email, [Password], FirstName, LastName, Created, Verified from Account where ID = @ID";
 
-            string accountQuery = @"select a.ID, r.Name, a.Email, a.FirstName, a.LastName, a.Created, a.Verified from Token t
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = query;
+
+				AddParameter(command, "ID", accountID);
+
+				using (IDataReader reader = command.ExecuteReader())
+				{
+					if (reader.Read())
+					{
+						return new Account
+						{
+							ID = Convert.ToInt32(reader["ID"]),
+							TokenID = reader["TokenID"] == DBNull.Value ? (int?)null : Convert.ToInt32(reader["TokenID"]),
+							RoleID = Convert.ToInt32(reader["RoleID"]),
+							Password = reader["Password"].ToString(),
+							Email = reader["Email"].ToString(),
+							FirstName = reader["FirstName"].ToString(),
+							LastName = reader["LastName"].ToString(),
+							Created = Convert.ToDateTime(reader["Created"]),
+							Verified = Convert.ToBoolean(reader["Verified"])
+						};
+					}
+					else
+					{
+						return null;
+					}
+				}
+			}
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
+
+	public ProfileManagementDTO GetProfileManagementDTOfromToken(string token)
+	{
+		try
+		{
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
+
+			ProfileManagementDTO profileManagementDTO = null;
+
+			_connection.Open();
+
+			string accountQuery = @"select a.ID, r.Name, a.Email, a.FirstName, a.LastName, a.Created, a.Verified from Token t
 									join Account a on t.UserID = a.ID
 									join Role r on r.ID = a.RoleID
 									where t.Value = @Token";
 
-            string addressesQuery = @"select ad.* from Token t
+			string addressesQuery = @"select ad.* from Token t
 									  join Account a on t.ID = a.TokenID
 									  join Address ad on a.ID = ad.UserID
 									  where t.Value = @Token";
 
-            using (SqlCommand command = new SqlCommand(accountQuery, connection))
-            {
-                command.Parameters.AddWithValue("@Token", token);
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = accountQuery;
 
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while(reader.Read())
-                    {
-                        profileManagementDTO = new ProfileManagementDTO
-                        {
-                            ID = reader.GetInt32(0),
-                            Role = reader.GetString(1),
-                            Email = reader.GetString(2),
-                            FirstName = reader.GetString(3),
-                            LastName = reader.GetString(4),
-                            CreatedAt = reader.GetDateTime(5),
-                            Verified = reader.GetBoolean(6)
-                        };
-                    }
-                    
-                    if(profileManagementDTO == null)
-                    {
-                        return null;
-                    }
-                }
-            }
+				AddParameter(command, "@Token", token);
 
-            using (SqlCommand command = new SqlCommand(addressesQuery, connection))
-            {
-                command.Parameters.AddWithValue("@Token", token);
+				using (IDataReader reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						profileManagementDTO = new ProfileManagementDTO
+						{
+							ID = reader.GetInt32(0),
+							Role = reader.GetString(1),
+							Email = reader.GetString(2),
+							FirstName = reader.GetString(3),
+							LastName = reader.GetString(4),
+							CreatedAt = reader.GetDateTime(5),
+							Verified = reader.GetBoolean(6)
+						};
+					}
 
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        profileManagementDTO.Addresses.Add(new Address
-                        {
-                            ID = reader.GetInt32(0),            //required
+					if (profileManagementDTO == null)
+					{
+						return null;
+					}
+				}
+			}
+
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = addressesQuery;
+
+				AddParameter(command, "@Token", token);
+
+				using (IDataReader reader = command.ExecuteReader())
+				{
+					while (reader.Read())
+					{
+						profileManagementDTO.Addresses.Add(new Address
+						{
+							ID = reader.GetInt32(0),            //required
 							AccountID = reader.GetInt32(1),     //required
-                            FirstLine = reader.GetString(2),    //required
-                            SecondLine = reader.IsDBNull(3) ? string.Empty : reader.GetString(3),
-                            ThirdLine = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
-                            FourthLine = reader.IsDBNull(5) ? string.Empty : reader.GetString(5),
-                            City = reader.GetString(6),         //required
-                            County = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
-                            Country = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
-                            PostCode = reader.GetString(9),     //required
-                            IsDefault = reader.GetBoolean(10),  //required
-                        });
-                    }
-                }
-            }
-        }
+							FirstLine = reader.GetString(2),    //required
+							SecondLine = reader.IsDBNull(3) ? string.Empty : reader.GetString(3),
+							ThirdLine = reader.IsDBNull(4) ? string.Empty : reader.GetString(4),
+							FourthLine = reader.IsDBNull(5) ? string.Empty : reader.GetString(5),
+							City = reader.GetString(6),         //required
+							County = reader.IsDBNull(7) ? string.Empty : reader.GetString(7),
+							Country = reader.IsDBNull(8) ? string.Empty : reader.GetString(8),
+							PostCode = reader.GetString(9),     //required
+							IsDefault = reader.GetBoolean(10),  //required
+						});
+					}
+				}
+			}
 
-        return profileManagementDTO;
-    }
+			return profileManagementDTO;
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
 
-    public string DoesEmailExist(string email)
-    {
-        using (SqlConnection connection = new SqlConnection(_connectionString))
-        {
-            connection.Open();
+	public string DoesEmailExist(string email)
+	{
+		try
+		{
+			if (_connection.State == ConnectionState.Open)
+			{
+				_connection.Close();
+			}
 
-            string query = @"select count(*) from Account where Email = @Email";
+			_connection.Open();
 
-            using (SqlCommand command = new SqlCommand(query, connection))
-            {
-                command.Parameters.AddWithValue("@Email", email);
+			string query = @"select count(*) from Account where Email = @Email";
 
-                int count = (int)command.ExecuteScalar();
+			using (IDbCommand command = _connection.CreateCommand())
+			{
+				command.CommandText = query;
 
-                if (count > 0)
-                {
-                    return "true";
-                }
-                else
-                {
-                    return "false";
-                }
-            }
-        }
-    }
+				AddParameter(command, "@Email", email);
+
+				int count = (int)command.ExecuteScalar();
+
+				if (count > 0)
+				{
+					return "true";
+				}
+				else
+				{
+					return "false";
+				}
+			}
+		}
+		finally
+		{
+			if (_connection.State != ConnectionState.Closed)
+			{
+				_connection.Close();
+			}
+		}
+	}
+
+	private void AddParameter(IDbCommand command, string parameterName, object value)
+	{
+		IDbDataParameter parameter = command.CreateParameter();
+		parameter.ParameterName = parameterName;
+		parameter.Value = value ?? DBNull.Value;
+		command.Parameters.Add(parameter);
+	}
 }
